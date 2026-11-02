@@ -145,8 +145,6 @@ if [ -n "$UPDATE_SRC" ] && [ -z "$UPDATE_PASS" ] && [[ "$UPDATE_SRC" == *@*:* ]]
 fi
 
 # 代码来源：默认匿名 clone 公开仓库（无需 token）
-  [ -z "$GITHUB_TOKEN" ] && [ -z "$PACK_DIR" ] && [ -z "$CODE_URL" ] && die "必须提供 --github-token / --pack-dir / --code-url 之一"
-fi
 
 # ---------- 环境前置 ----------
 [ "$(id -u)" -eq 0 ] || die "必须 root 运行"
