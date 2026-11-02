@@ -30,7 +30,7 @@ pm2 启动 + 开机自启 → 端口/页面验收。
 
 | 键 | 说明 |
 |---|---|
-| `GITHUB_TOKEN` | 私有仓库只读 PAT（或改用 `PACK_DIR` 指向本机 tgz 包目录）|
+| ~~`GITHUB_TOKEN`~~ | **不需要**（仓库公开，匿名 clone）；仅自建私有仓库时用 |
 | `UPDATE_SRC` | 游戏素材 `update/`（约 3.8G）来源：目录 / tgz / URL / `user@host:/路径` |
 | `ADMIN_PASS` | 后台与前缀账号 `aplm` 的密码 |
 | `MYSQL_PASS` | 新建 MySQL root 密码 |
