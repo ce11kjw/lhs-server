@@ -1,0 +1,2123 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>LHS</title>
+	<script>
+	(function () {
+		function describeRejection(reason) {
+			try {
+				if (reason == null) return String(reason);
+				if (typeof reason !== 'object') return String(reason);
+				var data = {};
+				Object.keys(reason).forEach(function (key) { data[key] = reason[key]; });
+				return JSON.stringify(data);
+			} catch (_e) {
+				return Object.prototype.toString.call(reason);
+			}
+		}
+		function silenceEmptyPromiseRejection(event) {
+			var reason = event && event.reason;
+			var isRealError = reason && (reason instanceof Error || reason.stack || reason.message);
+			if (!isRealError && event) {
+				console.log('[LHS promise rejection]', describeRejection(reason));
+				event.preventDefault && event.preventDefault();
+				event.returnValue = true;
+				return true;
+			}
+			return false;
+		}
+		window.onunhandledrejection = silenceEmptyPromiseRejection;
+		window.addEventListener('unhandledrejection', silenceEmptyPromiseRejection, true);
+	})();
+	</script>
+	<!--闃叉index.html琚祻瑙堝櫒缂撳瓨--begin-->
+	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="0">
+	<!--闃叉index.html琚祻瑙堝櫒缂撳瓨--over-->
+	<meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="full-screen" content="true" />
+	<meta name="screen-orientation" content="portrait" />
+	<meta name="x5-fullscreen" content="true" />
+	<meta name="360-fullscreen" content="true" />
+	<style>
+
+        html, body {
+            -ms-touch-action: none;
+            background: #000000;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+			overflow: hidden;
+        }
+    </style>
+	<link href="./icon.png" rel="apple-touch-icon">
+	<link rel="icon" href="./favicon.ico">
+</head>
+<body ondragstart="return false" >
+<script>
+(function () {
+  function hasQueryFlag(name) {
+    var q = location.search || '';
+    return q.indexOf(name + '=1') !== -1 || q.indexOf(name + '=true') !== -1;
+  }
+
+  var localProxyEnabled = hasQueryFlag('localProxy');
+  var runtimeGuardsEnabled = hasQueryFlag('runtimeGuards') || localProxyEnabled;
+  var diagEnabled = hasQueryFlag('diag') || localProxyEnabled;
+
+  window.__LHS_RUNTIME_FLAGS__ = {
+    localProxyEnabled: localProxyEnabled,
+    runtimeGuardsEnabled: runtimeGuardsEnabled,
+    diagEnabled: diagEnabled
+  };
+
+  window.__requestMapHeal = window.__requestMapHeal || function () { return false; };
+  window._diag = function () {};
+  if (!diagEnabled) return;
+
+  var d = document.createElement('div');
+  d.id = '_diag';
+  d.style.cssText = 'position:fixed;top:0;left:0;z-index:999999;background:rgba(0,0,0,0.8);color:#0f0;font:12px monospace;padding:4px 8px;max-width:100%;white-space:pre-wrap;pointer-events:none;display:none';
+  document.body.appendChild(d);
+
+  var logs = [];
+  window._diag = function (msg) {
+    logs.push(msg);
+    if (logs.length > 15) logs.shift();
+    d.textContent = logs.join('\n');
+  };
+
+  function _needMapHeal(text) {
+    return text.indexOf('m_Model') !== -1
+      || text.indexOf('targetHandle') !== -1
+      || text.indexOf('slotData') !== -1
+      || text.indexOf('clearChapter') !== -1
+      || text.indexOf('mapId') !== -1;
+  }
+
+  var origErr = window.onerror;
+  var errCount = 0;
+  window.onerror = function (msg, url, line, col, err) {
+    var msgText = msg == null ? '' : String(msg);
+    if (errCount < 20) {
+      var detail = msg;
+      if (err && err.stack) detail = err.stack.substring(0, 200);
+      else if (url) detail = msg + ' @ ' + url.split('/').pop() + ':' + line + ':' + col;
+      window._diag('ERR: ' + detail);
+    }
+    if (_needMapHeal(msgText)) {
+      window.__requestMapHeal('onerror:' + msgText.substring(0, 80));
+    }
+    errCount++;
+    if (typeof origErr === 'function') {
+      return origErr.call(window, msg, url, line, col, err);
+    }
+    return false;
+  };
+
+  window.addEventListener('unhandledrejection', function (e) {
+    var rawReason = e && e.reason;
+    var isRealError = rawReason && (rawReason instanceof Error || rawReason.stack || rawReason.message);
+    if (!isRealError) {
+      e.preventDefault();
+    }
+    if (errCount < 20) {
+      var reason = rawReason ? (rawReason.stack || rawReason.message || rawReason).toString() : 'unknown';
+      window._diag('REJECT: ' + reason.substring(0, 150));
+      if (_needMapHeal(reason)) {
+        window.__requestMapHeal('rejection:' + reason.substring(0, 80));
+      }
+    }
+    errCount++;
+  });
+
+  window._diag('diag loaded');
+})();
+</script>
+<div
+	style="margin: auto;width: 100%;height: 100%;" 
+	class="egret-player" 
+	data-entry-class="Main" 
+	data-orientation="auto" 
+	data-scale-mode="showAll" 
+	data-frame-rate="60" 
+	data-show-paint-rect="false"
+	data-content-width="720" 
+	data-content-height="1280" 
+	data-multi-fingered="2" 
+	data-show-fps="false" 
+	data-show-log="false"
+	data-show-fps-style="x:0,y:0,size:12,textColor:0xffffff,bgAlpha:0.2">
+
+<div id="bgimgbg">
+<div id="bgimg">
+<div id="loader">
+        <div class="loader-inner ball-spin-fade-loader">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+		<div id="load_text">正在加载...</div>	
+   </div>
+</div>
+</div>
+</div>
+
+<style>
+	#bgimgbg{
+		height: 100%;
+		width: 100%;
+	}
+
+	#user-account-entry{
+		position: fixed;
+		right: 14px;
+		top: 14px;
+		z-index: 9999;
+		width: 130px;
+		height: 50px;
+		line-height: 48px;
+		padding: 0;
+		background: url("update/resource/assets/atlas_ui/9_login/login_bm_dl1_2ededb58.png") center/100% 100% no-repeat;
+		color: #604728;
+		font-size: 16px;
+		font-weight: 700;
+		text-align: center;
+		text-decoration: none;
+		text-shadow: 0 1px 0 rgba(255,255,255,.65);
+	}
+
+	#bgimg{
+		overflow: hidden;
+		background-position:top center;
+		background-size:100% 100%;  
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		display: flex;
+		display: -webkit-flex;
+		-webkit-justify-content:center;
+		justify-content:center;
+		-webkit-align-items:center;
+		align-items:center;
+	}
+
+    .loader-inner{
+		left: 50%;
+		height: 5rem;
+	}
+	#load_text{
+        width: 100%;
+		text-align: center;
+		color: #ffffff;
+		font-size:1rem;
+		text-shadow:#000000 1px 1px;
+	}
+	@-webkit-keyframes ball-spin-fade-loader {
+	50% {
+	opacity: 0.3;
+	-webkit-transform: scale(0.4);
+			transform: scale(0.4); }
+
+	100% {
+	opacity: 1;
+	-webkit-transform: scale(1);
+			transform: scale(1); } }
+
+	@keyframes ball-spin-fade-loader {
+	50% {
+	opacity: 0.3;
+	-webkit-transform: scale(0.4);
+			transform: scale(0.4); }
+
+	100% {
+	opacity: 1;
+	-webkit-transform: scale(1);
+			transform: scale(1); } }
+
+	.ball-spin-fade-loader {
+	position: relative; }
+	.ball-spin-fade-loader > div:nth-child(1) {
+		top: 25px;
+		left: 0;
+		-webkit-animation: ball-spin-fade-loader 1s 0s infinite linear;
+				animation: ball-spin-fade-loader 1s 0s infinite linear; }
+	.ball-spin-fade-loader > div:nth-child(2) {
+		top: 17.04545px;
+		left: 17.04545px;
+		-webkit-animation: ball-spin-fade-loader 1s 0.12s infinite linear;
+				animation: ball-spin-fade-loader 1s 0.12s infinite linear; }
+	.ball-spin-fade-loader > div:nth-child(3) {
+		top: 0;
+		left: 25px;
+		-webkit-animation: ball-spin-fade-loader 1s 0.24s infinite linear;
+				animation: ball-spin-fade-loader 1s 0.24s infinite linear; }
+	.ball-spin-fade-loader > div:nth-child(4) {
+		top: -17.04545px;
+		left: 17.04545px;
+		-webkit-animation: ball-spin-fade-loader 1s 0.36s infinite linear;
+				animation: ball-spin-fade-loader 1s 0.36s infinite linear; }
+	.ball-spin-fade-loader > div:nth-child(5) {
+		top: -25px;
+		left: 0;
+		-webkit-animation: ball-spin-fade-loader 1s 0.48s infinite linear;
+				animation: ball-spin-fade-loader 1s 0.48s infinite linear; }
+	.ball-spin-fade-loader > div:nth-child(6) {
+		top: -17.04545px;
+		left: -17.04545px;
+		-webkit-animation: ball-spin-fade-loader 1s 0.6s infinite linear;
+				animation: ball-spin-fade-loader 1s 0.6s infinite linear; }
+	.ball-spin-fade-loader > div:nth-child(7) {
+		top: 0;
+		left: -25px;
+		-webkit-animation: ball-spin-fade-loader 1s 0.72s infinite linear;
+				animation: ball-spin-fade-loader 1s 0.72s infinite linear; }
+	.ball-spin-fade-loader > div:nth-child(8) {
+		top: 17.04545px;
+		left: -17.04545px;
+		-webkit-animation: ball-spin-fade-loader 1s 0.84s infinite linear;
+				animation: ball-spin-fade-loader 1s 0.84s infinite linear; }
+	.ball-spin-fade-loader > div {
+		background-color: #fff;
+		width: 15px;
+		height: 15px;
+		border-radius: 100%;
+		margin: 2px;
+		-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+		position: absolute; }
+
+</style>
+
+<!--SDK REPLACE-->
+
+<!-- ========== 鏈湴鏈嶅姟鍣ㄦ嫤鎴紙鏈€灏忓寲锛?========== -->
+<script type="text/javascript">
+	// ===== 绂佺敤 ASTC 绾圭悊鏀寔 =====
+	(function() {
+		var _origGetExtension = WebGLRenderingContext.prototype.getExtension;
+		WebGLRenderingContext.prototype.getExtension = function(name) {
+			if (name && (name.indexOf('ASTC') !== -1 || name.indexOf('astc') !== -1)) {
+				return null;
+			}
+			return _origGetExtension.call(this, name);
+		};
+		if (typeof WebGL2RenderingContext !== 'undefined') {
+			var _origGetExtension2 = WebGL2RenderingContext.prototype.getExtension;
+			WebGL2RenderingContext.prototype.getExtension = function(name) {
+				if (name && (name.indexOf('ASTC') !== -1 || name.indexOf('astc') !== -1)) {
+					return null;
+				}
+				return _origGetExtension2.call(this, name);
+			};
+		}
+	})();
+
+	var runtimeFlags = window.__LHS_RUNTIME_FLAGS__ || {};
+	var LOCAL_HOST = "127.0.0.1";
+
+	function normalizeLocalWsUrl(url) {
+		if (!url || typeof url !== 'string') return url;
+		try {
+			var u = new URL(url, location.href);
+			var protocol = String(u.protocol || '').toLowerCase();
+			var host = String(u.hostname || '').toLowerCase();
+			var port = String(u.port || (protocol === 'wss:' || protocol === 'https:' ? '443' : '80'));
+			var isLocal = host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '[::1]';
+			var isLocalWsPort = /^(9200|9201|9202|9203|9204)$/.test(port);
+			if (!isLocal || !isLocalWsPort) return url;
+			return "ws://" + LOCAL_HOST + ":" + port + (u.pathname || '') + (u.search || '');
+		} catch (_e) {
+			return url;
+		}
+	}
+
+	function installLocalWsNormalizePatch() {
+		// Keep the browser WebSocket constructor native. Replacing it with a
+		// forwarding function breaks the receiver binding of WebSocket.send.
+		if (window._diag) window._diag('native WebSocket; local URL normalization disabled');
+	}
+
+	if (!runtimeFlags.localProxyEnabled) {
+		if (window._diag) window._diag('local proxy disabled');
+
+		// Local compatibility fallback:
+		// when client requests old local gateway (:188), rewrite to current same-origin
+		// to avoid CORS preflight failures during local deployment.
+		(function enableLocalApiCompatRewrite() {
+			if (window.__LHS_API_COMPAT_PATCHED__) return;
+			window.__LHS_API_COMPAT_PATCHED__ = true;
+
+			function toSameOriginLocalApi(url) {
+				if (!url || typeof url !== 'string') return null;
+				try {
+					var u = new URL(url, location.href);
+					var isLocalHost = (u.hostname === '127.0.0.1' || u.hostname === 'localhost');
+					var isOldGatewayPort = String(u.port || (u.protocol === 'https:' ? '443' : '80')) === '188';
+					var isGameMsgPath = /\/gameMs[qg]\.do$/i.test(u.pathname || '');
+					if (!isLocalHost || !isOldGatewayPort || !isGameMsgPath) return null;
+					return location.protocol + '//' + location.host + u.pathname + u.search;
+				} catch (_e) {
+					return null;
+				}
+			}
+
+			var _CompatXHROpen = XMLHttpRequest.prototype.open;
+			XMLHttpRequest.prototype.open = function(method, url) {
+				var rewritten = toSameOriginLocalApi(url);
+				if (rewritten) {
+					if (window._diag) window._diag('XHR compat: ' + String(url).substring(0, 60) + ' -> ' + rewritten);
+					arguments[1] = rewritten;
+				}
+				return _CompatXHROpen.apply(this, arguments);
+			};
+
+			if (window.fetch) {
+				var _CompatFetch = window.fetch;
+				window.fetch = function(input, init) {
+					var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+					var rewritten = toSameOriginLocalApi(url);
+					if (rewritten) {
+						if (window._diag) window._diag('fetch compat -> ' + rewritten);
+						input = typeof input === 'string' ? rewritten : new Request(rewritten, input);
+					}
+					return _CompatFetch.call(window, input, init);
+				};
+			}
+		})();
+
+		// Keep local debug stable even on https://localhost by forcing loopback ws://
+		// for the local worker ports that are not exposed as WSS.
+		installLocalWsNormalizePatch();
+	} else {
+		if (window._diag) window._diag('local proxy enabled');
+
+	// ===== 閰嶇疆 =====
+	// Use loopback IP instead of "localhost" to avoid browser/HSTS ws->wss upgrades.
+	var LOCAL_WS = "ws://" + LOCAL_HOST + ":9201";
+	var LOCAL_API = "http://" + LOCAL_HOST + ":8080";
+	window.LHS_PAY_BASE_URL = window.LHS_PAY_BASE_URL || LOCAL_API;
+
+	function toLocalApiUrl(url) {
+		if (!url || typeof url !== 'string') return null;
+		var needRewrite = (
+			url.indexOf('guangzhougy') !== -1 ||
+			url.indexOf('lhsafk') !== -1 ||
+			url.indexOf('ccjh.cc') !== -1 ||
+			url.indexOf('gameMsg') !== -1 ||
+			url.indexOf('gameMsq') !== -1
+		);
+		if (!needRewrite) return null;
+		try {
+			var u = new URL(url, location.href);
+			return LOCAL_API + u.pathname + u.search;
+		} catch (_e) {
+			var pathPart = url.charAt(0) === '/' ? url : '/' + url;
+			return LOCAL_API + pathPart;
+		}
+	}
+
+	// Do not replace window.WebSocket in the local-proxy branch either. The
+	// official Egret client calls the native send method with a strict receiver.
+	if (window._diag) window._diag('native WebSocket; local proxy wrapper disabled');
+
+	// ===== XMLHttpRequest =====
+	var _OrigXHROpen = XMLHttpRequest.prototype.open;
+	XMLHttpRequest.prototype.open = function(method, url) {
+		var newUrl = toLocalApiUrl(url);
+		if (newUrl) {
+			if (window._diag) window._diag('XHR: ' + String(url).substring(0, 50) + ' -> local');
+			arguments[1] = newUrl;
+		}
+		return _OrigXHROpen.apply(this, arguments);
+	};
+
+	// ===== fetch =====
+	if (window.fetch) {
+		var _OrigFetch = window.fetch;
+		window.fetch = function(input, init) {
+			var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+			var newUrl = toLocalApiUrl(url);
+			if (newUrl) {
+				input = typeof input === 'string' ? newUrl : new Request(newUrl, input);
+			}
+			return _OrigFetch.call(window, input, init);
+		};
+	}
+
+	}
+</script>
+
+<script type="text/javascript">
+
+	//publish鐨勬椂鍊欎細琚嚜鍔ㄦ浛鎹㈡垚姝ｅ紡/娴嬭瘯鍩熷悕
+	var JS_URL_PREFIX = location.protocol + "//" + location.host + "/";
+	window.RES_URL_PREFIX = location.protocol + "//" + location.host + "/update/";
+	window.LHS_PAY_BASE_URL = window.LHS_PAY_BASE_URL || (/^https?:/.test(location.protocol) ? location.protocol + "//" + location.host : "http://127.0.0.1:8080");
+
+	var TEST_MODE = false;
+
+	var nativeJsMap;
+	var loadScript = function (list, threadNum, callback) {
+		if (list.length < 1) {
+			callback()
+			return
+		}
+		var loaded = 0;
+		var startLen = 0
+		var loadNext = function () {
+			for (var i = 0; i < threadNum; ++i) {
+				var url = list[loaded++]
+				if (url) {
+					var root = JS_URL_PREFIX;
+					var basename = url.split("/").pop();
+					if (basename in nativeJsMap.files) {
+						root = nativeJsMap.root;
+						url = basename;
+					}
+					loadSingleScript(root + url, function () {
+						startLen++;
+						if (startLen >= list.length) {
+							callback();
+						} else {
+							loadNext();
+						}
+					})
+				}
+			}
+		};
+		loadNext();
+	};
+
+	var loadSingleScript = function (src, callback) {
+		var s = document.createElement('script');
+		s.async = false;
+		s.crossOrigin = 'anonymous';
+		s.src = src;
+		s.addEventListener('load', function () {
+			s.parentNode.removeChild(s);
+			s.removeEventListener('load', arguments.callee, false);
+			callback();
+		}, false);
+		document.body.appendChild(s);
+	};
+	
+	var hashed_default_json;
+	var __JSVERSION__;
+	var delay_js = [];
+	function ready() {
+		var onManifestLoaded = function(response){
+			var manifest = response;
+			hashed_default_json = manifest.hashed_default_json || {};
+			__JSVERSION__ = manifest.version;
+			var list = manifest.initial;
+			window.loadScript(list, 1, function () {
+                window.__AGENT_ID__=70000001
+				list = manifest.game;
+				for(var i = 0; i < list.length; ++i){
+					if(list[i].indexOf("default.thm") != -1 && list[i].indexOf("default.thm.start") == -1){
+						delay_js.push(list.splice(i--, 1)[0]);
+					}else if(/main[^/]*?\.js$/.test(list[i])){
+						delay_js.push(list.splice(i--, 1)[0]);
+					}
+				}
+				window.loadScript(manifest.game, 1, function () {
+					egret.runEgret({ renderMode: "webgl", audioType: 0 });
+				});
+			});
+		}
+		var getJSResFinish = function(res) {
+			if (!nativeJsMap) {
+				nativeJsMap = res || {};
+				nativeJsMap.files = nativeJsMap.files || {};
+				if (manifestContent) {
+					onManifestLoaded(manifestContent);
+				}
+			}
+		};
+		var manifestContent;
+		if (window.egret_native) {
+			egret_native.receivedPluginInfo = function (info) {
+            	var data = JSON.parse(info);
+				if (data.functionName == "getJSResReturn" && data.value) {
+					console.log(data.value);
+					getJSResFinish(JSON.parse(data.value));
+				}
+			};
+			egret_native.sendInfoToPlugin(JSON.stringify({
+				functionName :"getJSRes",
+				value: "",
+			}));
+		}
+		function loadManifest(callback) {
+	        callback({
+	"initial": [
+		"js/egret.min_107c785c.js",
+		"js/egret.web.min_587897e9.js",
+		"js/egretex.min_37b3ee13.js",
+		"js/thirds.min_b052d442.js"
+	],
+	"game": [
+		"js/start.min_abb1362e.js",
+		"js/main.min_6425f861.js?v=11"
+	],
+	"hashed_default_json": {
+		"start": "default.res_46b523dd.bin",
+		"main": "default.res_main_ce23cac1.bin",
+		"cn_main": "default.res_cn_main_2ea2ec3d.bin",
+		"tw_main": "default.res_tw_main_dcf94c90.bin",
+		"en_main": "default.res_en_main_b20d63b2.bin",
+		"jp_main": "default.res_jp_main_5d460120.bin",
+		"kr_main": "default.res_kr_main_b2abd95e.bin"
+	}
+})
+		}
+		loadManifest(function(res){
+			manifestContent = res;
+			if (window.egret_native) {
+				if (nativeJsMap) {
+					//宸茬粡杩斿洖
+					onManifestLoaded(manifestContent);
+				} else {
+					//500姣鏈繑鍥烇紝鍒欒涓烘槸鑰佺増鏈琻ative锛屼笉浼氬啀杩斿洖浜?					setTimeout(getJSResFinish, 500);
+				}
+			} else {
+				getJSResFinish();
+			}
+		});
+	}
+
+	function closeSocket() {
+		if (window.Main && Main.Instance && Main.Instance.closesocket) {
+			Main.Instance.closesocket();
+		} else {
+			console.error("not Main.closesocket")
+		}
+	}
+
+	function closeSocketSafe() {
+		try { closeSocket(); } catch (_e) {}
+	}
+	window.addEventListener('pagehide', closeSocketSafe);
+	window.addEventListener('beforeunload', closeSocketSafe);
+
+	function __StartLoading(callback) {
+		var list = delay_js;
+		window.loadScript(list, 1, function() {
+			var runtimeFlags = window.__LHS_RUNTIME_FLAGS__ || {};
+			try {
+				function patchTaskChainProgression() {
+					var gm = window.W || window.GlobalManager;
+					var taskModel = gm && gm.TaskModel;
+					var taskCfgMap = gm && gm.Config && gm.Config.TaskConfig;
+					var messageCenter = window.MessageCenter;
+					var messageDef = window.MessageDef;
+					if (!taskModel || !taskCfgMap) return false;
+					if (taskModel.__taskChainPatchV4) return true;
+
+					function toSafeInt(value, fallback) {
+						var num = Number(value);
+						return isFinite(num) ? Math.floor(num) : fallback;
+					}
+
+					function getTaskCfg(taskId) {
+						return taskCfgMap[taskId] || taskCfgMap[String(taskId)] || null;
+					}
+
+					function ensureTaskInfo() {
+						var info = taskModel._taskInfo;
+						if (!info || typeof info !== 'object') {
+							info = {};
+							taskModel._taskInfo = info;
+						}
+						if (!info.tasks || typeof info.tasks !== 'object' || Array.isArray(info.tasks)) {
+							info.tasks = {};
+						}
+						if (!info.tasksMap || typeof info.tasksMap !== 'object' || Array.isArray(info.tasksMap)) {
+							info.tasksMap = {};
+						}
+						return info;
+					}
+
+					function sortTaskList(list) {
+						list.sort(function(a, b) {
+							return toSafeInt(a && a.id, 0) - toSafeInt(b && b.id, 0);
+						});
+					}
+
+					function ensureLocalProgressState() {
+						var state = taskModel.__taskProgressPatchState;
+						if (!state || typeof state !== 'object') {
+							state = {
+								bagelConsume: 0,
+								equipSaleCount: 0,
+								equipSaleSilver: 0,
+								mainlineChallengeCount: 0
+							};
+							taskModel.__taskProgressPatchState = state;
+						}
+						state.bagelConsume = Math.max(0, toSafeInt(state.bagelConsume, 0));
+						state.equipSaleCount = Math.max(0, toSafeInt(state.equipSaleCount, 0));
+						state.equipSaleSilver = Math.max(0, toSafeInt(state.equipSaleSilver, 0));
+						state.mainlineChallengeCount = Math.max(0, toSafeInt(state.mainlineChallengeCount, 0));
+						return state;
+					}
+
+					function seedLocalProgressStateFromTasks() {
+						var info = ensureTaskInfo();
+						var state = ensureLocalProgressState();
+						var tasks = info.tasks || {};
+						Object.keys(tasks).forEach(function(taskIdKey) {
+							var task = tasks[taskIdKey];
+							var taskId = toSafeInt(task && task.id, toSafeInt(taskIdKey, 0));
+							var cfg = getTaskCfg(taskId);
+							if (!cfg || toSafeInt(task && task.type, 0) !== 1) return;
+							var activeId = toSafeInt(cfg.activeId, 0);
+							var progress = Math.max(0, toSafeInt(task && task.progress, 0));
+							if (activeId === 1 && progress > state.bagelConsume) {
+								state.bagelConsume = progress;
+							}
+							if (activeId === 3 && progress > state.equipSaleCount) {
+								state.equipSaleCount = progress;
+							}
+							if (activeId === 4 && progress > state.equipSaleSilver) {
+								state.equipSaleSilver = progress;
+							}
+							if (activeId === 14 && progress > state.mainlineChallengeCount) {
+								state.mainlineChallengeCount = progress;
+							}
+						});
+						return state;
+					}
+
+					function getItemCount(itemId) {
+						var itemModel = gm && gm.ItemModel;
+						if (itemModel && typeof itemModel.GetItemCount === 'function') {
+							return Math.max(0, toSafeInt(itemModel.GetItemCount(itemId), 0));
+						}
+						if (itemModel && itemModel.itemMap && itemModel.itemMap[itemId]) {
+							return Math.max(0, toSafeInt(itemModel.itemMap[itemId].count, 0));
+						}
+						return 0;
+					}
+
+					function getEquippedItemCount() {
+						return getEquippedItemCountByMinQuality(1);
+					}
+
+					function getEquippedItemCountByMinQuality(minQuality) {
+						var equipModel = gm && gm.EquipModel;
+						if (!equipModel || typeof equipModel !== 'object') return 0;
+
+						var presetIdx = typeof equipModel.getPresetIdx === 'function'
+							? toSafeInt(equipModel.getPresetIdx(), 0)
+							: 0;
+						var equipMap = typeof equipModel.getEquipMapByPlan === 'function'
+							? equipModel.getEquipMapByPlan(presetIdx)
+							: null;
+						if (!equipMap || typeof equipMap !== 'object') return 0;
+
+						return Object.keys(equipMap).filter(function(slotKey) {
+							var equip = equipMap[slotKey];
+							return equip
+								&& typeof equip === 'object'
+								&& !Array.isArray(equip)
+								&& toSafeInt(equip.uid, 0) > 0
+								&& toSafeInt(equip.id, 0) > 0
+								&& Math.max(1, toSafeInt(equip.quailty, 1)) >= Math.max(1, toSafeInt(minQuality, 1));
+						}).length;
+					}
+
+					function calcMainTaskProgress(taskId) {
+						var cfg = getTaskCfg(taskId);
+						if (!cfg) return null;
+						var state = ensureLocalProgressState();
+						var activeId = toSafeInt(cfg.activeId, 0);
+						if (activeId === 1) return state.bagelConsume;
+						if (activeId === 2) return getEquippedItemCount();
+						if (activeId === 3) return state.equipSaleCount;
+						if (activeId === 4) return state.equipSaleSilver;
+						if (activeId === 5) return getEquippedItemCountByMinQuality(cfg.taskValue2);
+						if (activeId === 14) return state.mainlineChallengeCount;
+						return null;
+					}
+
+					function replaceTaskInfo(nextInfo) {
+						if (!nextInfo || typeof nextInfo !== 'object') return false;
+						taskModel._taskInfo = nextInfo;
+						ensureTaskInfo();
+						seedLocalProgressStateFromTasks();
+						syncTaskType(1);
+						syncTaskType(9);
+						return true;
+					}
+
+					function upsertTaskState(taskId, patch) {
+						var cfg = getTaskCfg(taskId);
+						if (!cfg) return null;
+						var info = ensureTaskInfo();
+						var key = String(taskId);
+						var prev = info.tasks[key] || {};
+						var type = toSafeInt(patch && patch.type, toSafeInt(prev.type, toSafeInt(cfg.type, 1)));
+						var target = Math.max(0, toSafeInt(
+							patch && patch.target,
+							toSafeInt(prev.target, toSafeInt(cfg.taskValue1, 0))
+						));
+						var status = toSafeInt(
+							patch && patch.status,
+							toSafeInt(prev.status, 10)
+						);
+						var progress = Math.max(0, toSafeInt(
+							patch && patch.progress,
+							toSafeInt(prev.progress, 0)
+						));
+						if (status >= 20 && target > 0 && progress < target) {
+							progress = target;
+						}
+
+						var nextState = {
+							id: taskId,
+							type: type,
+							status: status,
+							progress: progress,
+							target: target
+						};
+						info.tasks[key] = nextState;
+
+						var typeKey = String(type);
+						var list = Array.isArray(info.tasksMap[typeKey]) ? info.tasksMap[typeKey] : [];
+						var replaced = false;
+						for (var i = 0; i < list.length; i++) {
+							if (toSafeInt(list[i] && list[i].id, 0) === taskId) {
+								list[i] = nextState;
+								replaced = true;
+								break;
+							}
+						}
+						if (!replaced) list.push(nextState);
+						sortTaskList(list);
+						info.tasksMap[typeKey] = list;
+						return nextState;
+					}
+
+					function materializeNextTask(taskId) {
+						var cfg = getTaskCfg(taskId);
+						if (!cfg) return null;
+						var nextId = toSafeInt(cfg.nextId, 0);
+						var nextCfg = getTaskCfg(nextId);
+						if (nextId <= 0 || !nextCfg) return null;
+						return upsertTaskState(nextId, {
+							id: nextId,
+							type: nextCfg.type,
+							status: 10,
+							progress: 0,
+							target: nextCfg.taskValue1
+						});
+					}
+
+					function ensureTaskChainByType(type) {
+						var info = ensureTaskInfo();
+						var typeKey = String(type);
+						var list = Array.isArray(info.tasksMap[typeKey]) ? info.tasksMap[typeKey] : [];
+						if (!list.length) return false;
+						sortTaskList(list);
+
+						var changed = false;
+						var loopGuard = 0;
+						while (loopGuard < 64) {
+							loopGuard++;
+							var added = false;
+							for (var i = 0; i < list.length; i++) {
+								var task = list[i];
+								var taskId = toSafeInt(task && task.id, 0);
+								var state = info.tasks[String(taskId)] || task;
+								var cfg = getTaskCfg(taskId);
+								if (!cfg || toSafeInt(state && state.status, 0) < 30) continue;
+								var nextId = toSafeInt(cfg.nextId, 0);
+								var nextCfg = getTaskCfg(nextId);
+								if (nextId <= 0 || !nextCfg || toSafeInt(nextCfg.type, 0) !== toSafeInt(type, 0)) continue;
+								if (info.tasks[String(nextId)]) continue;
+								if (materializeNextTask(taskId)) {
+									added = true;
+									changed = true;
+									break;
+								}
+							}
+							if (!added) break;
+							list = Array.isArray(info.tasksMap[typeKey]) ? info.tasksMap[typeKey] : [];
+							sortTaskList(list);
+						}
+						return changed;
+					}
+
+					function refreshTaskProgressByType(type) {
+						var safeType = toSafeInt(type, 0);
+						if (safeType !== 1) return false;
+						var info = ensureTaskInfo();
+						var tasks = info.tasks || {};
+						var changed = false;
+						Object.keys(tasks).forEach(function(taskIdKey) {
+							var task = tasks[taskIdKey];
+							var taskId = toSafeInt(task && task.id, toSafeInt(taskIdKey, 0));
+							var cfg = getTaskCfg(taskId);
+							if (!cfg || toSafeInt(cfg.type, 0) !== safeType) return;
+
+							var calcProgress = calcMainTaskProgress(taskId);
+							if (calcProgress == null) return;
+
+							var target = Math.max(0, toSafeInt(cfg.taskValue1, toSafeInt(task && task.target, 0)));
+							var progress = target > 0
+								? Math.min(target, Math.max(0, toSafeInt(calcProgress, 0)))
+								: Math.max(0, toSafeInt(calcProgress, 0));
+							var prevStatus = toSafeInt(task && task.status, 10);
+							var nextStatus = prevStatus >= 30
+								? prevStatus
+								: (target > 0 && progress >= target ? 20 : 10);
+
+							if (
+								progress !== toSafeInt(task && task.progress, 0)
+								|| target !== toSafeInt(task && task.target, 0)
+								|| nextStatus !== prevStatus
+							) {
+								upsertTaskState(taskId, {
+									id: taskId,
+									type: safeType,
+									progress: progress,
+									target: target,
+									status: nextStatus
+								});
+								changed = true;
+							}
+						});
+						return changed;
+					}
+
+					function syncTaskType(type) {
+						var safeType = toSafeInt(type, 0);
+						var changed = false;
+						if (safeType === 1 || safeType === 9) {
+							changed = ensureTaskChainByType(safeType) || changed;
+						}
+						if (safeType === 1) {
+							changed = refreshTaskProgressByType(1) || changed;
+						}
+						return changed;
+					}
+
+					function dispatchTaskUpdates(types) {
+						if (!messageCenter || typeof messageCenter.ins !== 'function' || !messageDef) return;
+						try {
+							var mc = messageCenter.ins();
+							var typeMap = {};
+							if (!mc || typeof mc.dispatch !== 'function') return;
+							mc.dispatch(messageDef.Game_Task_Update);
+							(Array.isArray(types) ? types : []).forEach(function(type) {
+								var safeType = toSafeInt(type, 0);
+								if (safeType <= 0 || typeMap[safeType]) return;
+								typeMap[safeType] = true;
+								mc.dispatch(messageDef.Game_Task_Update + safeType);
+							});
+						} catch (_e) {}
+					}
+
+					function mergeRefreshTypes(types) {
+						var typeMap = {};
+						var merged = [];
+						(Array.isArray(types) ? types : []).forEach(function(type) {
+							var safeType = toSafeInt(type, 0);
+							if (safeType <= 0 || typeMap[safeType]) return;
+							typeMap[safeType] = true;
+							merged.push(safeType);
+						});
+						return merged;
+					}
+
+					function shouldAuthoritativeRefresh(tag) {
+						switch (toSafeInt(tag, 0)) {
+							case 2000:
+							case 1300:
+							case 2200:
+							case 2201:
+							case 2300:
+							case 2301:
+							case 2302:
+							case 2304:
+							case 502:
+							case 2100:
+							case 2101:
+							case 2102:
+							case 2150:
+							case 2151:
+							case 2152:
+							case 1501:
+							case 1502:
+							case 2400:
+							case 2401:
+							case 2407:
+							case 2420:
+							case 2500:
+							case 2501:
+							case 2602:
+							case 3200:
+							case 3203:
+							case 3204:
+							case 3301:
+							case 3302:
+							case 3306:
+							case 3314:
+							case 3500:
+							case 3600:
+							case 3802:
+							case 3901:
+							case 3902:
+							case 3903:
+							case 3904:
+							case 3906:
+							case 4008:
+							case 4010:
+							case 4021:
+							case 5420:
+							case 3103:
+							case 3105:
+							case 600:
+								return true;
+							default:
+								return false;
+						}
+					}
+
+					function getRawRpcInvoker() {
+						var gameSocket = window.GameSocket && typeof window.GameSocket.ins === 'function'
+							? window.GameSocket.ins()
+							: null;
+						if (gameSocket && typeof gameSocket.__taskProgressRawRpc === 'function') {
+							return { target: gameSocket, fn: gameSocket.__taskProgressRawRpc };
+						}
+						if (typeof window.__taskProgressRawRpc === 'function') {
+							return { target: window, fn: window.__taskProgressRawRpc };
+						}
+						return null;
+					}
+
+					function queueAuthoritativeTaskRefresh(types) {
+						var invoker = getRawRpcInvoker();
+						if (!invoker || typeof invoker.fn !== 'function') return false;
+
+						var pendingTypes = mergeRefreshTypes(types);
+						if (!pendingTypes.length) pendingTypes = [1, 9];
+
+						var queue = taskModel.__taskAuthoritativeRefreshQueue;
+						if (!queue || typeof queue !== 'object') {
+							queue = { pendingTypes: [], busy: false };
+							taskModel.__taskAuthoritativeRefreshQueue = queue;
+						}
+						queue.pendingTypes = mergeRefreshTypes((queue.pendingTypes || []).concat(pendingTypes));
+						if (queue.busy) return true;
+
+						function runRefresh() {
+							var currentTypes = mergeRefreshTypes(queue.pendingTypes);
+							if (!currentTypes.length) currentTypes = [1, 9];
+							queue.pendingTypes = [];
+							queue.busy = true;
+
+							invoker.fn.call(invoker.target, 1800, {}, function(taskInfoResult) {
+								queue.busy = false;
+								var finalTypes = mergeRefreshTypes(currentTypes.concat([1, 9]));
+								if (replaceTaskInfo(taskInfoResult)) {
+									dispatchTaskUpdates(finalTypes);
+								}
+								if (queue.pendingTypes && queue.pendingTypes.length) {
+									runRefresh();
+								}
+							}, invoker.target, function() {
+								queue.busy = false;
+								if (queue.pendingTypes && queue.pendingTypes.length) {
+									runRefresh();
+								}
+							});
+						}
+
+						runRefresh();
+						return true;
+					}
+
+					var originGetMainTask = typeof taskModel.getMainTask === 'function' ? taskModel.getMainTask : null;
+					if (originGetMainTask) {
+						taskModel.getMainTask = function() {
+							syncTaskType(1);
+							return originGetMainTask.call(this);
+						};
+					}
+
+					var originGetSubTask = typeof taskModel.getSubTask === 'function' ? taskModel.getSubTask : null;
+					if (originGetSubTask) {
+						taskModel.getSubTask = function() {
+							syncTaskType(9);
+							return originGetSubTask.call(this);
+						};
+					}
+
+					var originGetShowTaskByType = typeof taskModel.getShowTaskByType === 'function' ? taskModel.getShowTaskByType : null;
+					if (originGetShowTaskByType) {
+						taskModel.getShowTaskByType = function(type) {
+							var safeType = toSafeInt(type, 0);
+							syncTaskType(safeType);
+							return originGetShowTaskByType.call(this, type);
+						};
+					}
+
+					var originSendTaskReward = typeof taskModel.sendTaskReward === 'function' ? taskModel.sendTaskReward : null;
+					if (originSendTaskReward) {
+						taskModel.sendTaskReward = function(ids, type, callback) {
+							var safeType = toSafeInt(type, 0);
+							return originSendTaskReward.call(this, ids, type, function(rewardedIds) {
+								var finalIds = Array.isArray(rewardedIds) ? rewardedIds.slice() : [];
+								var callbackResult;
+								var callbackError = null;
+								if ((safeType === 1 || safeType === 9) && finalIds.length) {
+									for (var i = 0; i < finalIds.length; i++) {
+										var taskId = toSafeInt(finalIds[i], 0);
+										var cfg = getTaskCfg(taskId);
+										if (!cfg) continue;
+										upsertTaskState(taskId, {
+											id: taskId,
+											type: safeType,
+											status: 30,
+											progress: cfg.taskValue1,
+											target: cfg.taskValue1
+										});
+										materializeNextTask(taskId);
+									}
+								}
+								try {
+									if (typeof callback === 'function') {
+										callbackResult = callback(rewardedIds);
+									}
+								} catch (err) {
+									callbackError = err;
+								}
+								if (safeType === 1 || safeType === 9) {
+									var changedTypes = [];
+									if (finalIds.length || syncTaskType(safeType)) {
+										changedTypes.push(safeType);
+									}
+									if (safeType === 1 && syncTaskType(9)) {
+										changedTypes.push(9);
+									}
+									if (changedTypes.length) {
+										dispatchTaskUpdates(changedTypes);
+									}
+									queueAuthoritativeTaskRefresh(changedTypes);
+								}
+								if (callbackError) {
+									throw callbackError;
+								}
+								return callbackResult;
+							});
+						};
+					}
+
+					function wrapRpcTarget(target, key, markerKey) {
+						if (!target || target[markerKey] || typeof target[key] !== 'function') return false;
+						var originRpc = target[key];
+						target.__taskProgressRawRpc = originRpc;
+						if (target === window) {
+							window.__taskProgressRawRpc = originRpc;
+						}
+						target[key] = function(tag, params, onSuccess, thisObj, onError) {
+							var safeTag = toSafeInt(tag, 0);
+							var wrappedSuccess = function(result) {
+								var callbackResult;
+								var callbackError = null;
+								try {
+									if (typeof onSuccess === 'function') {
+										callbackResult = onSuccess.call(thisObj, result);
+									}
+								} catch (err) {
+									callbackError = err;
+								}
+
+								var changedTypes = [];
+								var localState = ensureLocalProgressState();
+								if (safeTag === 2201 && result && toSafeInt(result.result, 0) === 0) {
+									var soldCount = 0;
+									var rewardInfoItems = result.rewardInfo && Array.isArray(result.rewardInfo.items)
+										? result.rewardInfo.items
+										: [];
+									if (Array.isArray(result.uids)) soldCount = result.uids.length;
+									else if (params && Array.isArray(params.uids)) soldCount = params.uids.length;
+									localState.equipSaleCount += Math.max(0, soldCount);
+									for (var i = 0; i < rewardInfoItems.length; i++) {
+										if (toSafeInt(rewardInfoItems[i] && rewardInfoItems[i].id, 0) === 2) {
+											localState.equipSaleSilver += Math.max(0, toSafeInt(rewardInfoItems[i] && rewardInfoItems[i].count, 0));
+										}
+									}
+								} else if (safeTag === 2000 && result) {
+									localState.bagelConsume += Math.max(0, toSafeInt(result.count, 0));
+								} else if (safeTag === 2300 && result && toSafeInt(result.result, 0) === 0) {
+									localState.bagelConsume += 1;
+									localState.mainlineChallengeCount += 1;
+								}
+								if (syncTaskType(1)) {
+									changedTypes.push(1);
+								}
+								if (syncTaskType(9)) {
+									changedTypes.push(9);
+								}
+								if (changedTypes.length) {
+									dispatchTaskUpdates(changedTypes);
+								}
+								if (shouldAuthoritativeRefresh(safeTag)) {
+									queueAuthoritativeTaskRefresh(changedTypes);
+								}
+								if (callbackError) {
+									throw callbackError;
+								}
+								return callbackResult;
+							};
+							return originRpc.call(this, tag, params, wrappedSuccess, thisObj, onError);
+						};
+						target[markerKey] = true;
+						return true;
+					}
+
+					function patchRpcTaskProgress() {
+						var patched = false;
+						if (typeof window.Rpc === 'function') {
+							patched = wrapRpcTarget(window, 'Rpc', '__taskProgressRpcPatchV2') || patched;
+						}
+						var gameSocket = window.GameSocket && typeof window.GameSocket.ins === 'function'
+							? window.GameSocket.ins()
+							: null;
+						if (gameSocket && typeof gameSocket.Rpc === 'function') {
+							patched = wrapRpcTarget(gameSocket, 'Rpc', '__taskProgressRpcPatchV2') || patched;
+						}
+						return patched;
+					}
+
+					seedLocalProgressStateFromTasks();
+					patchRpcTaskProgress() || setTimeout(function() {
+						var rpcPatchRetry = 0;
+						var rpcPatchTimer = setInterval(function() {
+							rpcPatchRetry++;
+							if (patchRpcTaskProgress() || rpcPatchRetry >= 60) {
+								clearInterval(rpcPatchTimer);
+							}
+						}, 250);
+					}, 0);
+
+					taskModel.__taskChainPatchV4 = true;
+					return true;
+				}
+
+				if (!patchTaskChainProgression()) {
+					var taskChainPatchRetry = 0;
+					var taskChainPatchTimer = setInterval(function() {
+						taskChainPatchRetry++;
+						if (patchTaskChainProgression() || taskChainPatchRetry >= 60) {
+							clearInterval(taskChainPatchTimer);
+						}
+					}, 250);
+				}
+				if (window._diag) window._diag('task chain patch ready');
+			} catch (e) {
+				if (window._diag) window._diag('task patch err: ' + e.message);
+			}
+			try {
+				function patchServerRoleFlow() {
+					var main = window.Main && window.Main.Instance;
+					var httpLogic = window.HttpLogic;
+					if (!main || !httpLogic || typeof httpLogic.getInst !== 'function') return false;
+					var http = httpLogic.getInst();
+					if (!http || typeof http.SDKAuth !== 'function' || typeof http.requestJson !== 'function') return false;
+					if (main.__serverRoleFlowPatchV2) return true;
+
+					var state = window.__serverRoleFlowState = window.__serverRoleFlowState || {
+						authArgs: null,
+						lastAuthResponse: null,
+						overlayEl: null,
+						isCreating: false,
+						pendingServer: null,
+						bypassOnce: false,
+						forcedServerId: 0
+					};
+
+					function toSafeInt(value, fallback) {
+						var num = Number(value);
+						return isFinite(num) ? Math.floor(num) : fallback;
+					}
+
+					function getLoginInfo() {
+						return window.iJ || window.UserLoginInfo || {};
+					}
+
+					function normalizeAuthResponse(resp) {
+						if (!resp || typeof resp !== 'object') return resp;
+						resp.needCreateRole = toSafeInt(resp.needCreateRole, 0);
+						if (!Array.isArray(resp.roles)) resp.roles = [];
+						if (!Array.isArray(resp.roleCreateOptions)) resp.roleCreateOptions = [];
+						return resp;
+					}
+
+					function rememberSelectedServer(serverInfo) {
+						if (!serverInfo || typeof serverInfo !== 'object') return;
+						state.pendingServer = serverInfo;
+						state.forcedServerId = toSafeInt(serverInfo.serverId, state.forcedServerId);
+						var loginInfo = getLoginInfo();
+						loginInfo.ServerID = toSafeInt(serverInfo.serverId, toSafeInt(loginInfo.ServerID, 0));
+						loginInfo.ServerName = String(serverInfo.serverName || loginInfo.ServerName || '');
+						loginInfo.ServerInfo = serverInfo;
+					}
+
+					var ROLE_CREATE_ORDER = [1, 3, 4, 5, 6, 8];
+					var ROLE_CREATE_THEME_MAP = {
+						1: { shortName: '体', label: '体修', accent: '#f2c64d', buttonFill: '#f0c143', buttonText: '#684211', bg: 'create_bg_1_empty_882000cb.jpg', title: 'lang_cn/create_txt_1_eb907d33.png', head: 'create_head_1_2f82cfa.png' },
+						3: { shortName: '道', label: '道修', accent: '#e56d58', buttonFill: '#d65a46', buttonText: '#fff5df', bg: 'create_bg_3_empty_d04c528d.jpg', title: 'lang_cn/create_txt_3_a9830346.png', head: 'create_head_3_26009ef6.png' },
+						4: { shortName: '法', label: '法修', accent: '#53c7c8', buttonFill: '#41b6ba', buttonText: '#f6fffb', bg: 'create_bg_4_empty_98f89536.jpg', title: 'lang_cn/create_txt_4_6cc4bb59.png', head: 'create_head_4_905faf5a.png' },
+						5: { shortName: '妖', label: '妖修', accent: '#eadca9', buttonFill: '#ece1bc', buttonText: '#65513a', bg: 'create_bg_5_empty_35271206.jpg', title: 'lang_cn/create_txt_5_88d8e2a1.png', head: 'create_head_5_ca2b5a50.png' },
+						6: { shortName: '气', label: '气修', accent: '#8bc85a', buttonFill: '#7bbc43', buttonText: '#efffe2', bg: 'create_bg_6_empty_fabaf6bf.jpg', title: 'lang_cn/create_txt_6_f11ded93.png', head: 'create_head_6_4595c83e.png' },
+						8: { shortName: '禅', label: '禅修', accent: '#6388e7', buttonFill: '#4f76dd', buttonText: '#eef3ff', bg: 'create_bg_8_empty_ecb17b57.jpg', title: 'lang_cn/create_txt_8_7a1bf2c.png', head: 'create_head_8_aa5e54f9.png' }
+					};
+					var ROLE_CREATE_GENDER_META = {
+						0: {
+							label: '男',
+							bgOn: 'creat_bm_genderBg_1_2195e8d5.png',
+							bgOff: 'creat_bm_genderBg_2_4b67f3f.png',
+							iconOn: 'creat_bm_gender_male_1_382da554.png',
+							iconOff: 'creat_bm_gender_male_2_1206fc8b.png'
+						},
+						1: {
+							label: '女',
+							bgOn: 'creat_bm_genderBg_1_2195e8d5.png',
+							bgOff: 'creat_bm_genderBg_2_4b67f3f.png',
+							iconOn: 'creat_bm_gender_female_1_ae1e5bdd.png',
+							iconOff: 'creat_bm_gender_female_2_5a4822eb.png'
+						}
+					};
+
+					function getRoleCreateAssetUrl(path) {
+						return './update/resource/assets/atlas_ui/1_lilian/create/' + String(path || '');
+					}
+
+					function getRoleCreateTheme(kungfuId) {
+						var safeId = toSafeInt(kungfuId, 4);
+						var theme = ROLE_CREATE_THEME_MAP[safeId] || ROLE_CREATE_THEME_MAP[4];
+						return {
+							kungfuId: safeId,
+							shortName: theme.shortName,
+							label: theme.label,
+							accent: theme.accent,
+							buttonFill: theme.buttonFill,
+							buttonText: theme.buttonText,
+							bgUrl: getRoleCreateAssetUrl(theme.bg),
+							titleUrl: getRoleCreateAssetUrl(theme.title),
+							headUrl: getRoleCreateAssetUrl(theme.head)
+						};
+					}
+
+					function buildRoleCreateClasses(roleOptions) {
+						var grouped = {};
+						(roleOptions || []).forEach(function(rawOption) {
+							var kungfuId = toSafeInt(rawOption && rawOption.kungfuId, 4);
+							var subJob = toSafeInt(rawOption && rawOption.subJob, 0);
+							if (!Object.prototype.hasOwnProperty.call(ROLE_CREATE_THEME_MAP, kungfuId)) return;
+							if (!grouped[kungfuId]) {
+								grouped[kungfuId] = {
+									kungfuId: kungfuId,
+									theme: getRoleCreateTheme(kungfuId),
+									options: [],
+									byGender: {}
+								};
+							}
+							var option = {
+								key: String(rawOption && rawOption.key || (kungfuId + '_' + subJob)),
+								kungfuId: kungfuId,
+								subJob: subJob,
+								label: String(rawOption && rawOption.label || '')
+							};
+							grouped[kungfuId].options.push(option);
+							if (!grouped[kungfuId].byGender.hasOwnProperty(subJob)) {
+								grouped[kungfuId].byGender[subJob] = option;
+							}
+						});
+
+						var classes = [];
+						ROLE_CREATE_ORDER.forEach(function(kungfuId) {
+							if (grouped[kungfuId]) classes.push(grouped[kungfuId]);
+						});
+						Object.keys(grouped).forEach(function(kungfuKey) {
+							var safeId = toSafeInt(kungfuKey, 0);
+							if (ROLE_CREATE_ORDER.indexOf(safeId) === -1) classes.push(grouped[kungfuKey]);
+						});
+
+						if (classes.length > 0) return classes;
+						return [{
+							kungfuId: 4,
+							theme: getRoleCreateTheme(4),
+							options: [{ key: '4_0', kungfuId: 4, subJob: 0, label: '默认角色' }],
+							byGender: { 0: { key: '4_0', kungfuId: 4, subJob: 0, label: '默认角色' } }
+						}];
+					}
+
+					function pickRoleCreateOption(roleClass, gender) {
+						if (!roleClass) return null;
+						var safeGender = toSafeInt(gender, 0);
+						return roleClass.byGender[safeGender] || roleClass.options[0] || null;
+					}
+
+					function ensureOverlayStyle() {
+						if (document.getElementById('server-role-flow-style')) return;
+						var style = document.createElement('style');
+						style.id = 'server-role-flow-style';
+						style.textContent = [
+							'#server-role-flow-mask{position:fixed;inset:0;z-index:99999;display:flex;align-items:stretch;justify-content:center;background:rgba(5,10,14,.6);backdrop-filter:blur(6px);font-family:"Microsoft YaHei",sans-serif;}',
+							'#server-role-flow-page{position:relative;width:min(100vw,430px);height:100dvh;overflow:hidden;background:#70979a center/cover no-repeat;box-shadow:0 26px 58px rgba(0,0,0,.32);--server-role-accent:#53c7c8;}',
+							'#server-role-flow-page::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,42,49,.12) 0%,rgba(17,42,49,.18) 34%,rgba(17,42,49,.08) 56%,rgba(8,22,24,.12) 100%);}',
+							'#server-role-flow-page::after{content:"";position:absolute;left:50%;bottom:215px;width:300px;height:112px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(219,248,198,.34),rgba(219,248,198,0) 70%);filter:blur(4px);pointer-events:none;}',
+							'#server-role-flow-topbar{position:absolute;top:18px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;z-index:3;}',
+							'#server-role-flow-server{padding:6px 12px;border-radius:999px;background:rgba(14,41,46,.24);border:1px solid rgba(255,255,255,.16);font-size:13px;letter-spacing:.08em;color:rgba(255,255,255,.88);backdrop-filter:blur(8px);}',
+							'#server-role-flow-back{border:none;background:rgba(14,41,46,.18);color:rgba(255,255,255,.9);padding:6px 12px;border-radius:999px;font-size:13px;cursor:pointer;backdrop-filter:blur(8px);}',
+							'#server-role-flow-title{position:absolute;top:72px;right:10px;width:min(176px,42vw);z-index:2;pointer-events:none;filter:drop-shadow(0 6px 18px rgba(0,0,0,.28));}',
+							'#server-role-flow-figure{position:absolute;left:50%;top:180px;width:250px;height:230px;transform:translateX(-50%);z-index:2;pointer-events:none;}',
+							'#server-role-flow-figure-glow{position:absolute;left:50%;top:14px;width:194px;height:194px;transform:translateX(-50%);background:radial-gradient(circle,rgba(255,248,199,.48),rgba(255,248,199,.14) 42%,rgba(255,248,199,0) 72%);filter:blur(1px);}',
+							'#server-role-flow-figure-ring{position:absolute;left:50%;top:48px;width:142px;transform:translateX(-50%);opacity:.9;}',
+							'#server-role-flow-figure-avatar{position:absolute;left:50%;top:68px;width:138px;transform:translateX(-50%) scale(1.18);transform-origin:center top;filter:drop-shadow(0 12px 14px rgba(0,0,0,.18));}',
+							'#server-role-flow-figure-shadow{position:absolute;left:50%;bottom:12px;width:156px;height:26px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(10,30,35,.42),rgba(10,30,35,0) 70%);}',
+							'#server-role-flow-figure-tag{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);padding:2px 10px;border-radius:999px;background:rgba(16,42,46,.12);border:1px solid rgba(255,255,255,.12);font-size:12px;letter-spacing:.18em;color:rgba(255,255,255,.84);backdrop-filter:blur(8px);white-space:nowrap;}',
+							'#server-role-flow-controls{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:min(360px,88vw);display:flex;flex-direction:column;align-items:center;gap:12px;z-index:3;}',
+							'#server-role-flow-name{width:min(250px,72vw);height:40px;padding:0 16px;border:none;border-radius:999px;background:rgba(240,249,247,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.26);color:#fff;font-size:16px;text-align:center;outline:none;}',
+							'#server-role-flow-name::placeholder{color:rgba(255,255,255,.72);}',
+							'#server-role-flow-classrail{position:relative;width:100%;height:118px;}',
+							'#server-role-flow-arc{position:absolute;left:50%;top:28px;width:min(338px,82vw);transform:translateX(-50%);opacity:.92;}',
+							'.server-role-flow-major{position:absolute;width:56px;height:56px;padding:0;border:none;background:transparent;cursor:pointer;transform:translate(-50%,0);}',
+							'.server-role-flow-major-glow{position:absolute;inset:-8px;background:center/contain no-repeat;opacity:0;transform:scale(.86);transition:opacity .18s ease,transform .18s ease;}',
+							'.server-role-flow-major-core{position:relative;display:flex;align-items:center;justify-content:center;width:52px;height:52px;margin:2px;border-radius:50%;background:var(--major-fill,#53c7c8);color:var(--major-text,#fff);font-size:27px;font-weight:700;font-family:"STKaiti","KaiTi","Microsoft YaHei",sans-serif;text-shadow:0 2px 6px rgba(0,0,0,.18);box-shadow:0 6px 16px rgba(0,0,0,.14),inset 0 2px 4px rgba(255,255,255,.2);transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;}',
+							'.server-role-flow-major.is-active .server-role-flow-major-glow{opacity:1;transform:scale(1);}',
+							'.server-role-flow-major.is-active .server-role-flow-major-core{transform:translateY(-4px) scale(1.05);box-shadow:0 10px 20px rgba(0,0,0,.18),0 0 0 3px rgba(255,243,194,.36),inset 0 2px 4px rgba(255,255,255,.28);}',
+							'.server-role-flow-major.is-disabled{opacity:.42;cursor:default;}',
+							'#server-role-flow-gender{display:flex;gap:14px;align-items:center;justify-content:center;}',
+							'.server-role-flow-gender-btn{position:relative;width:54px;height:54px;padding:0;border:none;background:transparent center/contain no-repeat;cursor:pointer;transition:transform .18s ease,filter .18s ease;}',
+							'.server-role-flow-gender-btn img{width:22px;height:22px;object-fit:contain;}',
+							'.server-role-flow-gender-btn.is-active{transform:translateY(-2px);filter:drop-shadow(0 8px 12px rgba(0,0,0,.18));}',
+							'.server-role-flow-gender-btn.is-disabled{opacity:.42;cursor:default;filter:none;}',
+							'#server-role-flow-start{width:min(290px,78vw);height:72px;border:none;background:transparent center/contain no-repeat;cursor:pointer;transition:transform .18s ease,filter .18s ease;}',
+							'#server-role-flow-start:hover{transform:translateY(-2px);filter:drop-shadow(0 10px 18px rgba(130,100,24,.18));}',
+							'#server-role-flow-start:disabled{opacity:.7;cursor:default;transform:none;filter:none;}',
+							'#server-role-flow-hint{font-size:12px;line-height:1.4;color:rgba(255,255,255,.74);text-align:center;letter-spacing:.04em;}',
+							'@media (max-width:420px){#server-role-flow-page{width:100vw;}#server-role-flow-title{top:84px;right:8px;width:min(162px,44vw);}#server-role-flow-figure{top:184px;width:228px;height:212px;}#server-role-flow-figure-avatar{transform:translateX(-50%) scale(1.12);}#server-role-flow-controls{bottom:20px;gap:10px;}#server-role-flow-classrail{height:112px;}}'
+						].join('');
+						document.head.appendChild(style);
+					}
+
+					function showLoading(visible) {
+						try {
+							if (!main.m_UIGroup) return;
+							if (visible && typeof main.m_UIGroup.ShowLoadingImg === 'function') {
+								main.m_UIGroup.ShowLoadingImg();
+							}
+							if (!visible && typeof main.m_UIGroup.HideLoadingImg === 'function') {
+								main.m_UIGroup.HideLoadingImg();
+							}
+						} catch (_e) {}
+					}
+
+					function showMessage(text) {
+						var message = String(text || '操作失败');
+						try {
+							if (typeof main.showMsgBox === 'function') {
+								return main.showMsgBox(message, false);
+							}
+						} catch (_e) {}
+						if (window.alert) window.alert(message);
+						return null;
+					}
+
+					function removeOverlay() {
+						if (state.overlayEl && state.overlayEl.parentNode) {
+							state.overlayEl.parentNode.removeChild(state.overlayEl);
+						}
+						state.overlayEl = null;
+						state.isCreating = false;
+					}
+
+					function buildDefaultRoleName() {
+						var accountId = '';
+						if (state.lastAuthResponse && state.lastAuthResponse.uid) {
+							accountId = String(state.lastAuthResponse.uid);
+						} else if (state.authArgs && state.authArgs.uid) {
+							accountId = String(state.authArgs.uid);
+						}
+						accountId = accountId.replace(/[^0-9a-zA-Z_]/g, '');
+						if (accountId.length > 8) {
+							accountId = accountId.slice(accountId.length - 8);
+						}
+						return accountId ? ('灵画师_' + accountId) : '';
+					}
+
+					function requestRoleAuth(serverInfo) {
+						if (!state.authArgs || !http.__serverRoleFlowRawSdkAuth) {
+							return Promise.resolve(null);
+						}
+						rememberSelectedServer(serverInfo);
+						return Promise.resolve(
+							http.__serverRoleFlowRawSdkAuth.call(
+								http,
+								state.authArgs.firstName,
+								state.authArgs.token,
+								state.authArgs.uid,
+								state.authArgs.extend,
+								state.authArgs.keepGuest
+							)
+						).then(function(resp) {
+							state.lastAuthResponse = normalizeAuthResponse(resp);
+							return state.lastAuthResponse;
+						});
+					}
+
+					function openRoleCreateOverlay(authResp, serverInfo, onCreated) {
+						removeOverlay();
+						ensureOverlayStyle();
+						var safeResp = normalizeAuthResponse(authResp) || {};
+						var roleClasses = buildRoleCreateClasses(
+							safeResp.roleCreateOptions && safeResp.roleCreateOptions.length
+								? safeResp.roleCreateOptions
+								: [{ key: '4_0', kungfuId: 4, subJob: 0, label: '默认角色' }]
+						);
+						var selectedClass = roleClasses.filter(function(roleClass) {
+							return toSafeInt(roleClass && roleClass.kungfuId, 0) === 4;
+						})[0] || roleClasses[0];
+						var selectedOption = pickRoleCreateOption(selectedClass, 0) || pickRoleCreateOption(selectedClass, 1) || null;
+						var selectedGender = selectedOption ? toSafeInt(selectedOption.subJob, 0) : 0;
+						var classPositions = [
+							{ left: '5%', top: '46px' },
+							{ left: '22%', top: '22px' },
+							{ left: '39%', top: '0px' },
+							{ left: '57%', top: '0px' },
+							{ left: '74%', top: '22px' },
+							{ left: '91%', top: '46px' }
+						];
+
+						var mask = document.createElement('div');
+						mask.id = 'server-role-flow-mask';
+
+						var page = document.createElement('div');
+						page.id = 'server-role-flow-page';
+						mask.appendChild(page);
+
+						var topbar = document.createElement('div');
+						topbar.id = 'server-role-flow-topbar';
+						page.appendChild(topbar);
+
+						var serverName = document.createElement('div');
+						serverName.id = 'server-role-flow-server';
+						serverName.textContent = '当前大区 · ' + String(serverInfo && serverInfo.serverName || '未知大区');
+						topbar.appendChild(serverName);
+
+						var backBtn = document.createElement('button');
+						backBtn.type = 'button';
+						backBtn.id = 'server-role-flow-back';
+						backBtn.textContent = '返回选服';
+						backBtn.addEventListener('click', function() {
+							removeOverlay();
+							showLoading(false);
+						});
+						topbar.appendChild(backBtn);
+
+						var titleImg = document.createElement('img');
+						titleImg.id = 'server-role-flow-title';
+						titleImg.alt = '';
+						page.appendChild(titleImg);
+
+						var figure = document.createElement('div');
+						figure.id = 'server-role-flow-figure';
+						page.appendChild(figure);
+
+						var figureGlow = document.createElement('div');
+						figureGlow.id = 'server-role-flow-figure-glow';
+						figure.appendChild(figureGlow);
+
+						var figureRing = document.createElement('img');
+						figureRing.id = 'server-role-flow-figure-ring';
+						figureRing.alt = '';
+						figureRing.src = getRoleCreateAssetUrl('create_head_chose_bf21b031.png');
+						figure.appendChild(figureRing);
+
+						var figureAvatar = document.createElement('img');
+						figureAvatar.id = 'server-role-flow-figure-avatar';
+						figureAvatar.alt = '';
+						figure.appendChild(figureAvatar);
+
+						var figureShadow = document.createElement('div');
+						figureShadow.id = 'server-role-flow-figure-shadow';
+						figure.appendChild(figureShadow);
+
+						var figureTag = document.createElement('div');
+						figureTag.id = 'server-role-flow-figure-tag';
+						figure.appendChild(figureTag);
+
+						var controls = document.createElement('div');
+						controls.id = 'server-role-flow-controls';
+						page.appendChild(controls);
+
+						var nameInput = document.createElement('input');
+						nameInput.id = 'server-role-flow-name';
+						nameInput.maxLength = 24;
+						nameInput.autocomplete = 'off';
+						nameInput.placeholder = '输入角色名';
+						nameInput.value = buildDefaultRoleName();
+						controls.appendChild(nameInput);
+
+						var classRail = document.createElement('div');
+						classRail.id = 'server-role-flow-classrail';
+						controls.appendChild(classRail);
+
+						var arcImg = document.createElement('img');
+						arcImg.id = 'server-role-flow-arc';
+						arcImg.alt = '';
+						arcImg.src = getRoleCreateAssetUrl('creat_bm_arc_d67a90d2.png');
+						classRail.appendChild(arcImg);
+
+						var majorButtons = [];
+
+						function syncSelectedOption() {
+							selectedOption = pickRoleCreateOption(selectedClass, selectedGender);
+							if (selectedOption) selectedGender = toSafeInt(selectedOption.subJob, selectedGender);
+						}
+
+						roleClasses.forEach(function(roleClass, index) {
+							var position = classPositions[index] || classPositions[classPositions.length - 1];
+							var theme = roleClass.theme || getRoleCreateTheme(roleClass.kungfuId);
+							var btn = document.createElement('button');
+							btn.type = 'button';
+							btn.className = 'server-role-flow-major';
+							btn.style.left = position.left;
+							btn.style.top = position.top;
+							btn.style.setProperty('--major-fill', theme.buttonFill || theme.accent);
+							btn.style.setProperty('--major-text', theme.buttonText || '#fff');
+
+							var glow = document.createElement('div');
+							glow.className = 'server-role-flow-major-glow';
+							glow.style.backgroundImage = 'url(' + getRoleCreateAssetUrl('creat_bm_majorSelect_45651af3.png') + ')';
+							btn.appendChild(glow);
+
+							var core = document.createElement('div');
+							core.className = 'server-role-flow-major-core';
+							core.textContent = theme.shortName || '法';
+							btn.appendChild(core);
+
+							btn.addEventListener('click', function() {
+								selectedClass = roleClass;
+								syncSelectedOption();
+								renderRoleCreatePage();
+							});
+							classRail.appendChild(btn);
+							majorButtons.push({ roleClass: roleClass, element: btn });
+						});
+
+						var genderWrap = document.createElement('div');
+						genderWrap.id = 'server-role-flow-gender';
+						controls.appendChild(genderWrap);
+
+						var genderButtons = {};
+						[0, 1].forEach(function(genderKey) {
+							var genderMeta = ROLE_CREATE_GENDER_META[genderKey];
+							var btn = document.createElement('button');
+							btn.type = 'button';
+							btn.className = 'server-role-flow-gender-btn';
+							btn.setAttribute('data-gender', String(genderKey));
+
+							var icon = document.createElement('img');
+							icon.alt = genderMeta && genderMeta.label || '';
+							btn.appendChild(icon);
+
+							btn.addEventListener('click', function() {
+								var nextOption = pickRoleCreateOption(selectedClass, genderKey);
+								if (!nextOption) return;
+								selectedGender = genderKey;
+								selectedOption = nextOption;
+								renderRoleCreatePage();
+							});
+
+							genderWrap.appendChild(btn);
+							genderButtons[genderKey] = { button: btn, icon: icon };
+						});
+
+						var confirmBtn = document.createElement('button');
+						confirmBtn.type = 'button';
+						confirmBtn.id = 'server-role-flow-start';
+						confirmBtn.style.backgroundImage = 'url(' + getRoleCreateAssetUrl('lang_cn/create_btn_start_e7fc462a.png') + ')';
+						controls.appendChild(confirmBtn);
+
+						var hint = document.createElement('div');
+						hint.id = 'server-role-flow-hint';
+						hint.textContent = '当前大区暂无角色，选择灵修后即可创建并进入游戏';
+						controls.appendChild(hint);
+
+						function renderRoleCreatePage() {
+							syncSelectedOption();
+							var theme = selectedClass && selectedClass.theme
+								? selectedClass.theme
+								: getRoleCreateTheme(selectedOption && selectedOption.kungfuId);
+							page.style.backgroundImage = 'linear-gradient(180deg,rgba(9,24,27,.04),rgba(9,24,27,.04)),url(' + theme.bgUrl + ')';
+							page.style.setProperty('--server-role-accent', theme.accent || '#53c7c8');
+							titleImg.src = theme.titleUrl;
+							figureAvatar.src = theme.headUrl;
+							figureTag.textContent = theme.label + ' · ' + ((selectedOption && toSafeInt(selectedOption.subJob, 0) === 1) ? '女' : '男');
+
+							majorButtons.forEach(function(item) {
+								var isActive = item.roleClass === selectedClass;
+								var isDisabled = !item.roleClass || !item.roleClass.options || item.roleClass.options.length <= 0;
+								if (isActive) item.element.classList.add('is-active');
+								else item.element.classList.remove('is-active');
+								if (isDisabled) item.element.classList.add('is-disabled');
+								else item.element.classList.remove('is-disabled');
+							});
+
+							[0, 1].forEach(function(genderKey) {
+								var genderMeta = ROLE_CREATE_GENDER_META[genderKey];
+								var genderButton = genderButtons[genderKey];
+								if (!genderButton) return;
+								var availableOption = pickRoleCreateOption(selectedClass, genderKey);
+								var isActive = selectedOption && toSafeInt(selectedOption.subJob, 0) === genderKey;
+								genderButton.button.style.backgroundImage = 'url(' + getRoleCreateAssetUrl(isActive ? genderMeta.bgOn : genderMeta.bgOff) + ')';
+								genderButton.icon.src = getRoleCreateAssetUrl(isActive ? genderMeta.iconOn : genderMeta.iconOff);
+								if (isActive) genderButton.button.classList.add('is-active');
+								else genderButton.button.classList.remove('is-active');
+								if (availableOption) genderButton.button.classList.remove('is-disabled');
+								else genderButton.button.classList.add('is-disabled');
+							});
+						}
+						renderRoleCreatePage();
+						confirmBtn.addEventListener('click', function() {
+							if (state.isCreating) return;
+							var roleName = String(nameInput.value || '').replace(/^\s+|\s+$/g, '') || buildDefaultRoleName();
+							if (!roleName) {
+								showMessage('请输入角色名');
+								return;
+							}
+							if (!selectedOption) {
+								showMessage('请选择可用角色');
+								return;
+							}
+							state.isCreating = true;
+							showLoading(true);
+							confirmBtn.disabled = true;
+							backBtn.disabled = true;
+
+							var payload = {
+								strAccount: safeResp.uid || (state.authArgs && state.authArgs.uid) || '',
+								strPassword: (state.authArgs && state.authArgs.token) || '',
+								serverId: toSafeInt(serverInfo && serverInfo.serverId, 1001),
+								roleName: roleName,
+								firstName: (state.authArgs && state.authArgs.firstName) || '',
+								kungfuId: toSafeInt(selectedOption && selectedOption.kungfuId, 4),
+								subJob: toSafeInt(selectedOption && selectedOption.subJob, 0)
+							};
+
+							Promise.resolve(http.requestJson(2818, payload)).then(function(result) {
+								if (!result || toSafeInt(result.ret, -1) !== 0) {
+									throw new Error(result && (result.errInfo || result.strMsgTxt) || '创建角色失败');
+								}
+								return requestRoleAuth(serverInfo);
+							}).then(function(reAuthResp) {
+								if (!reAuthResp || toSafeInt(reAuthResp.ret, -1) !== 0) {
+									throw new Error(reAuthResp && (reAuthResp.errInfo || reAuthResp.strMsgTxt) || '角色鉴权失败');
+								}
+								if (toSafeInt(reAuthResp.needCreateRole, 0) === 1 || !String(reAuthResp.activeRoleId || '')) {
+									throw new Error('角色创建未生效，请稍后重试');
+								}
+								removeOverlay();
+								showLoading(false);
+								if (typeof onCreated === 'function') onCreated();
+							}).catch(function(err) {
+								state.isCreating = false;
+								confirmBtn.disabled = false;
+								backBtn.disabled = false;
+								showLoading(false);
+								showMessage(err && err.message ? err.message : '创建角色失败');
+							});
+						});
+
+						document.body.appendChild(mask);
+						state.overlayEl = mask;
+					}
+
+					var originRequestJson = http.requestJson;
+					http.requestJson = function(cmd, params, callback) {
+						var forcedServerId = toSafeInt(state.forcedServerId, 0);
+						var safeParams = params || {};
+						if (forcedServerId > 0 && typeof Proxy === 'function') {
+							safeParams = new Proxy(safeParams, {
+								get: function(target, key) {
+									return target[key];
+								},
+								set: function(target, key, value) {
+									target[key] = key === 'serverId' ? forcedServerId : value;
+									return true;
+								}
+							});
+							safeParams.serverId = forcedServerId;
+						} else if (forcedServerId > 0) {
+							safeParams = {};
+							for (var rawKey in (params || {})) {
+								if (Object.prototype.hasOwnProperty.call(params, rawKey)) {
+									safeParams[rawKey] = params[rawKey];
+								}
+							}
+							safeParams.serverId = forcedServerId;
+						}
+						return originRequestJson.call(this, cmd, safeParams, callback);
+					};
+
+					var originSdkAuth = http.SDKAuth;
+					http.__serverRoleFlowRawSdkAuth = originSdkAuth;
+					http.SDKAuth = function(firstName, token, uid, extend, keepGuest) {
+						state.authArgs = {
+							firstName: firstName,
+							token: token,
+							uid: uid,
+							extend: extend || {},
+							keepGuest: keepGuest
+						};
+						return Promise.resolve(originSdkAuth.call(this, firstName, token, uid, extend, keepGuest)).then(function(resp) {
+							state.lastAuthResponse = normalizeAuthResponse(resp);
+							return state.lastAuthResponse;
+						});
+					};
+
+					var originStartLoadGame = main.StartLoadGame;
+					main.StartLoadGame = function(serverInfo) {
+						var targetServer = serverInfo || state.pendingServer || getLoginInfo().ServerInfo;
+						if (!targetServer || !state.authArgs) {
+							rememberSelectedServer(targetServer);
+							return originStartLoadGame.call(this, targetServer);
+						}
+						if (state.bypassOnce) {
+							state.bypassOnce = false;
+							rememberSelectedServer(targetServer);
+							return originStartLoadGame.call(this, targetServer);
+						}
+						if (state.overlayEl || state.isCreating) return null;
+
+						showLoading(true);
+						return requestRoleAuth(targetServer).then(function(resp) {
+							showLoading(false);
+							if (!resp || toSafeInt(resp.ret, -1) !== 0) {
+								throw new Error(resp && (resp.errInfo || resp.strMsgTxt) || '进入游戏失败');
+							}
+							if (toSafeInt(resp.needCreateRole, 0) === 1 || !String(resp.activeRoleId || '')) {
+								openRoleCreateOverlay(resp, targetServer, function() {
+									state.bypassOnce = true;
+									main.StartLoadGame(targetServer);
+								});
+								return null;
+							}
+							state.bypassOnce = true;
+							main.StartLoadGame(targetServer);
+							return null;
+						}).catch(function(err) {
+							showLoading(false);
+							showMessage(err && err.message ? err.message : '进入游戏失败');
+							return null;
+						});
+					};
+
+					main.__serverRoleFlowPatchV2 = true;
+					return true;
+				}
+
+				if (!patchServerRoleFlow()) {
+					var serverRoleFlowRetry = 0;
+					var serverRoleFlowTimer = setInterval(function() {
+						serverRoleFlowRetry++;
+						if (patchServerRoleFlow() || serverRoleFlowRetry >= 60) {
+							clearInterval(serverRoleFlowTimer);
+						}
+					}, 250);
+				}
+				if (window._diag) window._diag('server role flow patch ready');
+			} catch (e) {
+				if (window._diag) window._diag('server role flow patch err: ' + e.message);
+			}
+			try {
+				function patchMainlineBattleFinish() {
+					var gm = window.W || window.GlobalManager;
+					var raidModel = gm && gm.RaidModel;
+					if (!raidModel || typeof raidModel.doBattleAction !== 'function') return false;
+					if (raidModel.__mainlineBattleFinishPatchV2) return true;
+
+					function toSafeInt(value, fallback) {
+						var num = Number(value);
+						return isFinite(num) ? Math.floor(num) : fallback;
+					}
+
+					function patchMainlineBattleMinDuration() {
+						var battleProto = window.BattleRaid && window.BattleRaid.prototype;
+						if (!battleProto || typeof battleProto.ExeFinishAction !== 'function') return false;
+						if (battleProto.__mainlineBattleMinDurationPatchV1) return true;
+
+						var MAINLINE_BATTLE_MIN_MS = 1800;
+						var originStartTurn = battleProto.StartTurn;
+						var originExeFinishAction = battleProto.ExeFinishAction;
+						var originOnExit = battleProto.OnExit;
+
+						if (typeof originStartTurn === 'function') {
+							battleProto.StartTurn = function() {
+								if (toSafeInt(this && this.raidType, 0) === 1) {
+									this.__mainlineBattleStartedAt = Date.now();
+									this.__mainlineBattleFinishQueued = false;
+								}
+								return originStartTurn.apply(this, arguments);
+							};
+						}
+
+						battleProto.ExeFinishAction = function() {
+							try {
+								var raidType = toSafeInt(this && this.raidType, 0);
+								var turnData = Array.isArray(this && this.m_TurnData) ? this.m_TurnData : [];
+								var startedAt = toSafeInt(this && this.__mainlineBattleStartedAt, 0);
+								var waitMs = raidType === 1 && turnData.length > 1 && startedAt > 0
+									? MAINLINE_BATTLE_MIN_MS - (Date.now() - startedAt)
+									: 0;
+
+								if (waitMs > 0) {
+									if (!this.__mainlineBattleFinishQueued) {
+										var self = this;
+										this.__mainlineBattleFinishQueued = true;
+										this.__mainlineBattleFinishTimer = setTimeout(function() {
+											if (!self) return;
+											self.__mainlineBattleFinishQueued = false;
+											self.__mainlineBattleFinishTimer = null;
+											try {
+												originExeFinishAction.call(self);
+											} catch (_e) {}
+										}, waitMs);
+									}
+									return true;
+								}
+							} catch (_e) {}
+
+							return originExeFinishAction.apply(this, arguments);
+						};
+
+						if (typeof originOnExit === 'function') {
+							battleProto.OnExit = function() {
+								if (this.__mainlineBattleFinishTimer) {
+									clearTimeout(this.__mainlineBattleFinishTimer);
+									this.__mainlineBattleFinishTimer = null;
+								}
+								this.__mainlineBattleFinishQueued = false;
+								this.__mainlineBattleStartedAt = 0;
+								return originOnExit.apply(this, arguments);
+							};
+						}
+
+						battleProto.__mainlineBattleMinDurationPatchV1 = true;
+						return true;
+					}
+
+					var originDoBattleAction = raidModel.doBattleAction;
+					raidModel.doBattleAction = function(fightResult, callback) {
+						var result = originDoBattleAction.call(this, fightResult, callback);
+						try {
+							if (toSafeInt(fightResult && fightResult.type, 0) !== 1) return result;
+
+							if (Array.isArray(fightResult && fightResult.events) && fightResult.events.length > 0) {
+								patchMainlineBattleMinDuration();
+								return result;
+							}
+
+							var self = this;
+							var attempts = 0;
+
+							function tryFinishEmptyBattle() {
+								attempts++;
+								try {
+									var battleRaid = self && typeof self.GetBattleRaid === 'function'
+										? self.GetBattleRaid()
+										: null;
+									if (!battleRaid || typeof battleRaid.FinishBattle !== 'function') return;
+
+									var turnData = Array.isArray(battleRaid.m_TurnData) ? battleRaid.m_TurnData : [];
+									var turnId = typeof battleRaid.GetTurnId === 'function'
+										? toSafeInt(battleRaid.GetTurnId(), -1)
+										: -1;
+
+									if (turnData.length === 0 && turnId === 0) {
+										battleRaid.FinishBattle();
+										return;
+									}
+
+									if (turnData.length === 0 && attempts < 8) {
+										setTimeout(tryFinishEmptyBattle, 500);
+									}
+								} catch (_e) {}
+							}
+
+							setTimeout(tryFinishEmptyBattle, 2500);
+						} catch (_e) {}
+						return result;
+					};
+
+					raidModel.__mainlineBattleFinishPatchV2 = true;
+					return true;
+				}
+
+				if (!patchMainlineBattleFinish()) {
+					var battlePatchRetry = 0;
+					var battlePatchTimer = setInterval(function() {
+						battlePatchRetry++;
+						if (patchMainlineBattleFinish() || battlePatchRetry >= 60) {
+							clearInterval(battlePatchTimer);
+						}
+					}, 250);
+				}
+				if (window._diag) window._diag('mainline battle patch ready');
+			} catch (e) {
+				if (window._diag) window._diag('mainline battle patch err: ' + e.message);
+			}
+			if (!runtimeFlags.runtimeGuardsEnabled) {
+				if (window._diag) window._diag('runtime guards disabled');
+				callback();
+				return;
+			}
+			// main.min loaded; keep only minimal, non-invasive guards.
+			try {
+				function normalizeRoleSex(raw) {
+					if (typeof raw === 'number' && isFinite(raw)) return raw;
+					if (raw && typeof raw === 'object') {
+						if (typeof raw.gender === 'number' && isFinite(raw.gender)) return raw.gender;
+						if (typeof raw.subJob === 'number' && isFinite(raw.subJob)) return raw.subJob;
+						if (typeof raw.id === 'number' && isFinite(raw.id)) return raw.id;
+					}
+					return 0;
+				}
+
+				function patchRoleSexGetter() {
+					var gm = window.W || window.GlobalManager;
+					if (!gm || !gm.RoleModel || typeof gm.RoleModel.getSelfSex !== 'function') return false;
+					if (gm.RoleModel.__roleSexNormalizedPatchV1) return true;
+					var originGetSelfSex = gm.RoleModel.getSelfSex;
+					gm.RoleModel.getSelfSex = function() {
+						var raw;
+						try {
+							raw = originGetSelfSex.call(this);
+						} catch (_e) {
+							raw = null;
+						}
+						return normalizeRoleSex(raw);
+					};
+					gm.RoleModel.__roleSexNormalizedPatchV1 = true;
+					return true;
+				}
+
+				function normalizeShowList(rawShow) {
+					if (Array.isArray(rawShow)) return rawShow;
+					if (!rawShow || typeof rawShow !== 'object') return [];
+					if (Array.isArray(rawShow[0])) return rawShow[0];
+					if (Array.isArray(rawShow['0'])) return rawShow['0'];
+					var keys = Object.keys(rawShow);
+					for (var i = 0; i < keys.length; i++) {
+						var key = keys[i];
+						if (Array.isArray(rawShow[key])) return rawShow[key];
+					}
+					return [];
+				}
+
+				function patchCreateShowByCfg() {
+					var gm = window.W || window.GlobalManager;
+					if (!gm || !gm.FashionModel || typeof gm.FashionModel.CreateShowByCfg !== 'function') return false;
+					if (gm.FashionModel.__createShowSafePatchV1) return true;
+					var originCreateShowByCfg = gm.FashionModel.CreateShowByCfg;
+					gm.FashionModel.CreateShowByCfg = function(id, shows, avatar, frame, ext) {
+						var safeShows = normalizeShowList(shows);
+						return originCreateShowByCfg.call(this, id, safeShows, avatar, frame, ext);
+					};
+					gm.FashionModel.__createShowSafePatchV1 = true;
+					return true;
+				}
+
+				function patchRebornRoleShowSpineData() {
+					var gm = window.W || window.GlobalManager;
+					if (!gm || !gm.RebornSimModel || typeof gm.RebornSimModel.getRoleShowSpineData !== 'function') return false;
+					if (gm.RebornSimModel.__rebornShowSafePatchV1) return true;
+					var originGetRoleShowSpineData = gm.RebornSimModel.getRoleShowSpineData;
+					gm.RebornSimModel.getRoleShowSpineData = function(chapter, sex) {
+						var safeSex = normalizeRoleSex(sex);
+						try {
+							var cfgMap = gm.Config && gm.Config.RebornSimChapterConfig;
+							var chapterCfg = cfgMap ? cfgMap[chapter] : null;
+							if (chapterCfg && chapterCfg.show && gm.FashionModel && typeof gm.FashionModel.CreateShowByCfg === 'function') {
+								var showList = normalizeShowList(chapterCfg.show[safeSex]);
+								var showData = gm.FashionModel.CreateShowByCfg(0, showList, 0, 0, {});
+								if (showData && typeof showData === 'object') {
+									showData.kungfuId = gm.RoleModel && gm.RoleModel.kungfuId ? gm.RoleModel.kungfuId : 0;
+									showData.subJob = safeSex;
+									if (typeof gm.FashionModel.CreteShowDataByInfo === 'function') {
+										return gm.FashionModel.CreteShowDataByInfo(showData);
+									}
+									return showData;
+								}
+							}
+						} catch (_err) {
+							if (window._diag) window._diag('reborn show guard: ' + (_err && _err.message ? _err.message : _err));
+						}
+						try {
+							return originGetRoleShowSpineData.call(this, chapter, safeSex);
+						} catch (_e) {
+							if (window._diag) window._diag('reborn show origin fail');
+							return null;
+						}
+					};
+					gm.RebornSimModel.__rebornShowSafePatchV1 = true;
+					return true;
+				}
+
+				function applyRuntimeGuards() {
+					var a = patchRoleSexGetter();
+					var b = patchCreateShowByCfg();
+					var c = patchRebornRoleShowSpineData();
+					return a || b || c;
+				}
+
+				if (!applyRuntimeGuards()) {
+					var roleSexPatchRetry = 0;
+					var roleSexPatchTimer = setInterval(function() {
+						roleSexPatchRetry++;
+						if (applyRuntimeGuards() || roleSexPatchRetry >= 40) {
+							clearInterval(roleSexPatchTimer);
+						}
+					}, 250);
+				}
+
+				if (window._diag) window._diag('loadScript cb: FashionModel=' + (typeof window.FashionModel) + ' AttrModel=' + (typeof window.AttrModel));
+				if (window._diag) window._diag('minimal guards patched OK');
+			} catch(e) { if (window._diag) window._diag('patch err: ' + e.message); }
+			callback();
+		});
+	}
+   
+	function __RemoveLoading() {
+		var myloading = document.getElementById("loader");
+		if (!myloading) {
+			return
+		}
+		myloading.parentNode.removeChild(myloading)
+	}
+
+	ready()
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,3153 @@
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>LHS 管理后台</title>
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0
+			}
+
+			body {
+				font: 14px "Microsoft YaHei", sans-serif;
+				background: #f4f7fb;
+				color: #223
+			}
+
+			button,
+			input {
+				font: inherit
+			}
+
+			.hd {
+				display: flex;
+				gap: 12px;
+				align-items: center;
+				padding: 16px 24px;
+				background: #111827;
+				color: #fff
+			}
+
+			.hd h1 {
+				font-size: 18px
+			}
+
+			.sp {
+				flex: 1
+			}
+
+			.badge {
+				background: #dc2626;
+				border-radius: 999px;
+				padding: 2px 10px;
+				font-size: 12px
+			}
+
+			.tabs {
+				display: flex;
+				background: #fff;
+				border-bottom: 1px solid #dbe3ef
+			}
+
+			.tabs button {
+				border: none;
+				background: none;
+				padding: 14px 22px;
+				cursor: pointer;
+				font-weight: 600;
+				color: #475467;
+				border-bottom: 2px solid transparent
+			}
+
+			.tabs button.on {
+				color: #1459c6;
+				border-bottom-color: #1459c6
+			}
+
+			.module-bar {
+				display: none;
+				align-items: center;
+				gap: 12px;
+				padding: 12px 24px;
+				background: #eef4ff;
+				border-bottom: 1px solid #d7e3fb
+			}
+
+			.module-bar strong {
+				font-size: 15px;
+				color: #17324d
+			}
+
+			.module-bar span {
+				color: #52607a;
+				font-size: 13px
+			}
+
+			.module-links {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+				margin-left: auto
+			}
+
+			.module-links a {
+				text-decoration: none;
+				padding: 8px 12px;
+				border-radius: 999px;
+				background: #fff;
+				border: 1px solid #c7d7f7;
+				color: #17324d
+			}
+
+			body.standalone-module .tabs {
+				position: sticky;
+				top: 0;
+				z-index: 3
+			}
+
+			.panel {
+				display: none
+			}
+
+			.panel.on {
+				display: block
+			}
+
+			.bar {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				align-items: center;
+				padding: 14px 24px;
+				background: #fff;
+				border-bottom: 1px solid #e6edf7
+			}
+
+			.bar input {
+				width: 340px;
+				max-width: 100%;
+				padding: 9px 12px;
+				border: 1px solid #cbd5e1;
+				border-radius: 8px
+			}
+
+			.btn {
+				border: none;
+				border-radius: 8px;
+				padding: 9px 14px;
+				cursor: pointer
+			}
+
+			.p {
+				background: #1459c6;
+				color: #fff
+			}
+
+			.g {
+				background: #fff;
+				border: 1px solid #cbd5e1;
+				color: #334155
+			}
+
+			.w {
+				background: #ea8b1f;
+				color: #fff
+			}
+
+			.r {
+				background: #d92d20;
+				color: #fff
+			}
+
+			.s {
+				background: #16a34a;
+				color: #fff
+			}
+
+			.ct {
+				padding: 20px 24px
+			}
+
+			.stats {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+				gap: 12px;
+				margin-bottom: 16px
+			}
+
+			.stat,
+			.card {
+				background: #fff;
+				border: 1px solid #e6edf7;
+				border-radius: 14px;
+				box-shadow: 0 8px 24px rgba(15, 23, 42, .04)
+			}
+
+			.stat {
+				padding: 15px 18px
+			}
+
+			.stat b {
+				display: block;
+				font-size: 24px;
+				color: #1459c6
+			}
+
+			.stat span {
+				font-size: 12px;
+				color: #667085
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse
+			}
+
+			th,
+			td {
+				padding: 14px 16px;
+				border-bottom: 1px solid #eef3fa;
+				text-align: left;
+				vertical-align: top
+			}
+
+			th {
+				background: #f8fbff;
+				font-size: 12px;
+				color: #667085
+			}
+
+			.sub {
+				display: block;
+				margin-top: 4px;
+				font-size: 12px;
+				color: #667085;
+				line-height: 1.45
+			}
+
+			.acts {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap
+			}
+
+			.batchbar {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+				flex-wrap: wrap;
+				margin-bottom: 10px
+			}
+
+			.pg {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 10px;
+				padding: 16px 0
+			}
+
+			.empty,
+			.loading {
+				padding: 42px 16px;
+				text-align: center;
+				color: #94a3b8
+			}
+
+			.tag {
+				display: inline-block;
+				border-radius: 999px;
+				padding: 2px 8px;
+				font-size: 12px;
+				font-weight: 600
+			}
+
+			.tb {
+				background: #e8f1ff;
+				color: #1459c6
+			}
+
+			.tg {
+				background: #eafaf0;
+				color: #157f3b
+			}
+
+			.to {
+				background: #fff4e8;
+				color: #b75a00
+			}
+
+			.tr {
+				background: #feefee;
+				color: #b42318
+			}
+
+			.overlay {
+				display: none;
+				position: fixed;
+				inset: 0;
+				background: rgba(15, 23, 42, .5);
+				z-index: 50;
+				align-items: center;
+				justify-content: center;
+				padding: 20px
+			}
+
+			.overlay.on {
+				display: flex
+			}
+
+			.modal {
+				width: min(1366PX, 96vw);
+				max-height:87vh;
+				overflow: auto;
+				background: #fff;
+				border-radius: 18px;
+				padding: 24px;
+				box-shadow: 0 24px 80px rgba(15, 23, 42, .28)
+			}
+
+			.sm {
+				width: min(560px, 96vw)
+			}
+
+			.xs {
+				width: min(420px, 96vw)
+			}
+
+			.modal h2 {
+				font-size: 18px;
+				margin-bottom: 16px;
+				padding-bottom: 10px;
+				border-bottom: 1px solid #e6edf7
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 12px
+			}
+
+			.full {
+				grid-column: 1/-1
+			}
+
+			.sec {
+				grid-column: 1/-1;
+				font-size: 12px;
+				font-weight: 700;
+				color: #1459c6;
+				margin-top: 6px;
+				padding-top: 6px;
+				border-top: 1px solid #e6edf7
+			}
+
+			.fg {
+				display: flex;
+				flex-direction: column;
+				gap: 6px
+			}
+
+			.fg label {
+				font-size: 12px;
+				color: #667085;
+				font-weight: 600
+			}
+
+			.fg input {
+				padding: 10px 12px;
+				border: 1px solid #cbd5e1;
+				border-radius: 10px
+			}
+
+			.fg textarea,
+			.fg select {
+				padding: 10px 12px;
+				border: 1px solid #cbd5e1;
+				border-radius: 10px;
+				font: inherit
+			}
+
+			.fg textarea {
+				min-height: 96px;
+				resize: vertical;
+				font-family: Consolas, monospace
+			}
+
+			.fg input[disabled] {
+				background: #f8fafc;
+				color: #667085
+			}
+
+			.foot {
+				display: flex;
+				justify-content: flex-end;
+				gap: 10px;
+				margin-top: 18px;
+				padding-top: 12px;
+				border-top: 1px solid #e6edf7
+			}
+
+			.pages {
+				display: flex;
+				flex-direction: column;
+				gap: 16px
+			}
+
+			.ph {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 16px 18px;
+				background: #f8fbff;
+				border-bottom: 1px solid #e6edf7
+			}
+
+			.sg {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+				gap: 14px;
+				padding: 18px
+			}
+
+			.sc {
+				border: 1px solid #e6edf7;
+				border-radius: 14px;
+				padding: 16px
+			}
+
+			.sc h3 {
+				display: flex;
+				justify-content: space-between;
+				gap: 10px;
+				margin-bottom: 10px;
+				font-size: 15px
+			}
+
+			.meta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				margin-bottom: 10px
+			}
+
+			.kv {
+				display: flex;
+				justify-content: space-between;
+				gap: 10px;
+				font-size: 13px;
+				color: #475467;
+				padding: 4px 0
+			}
+
+			.msg {
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				padding: 12px 18px;
+				border-radius: 12px;
+				z-index: 99;
+				box-shadow: 0 14px 40px rgba(15, 23, 42, .18)
+			}
+
+			.ok {
+				background: #ecfdf3;
+				color: #157f3b;
+				border: 1px solid #abefc6
+			}
+
+			.err {
+				background: #fef2f2;
+				color: #b42318;
+				border: 1px solid #fecaca
+			}
+
+			.hint {
+				font-size: 12px;
+				color: #667085
+			}
+
+			.inline {
+				display: flex;
+				gap: 16px;
+				flex-wrap: wrap;
+				align-items: center
+			}
+
+			.inline label {
+				display: flex;
+				gap: 6px;
+				align-items: center
+			}
+
+			.logerr {
+				min-height: 18px;
+				margin-top: 8px;
+				font-size: 12px;
+				color: #b42318
+			}
+
+			.task-admin-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 12px
+			}
+
+			.task-admin-card {
+				border: 1px solid #e6edf7;
+				border-radius: 14px;
+				padding: 14px;
+				background: #fbfdff
+			}
+
+			.task-admin-card h3 {
+				margin-bottom: 10px;
+				font-size: 14px;
+				color: #1459c6
+			}
+
+			.task-admin-list {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				max-height: 58vh;
+				overflow: auto
+			}
+
+			.task-group {
+				border: 1px dashed #d7e3f4;
+				border-radius: 12px;
+				padding: 10px;
+				background: #f8fbff
+			}
+
+			.task-group h4 {
+				font-size: 13px;
+				margin-bottom: 8px;
+				color: #1459c6
+			}
+
+			.task-group-list {
+				display: flex;
+				flex-direction: column;
+				gap: 10px
+			}
+
+			.task-row-edit,
+			.counter-row-edit {
+				border: 1px solid #e6edf7;
+				border-radius: 12px;
+				padding: 10px;
+				background: #fff
+			}
+
+			.task-row-head {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 8px
+			}
+
+			.task-mini-grid {
+				display: grid;
+				grid-template-columns: repeat(4, minmax(0, 1fr));
+				gap: 8px
+			}
+
+			.counter-row-edit {
+				display: grid;
+				grid-template-columns: 1fr 140px auto;
+				gap: 8px;
+				align-items: end
+			}
+
+			.quickbar {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+				margin-bottom: 10px
+			}
+
+			.mini-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+				gap: 8px;
+				max-height: 220px;
+				overflow: auto;
+				padding: 10px;
+				border: 1px solid #e6edf7;
+				border-radius: 12px;
+				background: #fbfdff
+			}
+
+			.mini-row {
+				border: 1px solid #e6edf7;
+				border-radius: 10px;
+				padding: 8px 10px;
+				background: #fff;
+				font-size: 12px;
+				line-height: 1.5
+			}
+
+			.mini-row b {
+				display: block;
+				font-size: 13px;
+				color: #223
+			}
+
+			@media (max-width:820px) {
+				.grid {
+					grid-template-columns: 1fr
+				}
+
+				.task-admin-grid,
+				.task-mini-grid,
+				.counter-row-edit {
+					grid-template-columns: 1fr
+				}
+
+				.bar input {
+					width: 100%
+				}
+
+				th:nth-child(2),
+				td:nth-child(2),
+				th:nth-child(5),
+				td:nth-child(5) {
+					display: none
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="hd">
+			<h1 id="adminTitle">LHS 管理后台</h1><span class="badge" id="totalBadge">-</span><span class="sp"></span><span
+				id="loginStatus"></span><button class="btn g" id="logoutBtn" style="display:none"
+				onclick="logout()">退出登录</button>
+		</div>
+		<div class="tabs"><button id="tp" class="on" onclick="tab('players')">用户数据管理</button><button id="ta"
+				onclick="tab('agents')">代理商管理</button><button id="trc" onclick="tab('rechargeConfigs')">充值配置</button><button id="tredeem" onclick="tab('redeemCodes')">兑换码管理</button><button id="tm" onclick="tab('mails')">信件管理</button><button id="tc" onclick="tab('chats')">聊天管理</button><button id="tl" onclick="tab('logs')">操作日志</button><button id="ts" onclick="tab('servers')">大区数据管理</button><button id="td" onclick="location.href='dist-admin.html'">分销管理</button></div>
+		<div id="moduleBar" class="module-bar"><strong id="moduleTitle"></strong><span id="moduleDesc"></span><div class="module-links"><a href="game-modules.html">模块中心</a><a href="admin-users.html">完整后台</a><a href="index.html">总控首页</a></div></div>
+
+		<section id="players" class="panel on">
+			<div class="bar"><input id="search"
+					placeholder="搜索 名字 / userId / playerId / accountId / roleId / agentId / 邀请码"><button class="btn p"
+					onclick="loadPlayers(1)">搜索</button><button class="btn g" onclick="clearSearch()">清空</button><button class="btn w" id="batchCreateBtn" onclick="openBatchCreate()">批量管理</button><span
+					class="hint">支持按账号、角色、邀请码和代理 ID 搜索</span></div>
+			<div class="ct">
+				<div class="batchbar"><label><input id="checkAllPlayers" type="checkbox" onchange="toggleAllPlayerChecks(this.checked)"> 全选当前页</label><span id="selectedPlayersTip" class="hint">已选择 0 个玩家</span><button class="btn g" id="batchGiveBtn" onclick="batchOpenGive()">批量发放</button><button class="btn s" id="batchUnlockBtn" onclick="batchUnlockAllSystems()">批量解锁系统</button><button class="btn w" id="batchClearSelectedBtn" onclick="clearSelectedGameData()">清档选中</button><button class="btn r" id="batchClearAllBtn" onclick="clearAllGameData()">清档全服/大区</button><button class="btn r" id="batchDeleteBtn" onclick="batchDeletePlayers()">批量删除</button></div>
+				<div class="stats">
+					<div class="stat"><b id="stTotal">-</b><span>总玩家数</span></div>
+					<div class="stat"><b id="stPage">-</b><span>当前页</span></div>
+					<div class="stat"><b id="stPages">-</b><span>总页数</span></div>
+				</div>
+				<div class="card" id="tableWrap">
+					<div class="loading">正在加载玩家数据...</div>
+				</div>
+				<div id="pg" class="pg"></div>
+			</div>
+		</section>
+
+		<section id="agents" class="panel">
+			<div class="bar"><input id="agentSearch" placeholder="搜索 代理账号 / agentId / 名称"><button class="btn p"
+					onclick="loadAgents()">搜索</button><button class="btn g" onclick="clearAgentSearch()">清空</button><button class="btn w"
+					onclick="openAgentEditor()">新增代理商</button><span class="hint">为代理商开通发放和充值权限，玩家归属按 player.agentId 匹配</span></div>
+			<div class="ct">
+				<div class="stats">
+					<div class="stat"><b id="agTotal">-</b><span>代理账号数</span></div>
+					<div class="stat"><b id="agGive">-</b><span>可发放账号</span></div>
+					<div class="stat"><b id="agRecharge">-</b><span>可充值账号</span></div>
+				</div>
+				<div class="card" id="agentWrap">
+					<div class="loading">点击搜索加载代理商数据...</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="logs" class="panel">
+			<div class="bar"><input id="logKeyword" placeholder="搜索 操作人 / 玩家 / agentId / 原因"><select id="logAction"><option value="">全部动作</option><option value="give_player">单人发放</option><option value="batch_give_players">批量发放</option><option value="send_user_mail">定点信件</option><option value="send_server_mail">区组信件</option><option value="clear_player_game_data">玩家清档</option><option value="recharge_player">手动充值</option></select><select id="logResult"><option value="">全部结果</option><option value="success">成功</option><option value="rejected">拒绝</option><option value="failure">失败</option></select><button class="btn p" onclick="loadActionLogs(1)">搜索</button><button class="btn g" onclick="clearActionLogSearch()">清空</button><span class="hint">管理员可看全部，代理商只看自己的操作日志</span></div>
+			<div class="ct">
+				<div class="stats">
+					<div class="stat"><b id="lgTotal">-</b><span>日志总数</span></div>
+					<div class="stat"><b id="lgPage">-</b><span>当前页</span></div>
+					<div class="stat"><b id="lgPages">-</b><span>总页数</span></div>
+				</div>
+				<div class="card" id="logWrap"><div class="loading">点击搜索加载操作日志...</div></div>
+				<div id="logPg" class="pg"></div>
+			</div>
+		</section>
+
+		<section id="servers" class="panel">
+			<div class="bar"><button class="btn p" onclick="openServer()">新增大区</button><button class="btn g"
+					onclick="loadServers()">刷新数据</button><span class="hint">删除前会校验该区服是否仍有角色归档</span></div>
+			<div class="ct">
+				<div class="stats">
+					<div class="stat"><b id="svTotal">-</b><span>全服总角色</span></div>
+					<div class="stat"><b id="svOn">-</b><span>当前在线</span></div>
+					<div class="stat"><b id="svAct">-</b><span>近 7 日活跃</span></div>
+					<div class="stat"><b id="svCnt">-</b><span>区服数量</span></div>
+				</div>
+				<div id="serverWrap">
+					<div class="loading">点击刷新加载大区数据...</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="chats" class="panel">
+			<div class="bar"><input id="chatKeyword" placeholder="搜索 内容 / 玩家名 / userId"><input id="chatUserId" placeholder="指定 userId / dbid"><select id="chatChannel"><option value="all">全部频道</option><option value="0">世界频道</option><option value="1">系统频道</option></select><select id="chatLimit"><option value="30">最近 30 条</option><option value="50" selected>最近 50 条</option><option value="100">最近 100 条</option></select><select id="chatAutoRefresh" onchange="updateChatAutoRefresh()"><option value="0">手动刷新</option><option value="5">每 5 秒刷新</option><option value="15">每 15 秒刷新</option><option value="30">每 30 秒刷新</option></select><button class="btn p" onclick="loadChats()">搜索</button><button class="btn g" onclick="clearChatSearch()">清空</button><span class="hint">显示当前服务内存聊天历史，重启服务后会清空</span></div>
+			<div class="ct">
+				<div class="stats">
+					<div class="stat"><b id="chTotal">-</b><span>匹配消息</span></div>
+					<div class="stat"><b id="chWorld">-</b><span>世界频道</span></div>
+					<div class="stat"><b id="chSystem">-</b><span>系统频道</span></div>
+					<div class="stat"><b id="chUpdated">-</b><span>最后刷新</span></div>
+				</div>
+				<div class="card" id="chatWrap"><div class="loading">点击搜索加载聊天记录...</div></div>
+			</div>
+		</section>
+
+		<section id="rechargeConfigs" class="panel">
+			<div class="bar"><input id="rechargeConfigSearch" placeholder="搜索 商品ID / 名称 / 支付方式"><button class="btn p"
+					onclick="loadRechargeConfigs()">搜索</button><button class="btn g" onclick="clearRechargeConfigSearch()">清空</button><button class="btn w"
+					onclick="openRechargeConfigEditor()">新增配置</button><span class="hint">用于统一维护后台手动充值和支付下单时使用的商品档位配置</span></div>
+			<div class="ct">
+				<div class="stats">
+					<div class="stat"><b id="rcTotal">-</b><span>配置总数</span></div>
+					<div class="stat"><b id="rcEnabled">-</b><span>启用配置</span></div>
+					<div class="stat"><b id="rcCustom">-</b><span>自定义覆盖</span></div>
+				</div>
+				<div class="card" id="rechargeConfigWrap"><div class="loading">点击搜索加载充值配置...</div></div>
+			</div>
+		</section>
+
+		<section id="redeemCodes" class="panel">
+			<div class="bar"><input id="redeemSearch" placeholder="搜索 兑换码 / 名称 / 备注"><select id="redeemStatus"><option value="">全部状态</option><option value="active">启用</option><option value="disabled">停用</option></select><button class="btn p" onclick="loadRedeemCodes()">搜索</button><button class="btn g" onclick="clearRedeemSearch()">清空</button><button class="btn w" onclick="openRedeemEditor()">新增兑换码</button><span class="hint">奖励配置与玩家发放一致，支持货币和道具</span></div>
+			<div class="ct">
+				<div class="stats">
+					<div class="stat"><b id="rdTotal">-</b><span>兑换码总数</span></div>
+					<div class="stat"><b id="rdActive">-</b><span>启用数量</span></div>
+					<div class="stat"><b id="rdUsed">-</b><span>累计使用</span></div>
+				</div>
+				<div class="card" id="redeemWrap"><div class="loading">点击搜索加载兑换码...</div></div>
+			</div>
+		</section>
+
+		<section id="mails" class="panel">
+			<div class="bar"><input id="mailUserFilter" placeholder="按 userId 查最近信件"><input id="mailBatchFilter" placeholder="按 batchId 查"><button class="btn p" onclick="loadMails()">查询</button><button class="btn g" onclick="clearMailSearch()">清空</button><span class="hint">支持指定用户推送和按大区 serverId 批量推送</span></div>
+			<div class="ct">
+				<div class="card" style="padding:18px;margin-bottom:16px">
+					<div class="grid">
+						<div class="fg"><label>推送范围</label><select id="mailScope" onchange="updateMailScope()"><option value="users">定点用户</option><option value="server">区组推送</option></select></div>
+						<div class="fg"><label>发送人</label><input id="mailSender" value="系统"></div>
+						<div class="fg full" id="mailUsersBox"><label>目标 userId（逗号、空格或换行分隔）</label><textarea id="mailUserIds" placeholder="例如：u1001, u1002；也可先在用户列表勾选后点击下方按钮带入"></textarea></div>
+						<div class="fg full" id="mailServerBox" style="display:none"><label>目标大区 serverId</label><input id="mailServerId" type="number" min="1" placeholder="例如 1001"></div>
+						<div class="fg"><label>标题</label><input id="mailTitle" maxlength="120" placeholder="邮件标题"></div>
+						<div class="fg"><label>有效天数</label><input id="mailExpireDays" type="number" min="1" max="365" value="30"></div>
+						<div class="fg full"><label>正文内容</label><textarea id="mailContent" placeholder="邮件正文"></textarea></div>
+						<div class="fg full"><label>附件（每行一个：道具ID 数量，也支持 1001:10）</label><textarea id="mailAttachments" placeholder="1001 10&#10;4 20"></textarea></div>
+						<div class="fg"><label>最低领取等级</label><input id="mailMinLevel" type="number" min="0" value="0"></div>
+						<div class="fg"><label>备注</label><input id="mailReason" placeholder="写入操作日志"></div>
+					</div>
+					<div class="foot"><button class="btn g" onclick="fillMailTargetsFromSelection()">带入已选玩家</button><button class="btn p" onclick="sendMail()">发送信件</button></div>
+				</div>
+				<div class="stats">
+					<div class="stat"><b id="mailTotal">-</b><span>最近信件</span></div>
+					<div class="stat"><b id="mailUnread">-</b><span>未读</span></div>
+					<div class="stat"><b id="mailClaimed">-</b><span>已领取</span></div>
+				</div>
+				<div class="card" id="mailWrap"><div class="loading">点击查询加载信件记录...</div></div>
+			</div>
+		</section>
+
+		<div id="editO" class="overlay">
+			<div class="modal">
+				<h2 id="editT">编辑玩家</h2><input id="eu" type="hidden">
+				<div class="grid">
+					<div class="sec">基础信息</div>
+					<div class="fg full"><label>玩家名称</label><input id="f_name" maxlength="16"></div>
+					<div class="fg"><label>等级</label><input id="f_level" type="number" min="1"></div>
+					<div class="fg"><label>经验</label><input id="f_exp" type="number" min="0"></div>
+					<div class="fg"><label>头像 ID</label><input id="f_avatar" type="number" min="0"></div>
+					<div class="fg"><label>头像框 ID</label><input id="f_avatarFrame" type="number" min="-1"></div>
+					<div class="fg"><label>称号 ID</label><input id="f_title" type="number" min="-1"></div>
+					<div class="sec">进度信息</div>
+					<div class="fg"><label>章节</label><input id="f_chapter" type="number" min="1"></div>
+					<div class="fg"><label>关卡</label><input id="f_raidLevel" type="number" min="1"></div>
+					<div class="fg"><label>挂机章节</label><input id="f_hangUpChapter" type="number" min="1"></div>
+					<div class="fg"><label>挂机时间(毫秒)</label><input id="f_hangUpTime" type="number" min="0"></div>
+					<div class="fg"><label>章节奖励进度</label><input id="f_rewardChapter" type="number" min="0"></div>
+					<div class="fg"><label>已领章节(逗号)</label><input id="f_claimedChapters"></div>
+					<div class="fg"><label>境界</label><input id="f_stage" type="number" min="1"></div>
+					<div class="fg"><label>突破已领奖阶</label><input id="f_rewardedStage" type="number" min="0"></div>
+					<div class="fg"><label>突破失败次数</label><input id="f_stageFailedTime" type="number" min="0"></div>
+					<div class="fg"><label>功法 ID</label><input id="f_kungfuId" type="number" min="1"></div>
+					<div class="fg"><label>子职业</label><input id="f_subJob" type="number" min="0"></div>
+					<div class="fg"><label>宝箱等级</label><input id="f_boxLevel" type="number" min="1"></div>
+					<div class="fg"><label>VIP</label><input id="f_vip" type="number" min="0"></div>
+					<div class="fg"><label>累计充值</label><input id="f_totalRecharge" type="number" min="0"></div>
+					<div class="fg"><label>法相 ID</label><input id="f_spiritId" type="number" min="-1"></div>
+					<div class="fg"><label>法相阶数</label><input id="f_spiritRank" type="number" min="1"></div>
+					<div class="sec">货币与道具</div>
+					<div class="fg"><label>元宝</label><input id="f_diamond" type="number" min="0"></div>
+					<div class="fg"><label>加速符</label><input id="f_gold" type="number" min="0"></div>
+					<div class="fg"><label>银币</label><input id="f_silver" type="number" min="0"></div>
+					<div class="fg"><label>包子(item4)</label><input id="f_baozi" type="number" min="0"></div>
+					<div class="fg"><label>法相碎片(item7)</label><input id="f_lingyun" type="number" min="0"></div>
+					<div class="fg"><label>法相精华(item8)</label><input id="f_faxiang" type="number" min="0"></div>
+					<div class="fg"><label>天衍令(小)(item1001)</label><input id="f_tianyanSmall" type="number" min="0"></div>
+					<div class="fg"><label>天衍令(中)(item1002)</label><input id="f_tianyanMedium" type="number" min="0"></div>
+					<div class="fg"><label>天衍令(大)(item1003)</label><input id="f_tianyanLarge" type="number" min="0"></div>
+					<div class="fg"><label>代金券(item7010)</label><input id="f_coupon" type="number" min="0"></div>
+					<div class="sec">装备 / 阵型 / 战力</div>
+					<div class="fg"><label>当前战力(只读)</label><input id="f_powerScore" disabled></div>
+					<div class="fg"><label>装备数量(只读)</label><input id="f_equipCount" disabled></div>
+					<div class="fg full"><label>属性明细(按 configMap 对齐)</label><div id="f_attrRows" class="mini-list"><div class="hint">打开玩家后显示</div></div></div>
+					<div class="fg full"><label>当前方案装备(按 configMap 对齐)</label><div id="f_equipRows" class="mini-list"><div class="hint">打开玩家后显示</div></div></div>
+					<div class="fg"><label>阵型 equippedId</label><input id="f_formationEquippedId" type="number" min="0"></div>
+					<div class="fg"><label>阵型等级</label><input id="f_formationLevel" type="number" min="1"></div>
+					<div class="fg"><label>阵型阶数</label><input id="f_formationGrade" type="number" min="1"></div>
+					<div class="fg"><label>阵型经验</label><input id="f_formationExp" type="number" min="0"></div>
+					<div class="fg"><label>已拥有阵型(逗号)</label><input id="f_formationOwns"></div>
+					<div class="fg"><label>阵法附魔(逗号)</label><input id="f_formationEnchant"></div>
+					<div class="fg full"><label>装备数据 equipInfo(JSON)</label><textarea id="f_equipInfo" placeholder='{"equipList":[],"equipSetMap":{},"curIndex":0}'></textarea></div>
+					<div class="fg full"><label>阵型数据 formationInfo(JSON)</label><textarea id="f_formationInfo" placeholder='{"equippedId":21001,"owns":[21001],"grade":1,"level":1,"exp":0,"enchant":[0,0,0,0,0]}'></textarea></div>
+					<div class="sec">系统解锁与引导</div>
+					<div class="fg"><label>引导步数 guideStep</label><input id="f_guideStep" type="number" min="0"></div>
+					<div class="fg"><label>已解锁系统(逗号)</label><input id="f_unlockedSystem"></div>
+					<div class="fg"><label>已领奖系统(逗号)</label><input id="f_rewardedSystem"></div>
+					<div class="fg"><label>已读新功能(逗号)</label><input id="f_seenNewFeatures"></div>
+					<div class="fg"><label>待弹新功能(只读)</label><input id="f_pendingNewFeatures" disabled></div>
+					<div class="fg full"><label>快捷操作</label><div class="inline"><button class="btn s" id="f_unlockAllSystemsBtn" type="button" onclick="unlockAllSystemsFromEdit()">一键解锁所有系统</button><span class="hint" id="f_unlockAllSystemsHint">将当前编辑玩家的全部系统与新功能状态一次性解锁并刷新表单。</span></div></div>
+					<div class="fg full"><label>系统设置 settings(JSON)</label><textarea id="f_systemSettings" placeholder='{"seenNewFeatures":[101,102]}'></textarea></div>
+					<div class="sec">关系与只读信息</div>
+					<div class="fg"><label>agentId</label><input id="f_agentId"></div>
+					<div class="fg"><label>inviteCode</label><input id="f_inviteCode"></div>
+					<div class="fg"><label>accountId</label><input id="f_accountId" disabled></div>
+					<div class="fg"><label>roleId</label><input id="f_roleId" disabled></div>
+					<div class="fg"><label>serverId</label><input id="f_serverId" disabled></div>
+					<div class="fg"><label>最后登录</label><input id="f_lastLogin" disabled></div>
+					<div class="fg"><label>userId</label><input id="f_userId" disabled></div>
+					<div class="fg"><label>playerId</label><input id="f_playerId" disabled></div>
+					<div class="fg"><label>创建时间</label><input id="f_createdAt" disabled></div>
+					<div class="fg"><label>更新时间</label><input id="f_updatedAt" disabled></div>
+					<div class="sec">任务进度管理</div>
+					<div class="full"><div class="hint">根据 `main` 的任务组、主任务计数器和当前关卡逻辑，任务编辑已拆到独立弹窗。</div><div style="margin-top:8px"><button class="btn w" type="button" onclick="openTaskManager()">打开任务进度管理</button></div></div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeEdit()">取消</button><button class="btn p"
+						onclick="savePlayer()">保存修改</button><button class="btn" onclick="normalizeOrbCurrentPlayer()">初始化魂玉</button></div>
+			</div>
+		</div>
+
+		<div id="taskO" class="overlay">
+			<div class="modal">
+				<h2 id="taskManagerTitle">任务进度管理</h2>
+				<div class="grid" style="grid-template-columns:1fr">
+					<div class="task-admin-card full">
+						<h3>快捷操作</h3>
+						<div class="quickbar">
+							<button class="btn g" type="button" onclick="taskMarkCurrentStage(10)">当前关卡设为进行中</button>
+							<button class="btn w" type="button" onclick="taskMarkCurrentStage(20)">当前关卡设为可领取</button>
+							<button class="btn s" type="button" onclick="taskMarkCurrentStage(30)">当前关卡设为已完成</button>
+							<button class="btn g" type="button" onclick="taskSyncCurrentStageTargets()">同步当前关卡目标</button>
+						</div>
+						<div class="hint">这里只改弹窗内的暂存数据，最终仍需回到玩家编辑页点击“保存修改”才会写入玩家存档。</div>
+					</div>
+					<div class="task-admin-grid full">
+						<div class="task-admin-card">
+							<h3>任务列表</h3>
+							<div id="taskEditorRows" class="task-admin-list"></div>
+							<div style="margin-top:10px"><button class="btn g" type="button" onclick="addTaskEditorRow()">新增任务行</button></div>
+						</div>
+						<div class="task-admin-card">
+							<h3>主任务计数器</h3>
+							<div id="counterEditorRows" class="task-admin-list"></div>
+							<div style="margin-top:10px"><button class="btn g" type="button" onclick="addCounterEditorRow()">新增计数器</button></div>
+						</div>
+					</div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeTaskManager()">关闭</button></div>
+			</div>
+		</div>
+
+		<div id="giveO" class="overlay">
+			<div class="modal sm">
+				<h2>发放货币与道具</h2><input id="gu" type="hidden">
+				<div class="grid">
+					<div class="sec">货币增减</div>
+					<div class="fg"><label>元宝</label><input id="g_diamond" type="number"></div>
+					<div class="fg"><label>加速符</label><input id="g_gold" type="number"></div>
+					<div class="fg"><label>银币</label><input id="g_silver" type="number"></div>
+					<div class="fg"><label>包子(item4)</label><input id="g_baozi" type="number"></div>
+					<div class="sec">常用道具</div>
+					<div class="fg"><label>法相碎片(item7)</label><input id="g_lingyun" type="number"></div>
+					<div class="fg"><label>法相精华(item8)</label><input id="g_faxiang" type="number"></div>
+					<div class="fg"><label>天衍令(小)(item1001)</label><input id="g_tianyanSmall" type="number"></div>
+					<div class="fg"><label>天衍令(中)(item1002)</label><input id="g_tianyanMedium" type="number"></div>
+					<div class="fg"><label>天衍令(大)(item1003)</label><input id="g_tianyanLarge" type="number"></div>
+					<div class="fg"><label>代金券(item7010)</label><input id="g_coupon" type="number"></div>
+					<div class="sec">自定义道具</div>
+					<div class="fg"><label>道具 ID</label><input id="g_customId" type="number" min="1" list="giveItemOptions" placeholder="输入或选择道具"></div>
+					<div class="fg"><label>数量增减</label><input id="g_customCount" type="number"></div>
+					<div class="full"><button class="btn g" onclick="addGive()">新增一行自定义道具</button></div>
+					<datalist id="giveItemOptions"></datalist>
+					<div id="grow" class="full"></div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeGive()">取消</button><button class="btn s"
+						onclick="give()">确认发放</button></div>
+			</div>
+		</div>
+
+		<div id="batchO" class="overlay">
+			<div class="modal sm">
+				<h2>批量管理</h2>
+				<div class="grid">
+					<div class="fg"><label>创建数量</label><input id="b_count" type="number" min="1" max="200" value="10"></div>
+					<div class="fg"><label>起始编号</label><input id="b_startIndex" type="number" min="1" value="1"></div>
+					<div class="fg"><label>userId 英文前缀</label><input id="b_userPrefix" value="user"></div>
+					<div class="fg"><label>用户名英文前缀</label><input id="b_namePrefix" value="Player"></div>
+					<div class="fg full"><label>说明</label><input value="将按英文前缀 + 四位编号创建，例如 Player0001 / user0001" disabled></div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeBatchCreate()">取消</button><button class="btn p" onclick="batchCreatePlayers()">开始创建</button></div>
+			</div>
+		</div>
+
+		<div id="whitelistO" class="overlay">
+			<div class="modal sm">
+				<h2>公益服免费充值白名单</h2>
+				<div class="grid" style="grid-template-columns:1fr">
+					<div class="fg full"><label>说明</label><input value="白名单内玩家点充值直接到账，无需付款" disabled></div>
+					<div class="fg full"><label>添加玩家（填玩家名或 userId）</label><input id="wl_input" placeholder="例如 admkk 或 u_Wk_1001_..."></div>
+					<div class="fg full"><button class="btn p" style="width:100%" onclick="addWhitelist()">添加到白名单</button></div>
+				</div>
+				<h4 style="margin:14px 0 8px">当前白名单 <span id="wl_count" class="badge">0</span></h4>
+				<div id="wl_list" class="list" style="max-height:280px;overflow:auto"></div>
+				<div class="foot"><button class="btn g" onclick="closeWhitelist()">关闭</button></div>
+			</div>
+		</div>
+
+		<div id="rechargeO" class="overlay">
+			<div class="modal xs">
+				<h2>手动充值</h2><input id="ru" type="hidden">
+				<div class="grid" style="grid-template-columns:1fr">
+					<div class="fg full"><label>目标玩家</label><input id="r_target" disabled></div>
+					<div class="fg full"><label>充值配置</label><select id="r_configProduct" onchange="applyRechargeConfigSelection()"><option value="">手动填写</option></select></div>
+					<div class="fg full"><label>充值金额(元)</label><input id="r_amount" type="number" min="1"></div>
+					<div class="fg full"><label>商品标识</label><input id="r_productId" placeholder="默认 manual-admin-recharge"></div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeRecharge()">取消</button><button class="btn s"
+						onclick="submitRecharge()">确认充值</button></div>
+			</div>
+		</div>
+
+		<div id="rechargeConfigO" class="overlay">
+			<div class="modal sm">
+				<h2 id="rechargeConfigT">新增充值配置</h2><input id="rechargeConfigMode" type="hidden" value="create"><input id="rechargeConfigCurrentId" type="hidden">
+				<div class="grid">
+					<div class="fg"><label>商品标识</label><input id="rc_productId" placeholder="如 101"></div>
+					<div class="fg"><label>显示名称</label><input id="rc_name" placeholder="如 60元礼包"></div>
+					<div class="fg"><label>充值金额(元)</label><input id="rc_amount" type="number" min="0" step="0.01"></div>
+					<div class="fg"><label>基础元宝</label><input id="rc_diamond" type="number" min="0"></div>
+					<div class="fg"><label>首充赠送</label><input id="rc_firstBonus" type="number" min="0"></div>
+					<div class="fg"><label>支付方式</label><input id="rc_payType" placeholder="如 alipay"></div>
+					<div class="fg"><label>排序值</label><input id="rc_sort" type="number"></div>
+					<div class="fg"><label>状态</label><select id="rc_enabled"><option value="1">启用</option><option value="0">停用</option></select></div>
+					<div class="sec">支付页邮件奖励</div>
+					<div class="fg full"><label>邮件标题</label><input id="rc_mailTitle" placeholder="为空时默认用商品名称"></div>
+					<div class="fg full"><label>邮件内容</label><input id="rc_mailContent" placeholder="例如：充值成功，请查收附件奖励"></div>
+					<div class="fg"><label>道具 ID</label><input id="rc_addItemId" type="number" min="1" placeholder="如 7"></div>
+					<div class="fg"><label>数量</label><input id="rc_addItemCount" type="number" min="1" placeholder="如 10"></div>
+					<div class="fg"><label>&nbsp;</label><button class="btn g" type="button" onclick="quickAddRechargeAttachmentRow()">添加邮件道具</button></div>
+					<div id="rc_attachments" class="full"></div>
+					<div class="fg full"><label>备注</label><input id="rc_note" placeholder="可记录渠道或运营说明"></div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeRechargeConfigEditor()">取消</button><button class="btn p"
+						onclick="saveRechargeConfig()">保存</button></div>
+			</div>
+		</div>
+
+		<div id="delO" class="overlay">
+			<div class="modal xs">
+				<h2>删除玩家</h2>
+				<p style="line-height:1.7;color:#475467">确定删除玩家 <b id="dn" style="color:#b42318"></b>
+					吗？<br>删除后会同时清理该玩家的账号角色映射，此操作不可恢复。</p><input id="du" type="hidden">
+				<div class="foot"><button class="btn g" onclick="closeDel()">取消</button><button class="btn r"
+						onclick="delPlayer()">确认删除</button></div>
+			</div>
+		</div>
+
+		<div id="srvO" class="overlay">
+			<div class="modal sm">
+				<h2 id="srvT">新增大区</h2><input id="srvMode" type="hidden" value="create">
+				<div class="grid">
+					<div class="fg"><label>大区 ID</label><input id="s_serverId" type="number" min="1"></div>
+					<div class="fg"><label>大区名称</label><input id="s_serverName"></div>
+					<div class="fg"><label>分页 ID</label><input id="s_pageId" type="number" min="1"></div>
+					<div class="fg"><label>分页名称</label><input id="s_pageName"></div>
+					<div class="fg"><label>区组状态</label><select id="s_status"><option value="0">停用</option><option value="1">启用</option><option value="2">爆满</option></select></div>
+					<div class="fg"><label>开服时间</label><input id="s_openTime" type="datetime-local"></div>
+					<div class="full"><label class="hint">开关项</label>
+						<div class="inline"><label><input id="s_running" type="checkbox">运行中</label><label><input id="s_isNew"
+									type="checkbox">新区</label><label><input id="s_isRecommend" type="checkbox">推荐</label></div>
+					</div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeServer()">取消</button><button class="btn p"
+						onclick="saveServer()">保存</button></div>
+			</div>
+		</div>
+
+		<div id="agentO" class="overlay">
+			<div class="modal sm">
+				<h2 id="agentT">新增代理商</h2><input id="agentMode" type="hidden" value="create"><input id="agentCurrentId" type="hidden">
+				<div class="grid">
+					<div class="fg"><label>登录账号</label><input id="a_username"></div>
+					<div class="fg"><label>绑定 agentId</label><input id="a_agentId" placeholder="玩家 player.agentId"></div>
+					<div class="fg"><label>显示名称</label><input id="a_name"></div>
+					<div class="fg"><label>状态</label><select id="a_status"><option value="active">启用</option><option value="disabled">停用</option></select></div>
+					<div class="fg full"><label>登录密码</label><input id="a_password" type="password" placeholder="新增必填，编辑时留空表示不修改"></div>
+					<div class="fg full"><label>备注</label><input id="a_note"></div>
+					<div class="full"><label class="hint">权限</label><div class="inline"><label><input id="a_permGive" type="checkbox">允许物品发放</label><label><input id="a_permRecharge" type="checkbox">允许手动充值</label></div></div>
+					<div class="sec">限制配置</div>
+					<div class="fg full"><label>允许发放货币(逗号)</label><input id="a_giveCurrencies" placeholder="diamond,gold,silver；留空表示不限"></div>
+					<div class="fg full"><label>允许发放道具 ID(逗号)</label><input id="a_giveItems" placeholder="如 4,7,8,1001；留空表示不限"></div>
+					<div class="fg"><label>单笔充值上限(元)</label><input id="a_rechargeSingleLimit" type="number" min="0" placeholder="0 表示不限"></div>
+					<div class="fg"><label>单日充值上限(元)</label><input id="a_rechargeDailyLimit" type="number" min="0" placeholder="0 表示不限"></div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeAgentEditor()">取消</button><button class="btn p"
+						onclick="saveAgent()">保存</button></div>
+			</div>
+		</div>
+
+		<div id="redeemO" class="overlay">
+			<div class="modal sm">
+				<h2 id="redeemTitle">新增兑换码</h2><input id="rd_originalCode" type="hidden">
+				<div class="grid">
+					<div class="sec">基础信息</div>
+					<div class="fg"><label>兑换码</label><input id="rd_code" placeholder="如 WELCOME2026"></div>
+					<div class="fg"><label>名称</label><input id="rd_name" placeholder="活动名称"></div>
+					<div class="fg"><label>状态</label><select id="rd_status"><option value="active">启用</option><option value="disabled">停用</option></select></div>
+					<div class="fg"><label>总可用次数</label><input id="rd_maxUses" type="number" min="0" placeholder="0 表示不限"></div>
+					<div class="fg"><label>每玩家次数</label><input id="rd_perUserLimit" type="number" min="1" value="1"></div>
+					<div class="fg"><label>开始时间</label><input id="rd_startsAt" placeholder="可空，如 2026-05-16 00:00"></div>
+					<div class="fg"><label>结束时间</label><input id="rd_expiresAt" placeholder="可空"></div>
+					<div class="fg full"><label>备注</label><input id="rd_note"></div>
+					<div class="sec">奖励配置</div>
+					<div class="fg"><label>元宝</label><input id="rd_diamond" type="number"></div>
+					<div class="fg"><label>加速符</label><input id="rd_gold" type="number"></div>
+					<div class="fg"><label>银币</label><input id="rd_silver" type="number"></div>
+					<div class="fg"><label>包子(item4)</label><input id="rd_baozi" type="number"></div>
+					<div class="fg"><label>法相碎片(item7)</label><input id="rd_lingyun" type="number"></div>
+					<div class="fg"><label>法相精华(item8)</label><input id="rd_faxiang" type="number"></div>
+					<div class="fg"><label>天衍令(小)(item1001)</label><input id="rd_tianyanSmall" type="number"></div>
+					<div class="fg"><label>天衍令(中)(item1002)</label><input id="rd_tianyanMedium" type="number"></div>
+					<div class="fg"><label>天衍令(大)(item1003)</label><input id="rd_tianyanLarge" type="number"></div>
+					<div class="fg"><label>代金券(item7010)</label><input id="rd_coupon" type="number"></div>
+					<div class="fg"><label>自定义道具 ID</label><input id="rd_customId" type="number" min="1"></div>
+					<div class="fg"><label>数量</label><input id="rd_customCount" type="number"></div>
+					<div class="full"><button class="btn g" onclick="addRedeemItemRow()">新增一行自定义道具</button></div>
+					<div id="rd_items" class="full"></div>
+				</div>
+				<div class="foot"><button class="btn g" onclick="closeRedeemEditor()">取消</button><button class="btn p" onclick="saveRedeemCode()">保存兑换码</button></div>
+			</div>
+		</div>
+
+		<div id="logO" class="overlay on">
+			<div class="modal xs">
+				<h2>后台登录</h2>
+				<div class="grid" style="grid-template-columns:1fr">
+					<div class="fg full"><label>用户名</label><input id="lu" autocomplete="username"></div>
+					<div class="fg full"><label>密码</label><input id="lp" type="password" autocomplete="current-password"></div>
+				</div>
+				<div id="le" class="logerr"></div>
+				<div class="foot" style="border-top:none;padding-top:0"><button class="btn p" style="width:100%"
+						onclick="login()">登录</button></div>
+			</div>
+		</div>
+
+		<script>
+			const MODULE_META = {
+				players: { title: '用户数据管理', desc: '独立处理玩家查询、编辑、批量发放、手动充值等后台能力。', buttonId: 'tp', panelId: 'players' },
+				agents: { title: '代理商管理', desc: '独立处理代理账号开通、权限配置和代理资料维护。', buttonId: 'ta', panelId: 'agents' },
+				rechargeConfigs: { title: '充值配置', desc: '独立处理商品档位、支付方式和手动充值商品配置。', buttonId: 'trc', panelId: 'rechargeConfigs' },
+				redeemCodes: { title: '兑换码管理', desc: '独立维护可兑换物资、使用次数和有效期。', buttonId: 'tredeem', panelId: 'redeemCodes' },
+				chats: { title: '聊天管理', desc: '查看当前服务内存里的世界和系统聊天动态，辅助禁言排查。', buttonId: 'tc', panelId: 'chats' },
+				logs: { title: '操作日志', desc: '独立查看后台操作链路、结果和责任归属。', buttonId: 'tl', panelId: 'logs' },
+				servers: { title: '大区数据管理', desc: '独立维护区服资料、活跃统计和大区增删改。', buttonId: 'ts', panelId: 'servers' }
+			};
+
+			function normalizeModuleName(name) {
+				const key = String(name || '').trim();
+				return MODULE_META[key] ? key : 'players';
+			}
+
+			const urlParams = new URLSearchParams(location.search);
+			const bootModuleName = normalizeModuleName(window.__LHS_ADMIN_BOOT_MODULE__ || urlParams.get('module') || location.hash.slice(1) || sessionStorage.getItem('admin_tab') || 'players');
+			const $ = id => document.getElementById(id),
+				cache = {};
+			const GAME_PROXY_PREFIX = '/game';
+			let page = 1,
+				search = '',
+				tabName = bootModuleName,
+				logPage = 1,
+				grow = 0,
+				redeemItemRow = 0,
+				rechargeAttachmentRow = 0,
+				selectedPlayers = new Set(),
+				currentGiveUserIds = [],
+				currentRechargeUserId = '';
+			let standaloneModule = window.__LHS_ADMIN_STANDALONE_MODULE__ ? tabName : (urlParams.get('standalone') === '1' ? tabName : '');
+			let currentUser = null,
+				agentCache = [],
+				rechargeConfigCache = [];
+			let chatRefreshTimer = null;
+			let giveItemConfigCache = [],
+				giveItemConfigLoading = null;
+			const tok = () => sessionStorage.getItem('admin_token') || '',
+				setTok = v => sessionStorage.setItem('admin_token', v),
+				setUser = user => sessionStorage.setItem('admin_user', JSON.stringify(user || null)),
+				getSavedUser = () => {
+					try {
+						return JSON.parse(sessionStorage.getItem('admin_user') || 'null')
+					} catch (_e) {
+						return null
+					}
+				};
+			const esc = s => String(s || '').replace(/[&<>"']/g, c => ({
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;'
+			} [c]));
+			const fmt = n => Number(n || 0).toLocaleString('zh-CN');
+			const date = v => v ? new Date(v).toLocaleString('zh-CN') : '-';
+			const num = id => {
+				const v = String($(id).value || '').trim();
+				if (!v) return null;
+				const n = Number(v);
+				return Number.isFinite(n) ? n : null;
+			};
+			const str = id => String($(id).value || '').trim();
+			const isAdmin = () => !currentUser || currentUser.role !== 'agent';
+			const hasPerm = key => isAdmin() || !!(currentUser && currentUser.permissions && currentUser.permissions[key]);
+
+			function applyStandaloneModuleView() {
+				const bar = $('moduleBar');
+				if (!bar) return;
+				if (!standaloneModule || !MODULE_META[standaloneModule]) {
+					bar.style.display = 'none';
+					document.body.classList.remove('standalone-module');
+					$('adminTitle').textContent = 'LHS 管理后台';
+					return;
+				}
+				const meta = MODULE_META[standaloneModule];
+				document.body.classList.add('standalone-module');
+				document.title = `${meta.title} - LHS 管理后台`;
+				$('adminTitle').textContent = meta.title;
+				$('moduleTitle').textContent = meta.title;
+				$('moduleDesc').textContent = meta.desc;
+				bar.style.display = 'flex';
+				Object.keys(MODULE_META).forEach(key => {
+					const btn = $(MODULE_META[key].buttonId);
+					if (btn) btn.style.display = key === standaloneModule ? '' : 'none';
+				});
+			}
+
+			function applyRoleView() {
+				const adminOnlyIds = ['ta', 'trc', 'tredeem', 'tm', 'tc', 'ts', 'batchCreateBtn', 'batchUnlockBtn', 'batchClearSelectedBtn', 'batchClearAllBtn', 'batchDeleteBtn'];
+				adminOnlyIds.forEach(id => {
+					const el = $(id);
+					if (el) el.style.display = isAdmin() ? '' : 'none';
+				});
+				const batchGiveBtn = $('batchGiveBtn');
+				if (batchGiveBtn) batchGiveBtn.style.display = hasPerm('giveItems') ? '' : 'none';
+				if (!isAdmin() && (tabName === 'agents' || tabName === 'rechargeConfigs' || tabName === 'redeemCodes' || tabName === 'mails' || tabName === 'chats' || tabName === 'servers')) {
+					tabName = 'players';
+					if (standaloneModule && standaloneModule !== 'players') standaloneModule = 'players';
+				}
+				applyStandaloneModuleView();
+			}
+
+			function msg(t, ok = true) {
+				const d = document.createElement('div');
+				d.className = 'msg ' + (ok ? 'ok' : 'err');
+				d.textContent = t;
+				document.body.appendChild(d);
+				setTimeout(() => d.remove(), 3200);
+			}
+
+			function compact(v) {
+				if (Array.isArray(v) || !v || typeof v !== 'object') return v;
+				const o = {};
+				Object.keys(v).forEach(k => {
+					const x = v[k];
+					if (x === null || x === undefined || Number.isNaN(x)) return;
+					if (x && typeof x === 'object' && !Array.isArray(x)) {
+						const y = compact(x);
+						if (y && Object.keys(y).length) o[k] = y;
+						return;
+					}
+					o[k] = x;
+				});
+				return o;
+			}
+
+			function parseNumberList(raw) {
+				return String(raw || '').split(/[，,\s]+/).map(v => Number(v)).filter(v => Number.isFinite(v) && v > 0).map(v => Math.floor(v));
+			}
+
+			function parseTextList(raw) {
+				return String(raw || '').split(/[，,\s]+/).map(v => String(v || '').trim().toLowerCase()).filter(Boolean).filter((v, i, arr) => arr.indexOf(v) === i);
+			}
+
+			function normalizeAttachmentRows(rows) {
+				if (!Array.isArray(rows)) return [];
+				return rows.map(row => ({
+					id: Number(row && row.id || 0),
+					count: Number(row && row.count || 0)
+				})).filter(row => Number.isFinite(row.id) && row.id > 0 && Number.isFinite(row.count) && row.count > 0).map(row => ({
+					id: Math.floor(row.id),
+					count: Math.floor(row.count)
+				})).sort((a, b) => a.id - b.id);
+			}
+
+			function attachmentRewardText(items = []) {
+				const rows = normalizeAttachmentRows(items);
+				return rows.length ? rows.map(row => `item${row.id} x${fmt(row.count)}`).join('，') : '未配置';
+			}
+
+			function parseMailAttachments() {
+				return normalizeAttachmentRows(String($('mailAttachments').value || '').split(/[\n;,，]+/).map(part => {
+					const arr = String(part || '').trim().split(/[:：*xX\s]+/).filter(Boolean);
+					return { id: arr[0], count: arr[1] };
+				}));
+			}
+
+			function updateMailScope() {
+				const isServer = $('mailScope').value === 'server';
+				$('mailUsersBox').style.display = isServer ? 'none' : '';
+				$('mailServerBox').style.display = isServer ? '' : 'none';
+			}
+
+			function fillMailTargetsFromSelection() {
+				const ids = selectedPlayerIds();
+				if (!ids.length) return msg('请先在用户列表勾选玩家', false);
+				$('mailScope').value = 'users';
+				updateMailScope();
+				$('mailUserIds').value = ids.join('\n');
+				msg(`已带入 ${ids.length} 个玩家`);
+			}
+
+			function clearMailSearch() {
+				$('mailUserFilter').value = '';
+				$('mailBatchFilter').value = '';
+				loadMails();
+			}
+
+			function renderMailTarget(row) {
+				if (row.targetType === 'server') return `区组 ${row.targetServerId || '-'}`;
+				return row.userId || '-';
+			}
+
+			async function loadMails() {
+				$('mailWrap').innerHTML = '<div class="loading">正在加载信件记录...</div>';
+				try {
+					const q = new URLSearchParams();
+					if (str('mailUserFilter')) q.set('userId', str('mailUserFilter'));
+					if (str('mailBatchFilter')) q.set('batchId', str('mailBatchFilter'));
+					q.set('limit', '80');
+					const d = await api('GET', '/api/admin/mails?' + q.toString());
+					const rows = Array.isArray(d.mails) ? d.mails : [];
+					$('mailTotal').textContent = rows.length;
+					$('mailUnread').textContent = rows.filter(row => !row.read).length;
+					$('mailClaimed').textContent = rows.filter(row => row.claimed).length;
+					if (!rows.length) {
+						$('mailWrap').innerHTML = '<div class="empty">暂无信件记录</div>';
+						return;
+					}
+					$('mailWrap').innerHTML = `<table><thead><tr><th>目标</th><th>标题 / 内容</th><th>附件</th><th>批次</th><th>状态</th><th>时间</th></tr></thead><tbody>${rows.map(row=>`<tr><td><b>${esc(renderMailTarget(row))}</b><span class="sub">userId: ${esc(row.userId||'-')}</span></td><td><b>${esc(row.title||'-')}</b><span class="sub">${esc(row.content||'')}</span><span class="sub">发送人：${esc(row.sender||'-')}</span></td><td>${esc(attachmentRewardText(row.attachments||[]))}</td><td><span class="sub">${esc(row.batchId||'-')}</span><span class="sub">操作人：${esc(row.createdBy||'-')}</span></td><td>${row.read?'<span class="tag tb">已读</span>':'<span class="tag to">未读</span>'}${row.claimed?'<span class="tag tg">已领取</span>':'<span class="tag tr">未领取</span>'}</td><td><div>${date(row.createdAt)}</div><span class="sub">过期 ${date(row.expireAt)}</span></td></tr>`).join('')}</tbody></table>`;
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					$('mailWrap').innerHTML = `<div class="empty" style="color:#b42318">加载失败：${esc(e.message)}</div>`;
+					msg('加载信件失败：' + e.message, false);
+				}
+			}
+
+			async function sendMail() {
+				if (!isAdmin()) return msg('当前账号无权发送信件', false);
+				const scope = $('mailScope').value;
+				const body = compact({
+					scope,
+					userIds: scope === 'users' ? $('mailUserIds').value : undefined,
+					serverId: scope === 'server' ? num('mailServerId') : undefined,
+					title: str('mailTitle'),
+					content: $('mailContent').value,
+					sender: str('mailSender') || '系统',
+					attachments: parseMailAttachments(),
+					minClaimLevel: num('mailMinLevel'),
+					expireDays: num('mailExpireDays') || 30,
+					reason: str('mailReason')
+				});
+				if (!body.title || !body.content) return msg('请填写标题和正文', false);
+				if (scope === 'users' && !String(body.userIds || '').trim()) return msg('请填写目标 userId', false);
+				if (scope === 'server' && !body.serverId) return msg('请填写目标大区 serverId', false);
+				if (!confirm(scope === 'server' ? `确定给大区 ${body.serverId} 推送信件吗？` : '确定给指定用户推送信件吗？')) return;
+				try {
+					const d = await api('POST', '/api/admin/mails/send', body);
+					msg(`信件已发送：${fmt(d.total || 0)} 封`);
+					$('mailBatchFilter').value = d.batchId || '';
+					loadMails();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					const m = { MAIL_TARGET_NOT_FOUND: '存在未找到的目标 userId', MAIL_TARGET_EMPTY: '目标范围内没有玩家', SERVER_ID_REQUIRED: '请填写有效大区 ID', MAIL_TARGET_REQUIRED: '请填写目标 userId', MAIL_TITLE_REQUIRED: '请填写标题', MAIL_CONTENT_REQUIRED: '请填写正文' };
+					msg(m[e.message] || ('发送信件失败：' + e.message), false);
+				}
+			}
+
+			function addRechargeAttachmentRow(item = {}) {
+				rechargeAttachmentRow += 1;
+				const rowId = `rc_attach_${rechargeAttachmentRow}`;
+				const wrap = $('rc_attachments');
+				if (!wrap) return;
+				const row = document.createElement('div');
+				row.id = rowId;
+				row.className = 'inline';
+				row.style.marginBottom = '8px';
+				row.innerHTML = `<input class="rc-attach-id" type="number" min="1" placeholder="道具 ID" value="${Number(item.id || 0) > 0 ? Math.floor(Number(item.id || 0)) : ''}" style="flex:1;min-width:120px"><input class="rc-attach-count" type="number" min="1" placeholder="数量" value="${Number(item.count || 0) > 0 ? Math.floor(Number(item.count || 0)) : ''}" style="flex:1;min-width:120px"><button class="btn r" type="button" onclick="removeRechargeAttachmentRow('${rowId}')">删除</button>`;
+				wrap.appendChild(row);
+			}
+
+			function renderRechargeAttachmentRows(items = []) {
+				const wrap = $('rc_attachments');
+				if (!wrap) return;
+				wrap.innerHTML = '';
+				normalizeAttachmentRows(items).forEach(item => addRechargeAttachmentRow(item));
+				if (!wrap.children.length) addRechargeAttachmentRow();
+			}
+
+			function quickAddRechargeAttachmentRow() {
+				const id = Number($('rc_addItemId').value || 0);
+				const count = Number($('rc_addItemCount').value || 0);
+				if (!(id > 0) || !(count > 0)) return msg('请先填写有效的道具 ID 和数量', false);
+				addRechargeAttachmentRow({ id, count });
+				$('rc_addItemId').value = '';
+				$('rc_addItemCount').value = '';
+			}
+
+			function removeRechargeAttachmentRow(rowId) {
+				const row = $(rowId);
+				if (row) row.remove();
+				const wrap = $('rc_attachments');
+				if (wrap && !wrap.children.length) addRechargeAttachmentRow();
+			}
+
+			function collectRechargeAttachments() {
+				return normalizeAttachmentRows(Array.from(document.querySelectorAll('#rc_attachments .inline')).map(row => ({
+					id: Number((row.querySelector('.rc-attach-id') || {}).value || 0),
+					count: Number((row.querySelector('.rc-attach-count') || {}).value || 0)
+				})));
+			}
+
+			function setJsonField(id, value) {
+				const el = $(id);
+				if (!el) return;
+				try {
+					el.value = value == null ? '' : JSON.stringify(value, null, 2);
+				} catch (_err) {
+					el.value = '';
+				}
+			}
+
+			function parseJsonField(id, fallback) {
+				const raw = String($(id).value || '').trim();
+				if (!raw) return fallback;
+				return JSON.parse(raw);
+			}
+
+			function renderAttrRows(rows = []) {
+				const box = $('f_attrRows');
+				if (!box) return;
+				const arr = Array.isArray(rows) ? rows.filter(row => row && Number(row.value || 0) > 0) : [];
+				if (!arr.length) {
+					box.innerHTML = '<div class="hint">暂无属性数据</div>';
+					return;
+				}
+				box.innerHTML = arr.map(row => `<div class="mini-row"><b>${esc(row.name || ('属性#' + (row.id || '')))}</b><span class="sub">ID: ${esc(row.id || '')} / 数值: ${fmt(row.value)}</span>${row.power ? `<span class="sub">战力系数: ${esc(row.power)}</span>` : ''}</div>`).join('');
+			}
+
+			function renderEquipRows(rows = []) {
+				const box = $('f_equipRows');
+				if (!box) return;
+				const arr = Array.isArray(rows) ? rows : [];
+				if (!arr.length) {
+					box.innerHTML = '<div class="hint">暂无装备数据</div>';
+					return;
+				}
+				box.innerHTML = arr.map(row => {
+					const attrs = Array.isArray(row.attrs) && row.attrs.length
+						? row.attrs.slice(0, 4).map(a => `${esc(a.name || ('属性#' + (a.id || '')))} +${fmt(a.value)}`).join('，')
+						: '无属性';
+					return `<div class="mini-row"><b>${row.equipped ? '已穿戴 · ' : ''}${esc(row.name || ('装备#' + (row.id || '')))}</b><span class="sub">UID: ${esc(row.uid || '')} / ID: ${esc(row.id || '')} / ${esc(row.slot || ('部位' + (row.type || '')))}</span><span class="sub">品质: ${esc(row.quality || 1)} / 等级: ${esc(row.level || 1)} / ${esc(row.location || '')}</span><span class="sub">${attrs}${Array.isArray(row.attrs) && row.attrs.length > 4 ? ' ...' : ''}</span></div>`;
+				}).join('');
+			}
+
+			function taskStatusLabel(v) {
+				const n = Number(v || 0);
+				if (n >= 30) return '已完成';
+				if (n >= 20) return '可领取';
+				return '进行中';
+			}
+
+			function taskTypeLabel(v) {
+				const n = Number(v || 0);
+				return {
+					1: '主线任务',
+					2: '支线任务',
+					3: '日常任务',
+					4: '境界任务',
+					5: '活动任务',
+					6: '活动累计'
+				}[n] || `类型${n||0}`;
+			}
+
+			const counterAliasMap = {
+				bagelConsume: '包子消耗次数',
+				equipSaleCount: '装备出售次数',
+				equipSaleSilver: '装备出售银币',
+				mainlineChallengeCount: '主线挑战次数',
+				arenaChallengeCount: '竞技场挑战次数',
+				spiritUpgradeCount: '法相升级次数',
+				farmPlantCount: '灵田播种次数',
+				farmHarvestCount: '灵田收获次数',
+				farmStealCount: '灵田偷取次数',
+				alchemyGenerateCount: '炼丹产出次数',
+				farmRobberFightCount: '田鼠战斗次数',
+				mountRideCount: '坐骑骑乘次数',
+				mountSummonCount: '坐骑召唤次数',
+				mountUpgradeCount: '坐骑升级次数',
+				guildJoinCount: '仙盟加入次数',
+				petComposeCount: '宠物合成次数',
+				petWashCount: '宠物洗练次数',
+				fishCount: '钓鱼次数',
+				fishRodUpgradeCount: '鱼竿升级次数',
+				fishOrderCompleteCount: '钓鱼订单完成次数',
+				gemObtainCount: '宝石获得数量',
+				gemComposeCount: '宝石合成次数',
+				artifactUpgradeCount: '神器升级次数'
+			};
+
+			function counterAlias(key) {
+				return counterAliasMap[key] || key || '未命名计数器';
+			}
+
+			function groupTaskRows(rows = []) {
+				const groups = [{ key: 'main', label: '主线任务', match: row => Number(row.type || 0) === 1 }, { key: 'side', label: '支线任务', match: row => Number(row.type || 0) === 2 }, { key: 'realm', label: '境界任务', match: row => Number(row.type || 0) === 4 }, { key: 'other', label: '其他任务', match: row => ![1, 2, 4].includes(Number(row.type || 0)) }];
+				return groups.map(group => ({ ...group, rows: rows.filter(group.match) }));
+			}
+
+			function buildTaskEditorRow(row = {}) {
+				const el = document.createElement('div');
+				el.className = 'task-row-edit';
+				el.innerHTML = `<div class="task-row-head"><div><b>${esc(row.name||('任务#'+(row.id||'')))}</b><span class="sub">${esc(row.typeLabel||taskTypeLabel(row.type))} · ${esc(taskStatusLabel(row.status))}${row.isCurrentStageTask?' · 当前关卡':''}</span></div><button class="btn g" type="button">移除</button></div><div class="task-mini-grid"><div class="fg"><label>任务ID</label><input data-task-field="id" type="number" min="1" value="${Number(row.id||0)||''}"></div><div class="fg"><label>类型</label><input data-task-field="type" type="number" min="0" value="${Number(row.type||0)||''}"></div><div class="fg"><label>进度</label><input data-task-field="progress" type="number" min="0" value="${Number(row.progress||0)}"></div><div class="fg"><label>目标</label><input data-task-field="target" type="number" min="0" value="${Number(row.target||0)}"></div><div class="fg"><label>状态</label><select data-task-field="status"><option value="10">进行中(10)</option><option value="20">可领取(20)</option><option value="30">已完成(30)</option></select></div><div class="fg"><label>activeId</label><input data-task-field="activeId" type="number" min="0" value="${Number(row.activeId||0)||''}"></div><div class="fg full"><label>备注</label><input data-task-field="name" value="${esc(row.name||'')}" placeholder="仅后台展示，不会写入配置"></div></div>`;
+				const btn = el.querySelector('button');
+				if (btn) btn.onclick = () => el.remove();
+				const status = el.querySelector('[data-task-field="status"]');
+				if (status) status.value = String(Number(row.status || 10));
+				if (row.isCurrentStageTask) el.setAttribute('data-current-stage-task', '1');
+				return el;
+			}
+
+			function buildCounterEditorRow(key = '', value = 0) {
+				const el = document.createElement('div');
+				el.className = 'counter-row-edit';
+				el.innerHTML = `<div class="fg"><label>${esc(counterAlias(key))}</label><input data-counter-field="key" value="${esc(key)}" placeholder="如 farmPlantCount"></div><div class="fg"><label>数值</label><input data-counter-field="value" type="number" min="0" value="${Number(value||0)}"></div><button class="btn g" type="button">移除</button>`;
+				const btn = el.querySelector('button');
+				if (btn) btn.onclick = () => el.remove();
+				const keyInput = el.querySelector('[data-counter-field="key"]');
+				const label = el.querySelector('label');
+				if (keyInput && label) keyInput.addEventListener('input', () => { label.textContent = counterAlias(String(keyInput.value || '').trim()); });
+				return el;
+			}
+
+			function renderTaskManagement(p = {}) {
+				const taskBox = $('taskEditorRows');
+				const counterBox = $('counterEditorRows');
+				if (taskBox) taskBox.innerHTML = '';
+				if (counterBox) counterBox.innerHTML = '';
+				const taskProgress = p.taskProgress || {};
+				const rows = Array.isArray(taskProgress.rows) ? taskProgress.rows : [];
+				const currentStageTaskIds = new Set(Array.isArray(taskProgress.currentStageTaskIds) ? taskProgress.currentStageTaskIds.map(Number) : []);
+				const currentStageRows = rows.filter(row => currentStageTaskIds.has(Number(row.id || 0)) || row.isCurrentStageTask);
+				const otherRows = rows.filter(row => !currentStageTaskIds.has(Number(row.id || 0)) && !row.isCurrentStageTask);
+				if (taskBox) {
+					if (currentStageRows.length) {
+						const wrap = document.createElement('div');
+						wrap.className = 'task-group';
+						wrap.innerHTML = `<h4>${esc(taskProgress.currentStageName || '当前关卡任务')} (${currentStageRows.length})</h4><div class="task-group-list"></div>`;
+						const list = wrap.querySelector('.task-group-list');
+						currentStageRows.forEach(row => list.appendChild(buildTaskEditorRow({ ...row, isCurrentStageTask: true })));
+						taskBox.appendChild(wrap);
+					}
+					groupTaskRows(otherRows).forEach(group => {
+						if (!group.rows.length) return;
+						const wrap = document.createElement('div');
+						wrap.className = 'task-group';
+						wrap.setAttribute('data-group', group.key);
+						wrap.innerHTML = `<h4>${esc(group.label)} (${group.rows.length})</h4><div class="task-group-list"></div>`;
+						const list = wrap.querySelector('.task-group-list');
+						group.rows.forEach(row => list.appendChild(buildTaskEditorRow(row)));
+						taskBox.appendChild(wrap);
+					});
+					if (!rows.length) taskBox.innerHTML = '<div class="hint">暂无任务，点击下方按钮可手动添加。</div>';
+				}
+				const counters = taskProgress.counters && typeof taskProgress.counters === 'object' ? taskProgress.counters : {};
+				Object.keys(counters).forEach(key => counterBox.appendChild(buildCounterEditorRow(key, counters[key])));
+				if (counterBox && !Object.keys(counters).length) counterBox.innerHTML = '<div class="hint">暂无主任务计数器，点击下方按钮可手动添加。</div>';
+			}
+
+			function addTaskEditorRow() {
+				const box = $('taskEditorRows');
+				if (!box) return;
+				if (box.querySelector('.hint')) box.innerHTML = '';
+				let group = box.querySelector('.task-group[data-group="other"] .task-group-list');
+				if (!group) {
+					const wrap = document.createElement('div');
+					wrap.className = 'task-group';
+					wrap.setAttribute('data-group', 'other');
+					wrap.innerHTML = '<h4>其他任务</h4><div class="task-group-list"></div>';
+					box.appendChild(wrap);
+					group = wrap.querySelector('.task-group-list');
+				}
+				group.appendChild(buildTaskEditorRow({ type: 0, typeLabel: '待分组任务', status: 10, progress: 0, target: 1 }));
+			}
+
+			function addCounterEditorRow() {
+				const box = $('counterEditorRows');
+				if (!box) return;
+				if (box.querySelector('.hint')) box.innerHTML = '';
+				box.appendChild(buildCounterEditorRow('', 0));
+			}
+
+			function collectTaskEditorRows() {
+				const tasks = {};
+				document.querySelectorAll('#taskEditorRows .task-row-edit').forEach(row => {
+					const getVal = name => row.querySelector(`[data-task-field="${name}"]`);
+					const id = Number(getVal('id') && getVal('id').value || 0);
+					if (!id) return;
+					tasks[String(id)] = {
+						id,
+						type: Math.max(0, Number(getVal('type') && getVal('type').value || 0)),
+						progress: Math.max(0, Number(getVal('progress') && getVal('progress').value || 0)),
+						target: Math.max(0, Number(getVal('target') && getVal('target').value || 0)),
+						status: Math.max(10, Number(getVal('status') && getVal('status').value || 10))
+					};
+				});
+				return tasks;
+			}
+
+			function collectCounterEditorRows() {
+				const counters = {};
+				document.querySelectorAll('#counterEditorRows .counter-row-edit').forEach(row => {
+					const keyInput = row.querySelector('[data-counter-field="key"]');
+					const valueInput = row.querySelector('[data-counter-field="value"]');
+					const key = String(keyInput && keyInput.value || '').trim();
+					if (!key) return;
+					const val = Number(valueInput && valueInput.value || 0);
+					counters[key] = Number.isFinite(val) ? Math.max(0, Math.floor(val)) : 0;
+				});
+				return counters;
+			}
+
+			function openTaskManager() {
+				$('taskO').classList.add('on');
+			}
+
+			function closeTaskManager() {
+				$('taskO').classList.remove('on');
+			}
+
+			function openBatchCreate() {
+				if (!isAdmin()) return msg('当前账号无权批量创建玩家', false);
+				$('batchO').classList.add('on');
+			}
+
+			function closeBatchCreate() {
+				$('batchO').classList.remove('on');
+			}
+
+			function selectedPlayerIds() {
+				return Array.from(selectedPlayers.values());
+			}
+
+			function updateSelectedPlayersTip() {
+				$('selectedPlayersTip').textContent = `已选择 ${selectedPlayers.size} 个玩家`;
+				const all = Array.from(document.querySelectorAll('.player-check'));
+				const checked = all.length > 0 && all.every(el => el.checked);
+				if ($('checkAllPlayers')) $('checkAllPlayers').checked = checked;
+				if ($('checkAllPlayersHead')) $('checkAllPlayersHead').checked = checked;
+			}
+
+			function togglePlayerCheck(uid, checked) {
+				checked ? selectedPlayers.add(uid) : selectedPlayers.delete(uid);
+				updateSelectedPlayersTip();
+			}
+
+			function toggleAllPlayerChecks(checked) {
+				document.querySelectorAll('.player-check').forEach(el => {
+					el.checked = !!checked;
+					checked ? selectedPlayers.add(el.value) : selectedPlayers.delete(el.value);
+				});
+				updateSelectedPlayersTip();
+			}
+
+			async function batchCreatePlayers() {
+				if (!isAdmin()) return msg('当前账号无权批量创建玩家', false);
+				try {
+					const d = await api('POST', '/api/admin/players/batch-create', {
+						count: num('b_count'),
+						startIndex: num('b_startIndex'),
+						userPrefix: str('b_userPrefix'),
+						namePrefix: str('b_namePrefix')
+					});
+					msg(`批量创建成功，本次创建 ${fmt(d.count||0)} 个玩家`);
+					$('b_startIndex').value = Number(d.nextIndex || num('b_startIndex') || 1);
+					closeBatchCreate();
+					loadPlayers(1);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('批量创建失败：' + e.message, false);
+				}
+			}
+
+			function batchOpenGive() {
+				if (!hasPerm('giveItems')) return msg('当前账号无权批量发放', false);
+				const ids = selectedPlayerIds();
+				if (!ids.length) return msg('请先勾选玩家', false);
+				openGive(ids);
+				msg(`已打开批量发放弹窗，目标玩家 ${ids.length} 个`);
+			}
+
+			async function batchDeletePlayers() {
+				if (!isAdmin()) return msg('当前账号无权批量删除玩家', false);
+				const ids = selectedPlayerIds();
+				if (!ids.length) return msg('请先勾选玩家', false);
+				if (!confirm(`确认批量删除 ${ids.length} 个玩家吗？`)) return;
+				let ok = 0;
+				for (const uid of ids) {
+					try {
+						await api('DELETE', `/api/admin/players/${uid}`);
+						ok += 1;
+						selectedPlayers.delete(uid);
+					} catch (_err) {}
+				}
+				updateSelectedPlayersTip();
+				msg(`批量删除完成，成功 ${ok} / ${ids.length}`);
+				loadPlayers(page);
+			}
+
+			async function unlockAllSystems(uid, playerName) {
+				if (!isAdmin()) return msg('当前账号无权解锁系统', false);
+				if (!uid) return msg('缺少玩家标识', false);
+				if (!confirm(`确定为玩家“${playerName || uid}”一键解锁所有系统吗？`)) return;
+				try {
+					await api('POST', `/api/admin/players/${uid}/unlock-all-systems`);
+					msg(`已为 ${playerName || uid} 解锁全部系统`);
+					loadPlayers(page);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('一键解锁系统失败：' + e.message, false)
+				}
+			}
+
+			/* ===== 公益服免费充值白名单 ===== */
+			let wlTarget = '';
+			async function openWhitelist(uid, namev) {
+				wlTarget = uid || '';
+				$('whitelistO').classList.add('on');
+				$('wl_input').value = namev || uid || '';
+				await loadWhitelist();
+			}
+			function closeWhitelist() {
+				$('whitelistO').classList.remove('on');
+			}
+			async function loadWhitelist() {
+				const box = $('wl_list');
+				box.innerHTML = '<div class="hint">加载中...</div>';
+				try {
+					const d = await api('GET', '/api/admin/free-recharge-whitelist');
+					const list = Array.isArray(d.list) ? d.list : [];
+					$('wl_count').textContent = list.length;
+					if (!list.length) {
+						box.innerHTML = '<div class="hint">白名单为空（所有玩家点充值都会提示不在白名单）</div>';
+						return;
+					}
+					box.innerHTML = list.map(row => `
+						<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid #e2e8f0">
+							<div>
+								<b>${esc(row.name || '(玩家已删除)')}</b>
+								<span class="sub" style="display:block">${esc(row.userId)}${row.level ? ' · Lv.' + row.level : ''}${row.exists===false?' · <span style="color:#b42318">数据库无此玩家</span>':''}</span>
+							</div>
+							<button class="btn r" onclick="removeWhitelist('${esc(row.userId)}')">移除</button>
+						</div>`).join('');
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					box.innerHTML = '<div class="hint" style="color:#b42318">加载失败：' + esc(e.message) + '</div>';
+				}
+			}
+			async function addWhitelist() {
+				const v = ($('wl_input').value || '').trim();
+				if (!v) return msg('请输入玩家名或 userId', false);
+				// 是 userId 就传 userId，否则按玩家名查
+				const body = /^u_/.test(v) ? { userId: v } : { name: v };
+				try {
+					const d = await api('POST', '/api/admin/free-recharge-whitelist', body);
+					msg(d.added ? ('已加入白名单：' + (d.userId || v)) : ('该玩家已在白名单中'), true);
+					$('wl_input').value = '';
+					await loadWhitelist();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('添加失败：' + (e.message === 'PLAYER_NOT_FOUND' ? '找不到该玩家' : e.message), false);
+				}
+			}
+			async function removeWhitelist(uid) {
+				if (!confirm('确定从免充白名单移除？\n' + uid)) return;
+				try {
+					await api('DELETE', '/api/admin/free-recharge-whitelist/' + encodeURIComponent(uid));
+					msg('已移除', true);
+					await loadWhitelist();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('移除失败：' + e.message, false);
+				}
+			}
+
+			async function adminMutePlayer(uid, namev) {
+				const reason = prompt(`请输入禁言玩家“${namev || uid}”的原因`, '违反聊天规则');
+				if (reason === null) return;
+				const hoursText = prompt('禁言时长（小时），留空或 0 表示永久', '24');
+				if (hoursText === null) return;
+				try {
+					await api('POST', `/api/admin/players/${encodeURIComponent(uid)}/mute`, { reason, durationHours: Number(hoursText || 0) || 0 });
+					msg('玩家已禁言，并已发送系统邮件');
+					loadPlayers(page);
+					if (tabName === 'chats') loadChats();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('禁言失败：' + e.message, false);
+				}
+			}
+
+			async function adminUnmutePlayer(uid, namev) {
+				const reason = prompt(`请输入解除玩家“${namev || uid}”禁言的原因`, '后台解除禁言');
+				if (reason === null) return;
+				try {
+					await api('POST', `/api/admin/players/${encodeURIComponent(uid)}/unmute`, { reason });
+					msg('玩家已解除禁言，并已发送系统邮件');
+					loadPlayers(page);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('解禁言失败：' + e.message, false);
+				}
+			}
+
+			async function adminBanPlayerAccount(uid, namev) {
+				const reason = prompt(`请输入封禁玩家账号“${namev || uid}”的原因`, '违反用户规则');
+				if (reason === null) return;
+				if (!confirm(`确定封禁玩家账号“${namev || uid}”吗？封禁后该账号无法登录。`)) return;
+				try {
+					await api('POST', `/api/admin/players/${encodeURIComponent(uid)}/ban-account`, { reason });
+					msg('玩家账号已封禁，并已发送系统邮件');
+					loadPlayers(page);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('封禁账号失败：' + e.message, false);
+				}
+			}
+
+			async function adminUnbanPlayerAccount(uid, namev) {
+				const reason = prompt(`请输入解封玩家账号“${namev || uid}”的原因`, '后台解除账号封禁');
+				if (reason === null) return;
+				try {
+					await api('POST', `/api/admin/players/${encodeURIComponent(uid)}/unban-account`, { reason });
+					msg('玩家账号已解封，并已发送系统邮件');
+					loadPlayers(page);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('解封账号失败：' + e.message, false);
+				}
+			}
+
+			async function adminBanAgent(agentId, username) {
+				const reason = prompt(`请输入封禁代理账号“${username || agentId}”的原因`, '后台封禁代理账号');
+				if (reason === null) return;
+				try {
+					await api('POST', `/api/admin/agents/${encodeURIComponent(agentId)}/ban`, { reason, note: reason });
+					msg('代理账号已封禁');
+					loadAgents();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('封禁代理失败：' + e.message, false);
+				}
+			}
+
+			async function adminUnbanAgent(agentId, username) {
+				const reason = prompt(`请输入解封代理账号“${username || agentId}”的原因`, '后台解除代理封禁');
+				if (reason === null) return;
+				try {
+					await api('POST', `/api/admin/agents/${encodeURIComponent(agentId)}/unban`, { reason });
+					msg('代理账号已解封');
+					loadAgents();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('解封代理失败：' + e.message, false);
+				}
+			}
+
+			async function batchUnlockAllSystems() {
+				const ids = selectedPlayerIds();
+				if (!ids.length) return msg('请先勾选玩家', false);
+				if (!confirm(`确定为已选择的 ${ids.length} 个玩家一键解锁所有系统吗？`)) return;
+				try {
+					const d = await api('POST', '/api/admin/players/batch-unlock-all-systems', { userIds: ids });
+					const failedCount = Number(d.failedCount || 0);
+					const failedTip = failedCount > 0 ? `，失败 ${fmt(failedCount)}` : '';
+					msg(`批量解锁完成，成功 ${fmt(d.successCount || 0)} / ${fmt(d.total || ids.length)}${failedTip}`);
+					if (failedCount > 0) {
+						const firstFailed = Array.isArray(d.failed) && d.failed.length ? d.failed[0] : null;
+						msg(`有 ${fmt(failedCount)} 个玩家未解锁${firstFailed ? `，例如 ${firstFailed.userId}: ${firstFailed.reason}` : ''}`, false);
+					}
+					loadPlayers(page);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('批量解锁系统失败：' + e.message, false)
+				}
+			}
+
+			function confirmClearGameData(text) {
+				if (!confirm(`${text}\n\n该操作只清除游戏数据，不删除玩家账号和角色映射。`)) return false;
+				return confirm(`二次确认：${text}\n\n清档后玩家游戏进度、资产、任务、区服角色绑定等会清零，且不可恢复。确定继续吗？`);
+			}
+
+			async function submitClearGameData(payload, successText) {
+				try {
+					const d = await api('POST', '/api/admin/players/clear-game-data', {
+						...payload,
+						confirmText: 'CLEAR_GAME_DATA'
+					});
+					const failedCount = Number(d.failedCount || 0);
+					const failedTip = failedCount > 0 ? `，失败 ${fmt(failedCount)}` : '';
+					msg(`${successText}，成功 ${fmt(d.successCount || 0)} / ${fmt(d.total || 0)}${failedTip}`);
+					selectedPlayers.clear();
+					updateSelectedPlayersTip();
+					loadPlayers(1);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('清档失败：' + e.message, false);
+				}
+			}
+
+			async function clearSelectedGameData() {
+				if (!isAdmin()) return msg('当前账号无权清档玩家数据', false);
+				const ids = selectedPlayerIds();
+				if (!ids.length) return msg('请先勾选玩家', false);
+				const serverText = prompt('如需限定某区，请输入大区 ID；留空表示不按区服限制。', '');
+				if (serverText === null) return;
+				const serverId = Number(String(serverText || '').trim() || 0);
+				const zoneTip = serverId > 0 ? `（限定 ${serverId} 区）` : '';
+				if (!confirmClearGameData(`确认清档已选 ${ids.length} 个玩家${zoneTip}吗？`)) return;
+				await submitClearGameData({ scope: 'selected', userIds: ids, serverId }, '选中玩家清档完成');
+			}
+
+			async function clearAllGameData() {
+				if (!isAdmin()) return msg('当前账号无权清档玩家数据', false);
+				const serverText = prompt('输入大区 ID 则清该区全部玩家；留空则清全服全部玩家。', '');
+				if (serverText === null) return;
+				const serverId = Number(String(serverText || '').trim() || 0);
+				const scope = serverId > 0 ? 'server' : 'all';
+				const targetText = scope === 'server' ? `${serverId} 区全部玩家` : '全服全部玩家';
+				if (!confirmClearGameData(`确认清档${targetText}吗？`)) return;
+				await submitClearGameData({ scope, serverId }, `${targetText}清档完成`);
+			}
+
+			async function unlockAllSystemsFromEdit() {
+				const uid = String($('eu').value || '').trim();
+				const playerName = String($('f_name').value || '').trim() || uid;
+				const btn = $('f_unlockAllSystemsBtn');
+				if (btn && btn.disabled) return msg('该玩家已全部解锁，无需重复操作');
+				if (!uid) return msg('请先打开玩家编辑弹窗', false);
+				if (!confirm(`确定为玩家“${playerName}”一键解锁所有系统吗？`)) return;
+				try {
+					await api('POST', `/api/admin/players/${uid}/unlock-all-systems`);
+					msg(`已为 ${playerName} 解锁全部系统`);
+					await openEdit(uid);
+					loadPlayers(page);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('弹窗内解锁系统失败：' + e.message, false)
+				}
+			}
+
+			function taskMarkCurrentStage(status) {
+				document.querySelectorAll('#taskEditorRows [data-current-stage-task="1"]').forEach(row => {
+					const statusInput = row.querySelector('[data-task-field="status"]');
+					const progressInput = row.querySelector('[data-task-field="progress"]');
+					const targetInput = row.querySelector('[data-task-field="target"]');
+					if (statusInput) statusInput.value = String(status);
+					if (progressInput && targetInput && Number(status) >= 20) progressInput.value = targetInput.value || '0';
+				});
+			}
+
+			function taskSyncCurrentStageTargets() {
+				document.querySelectorAll('#taskEditorRows [data-current-stage-task="1"]').forEach(row => {
+					const progressInput = row.querySelector('[data-task-field="progress"]');
+					const targetInput = row.querySelector('[data-task-field="target"]');
+					const statusInput = row.querySelector('[data-task-field="status"]');
+					if (statusInput && Number(statusInput.value || 0) >= 20 && progressInput && targetInput) progressInput.value = targetInput.value || '0';
+				});
+				msg('已同步当前关卡任务目标值');
+			}
+
+			function closeAll() {
+				['editO', 'taskO', 'giveO', 'batchO', 'rechargeO', 'rechargeConfigO', 'redeemO', 'delO', 'srvO'].forEach(id => $(id).classList.remove('on'))
+			}
+
+			function setLogin(show) {
+				$('logO').classList.toggle('on', show);
+				$('logoutBtn').style.display = show ? 'none' : '';
+				const label = currentUser ? `${currentUser.displayName||currentUser.username||'-'} · ${isAdmin() ? '管理员' : '代理商'}` : '';
+				$('loginStatus').textContent = show ? '' : `已登录：${label}`;
+			}
+			async function api(method, path, body) {
+				const opt = {
+					method,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + tok()
+					}
+				};
+				if (body !== undefined) opt.body = JSON.stringify(body);
+				const r = await fetch(location.origin + path, opt);
+				if (r.status === 401) {
+					sessionStorage.removeItem('admin_token');
+					sessionStorage.removeItem('admin_user');
+					currentUser = null;
+					setLogin(true);
+					throw new Error('SESSION_EXPIRED');
+				}
+				let d = {};
+				try {
+					d = await r.json()
+				} catch {}
+				if (!r.ok) throw new Error(d.error || ('HTTP ' + r.status));
+				return d;
+			}
+			async function login() {
+				const username = str('lu'),
+					password = $('lp').value,
+					err = $('le');
+				err.textContent = '';
+				if (!username || !password) {
+					err.textContent = '请输入用户名和密码';
+					return;
+				}
+				try {
+					const r = await fetch(location.origin + '/api/admin/auth/login', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							username,
+							password
+						})
+					});
+					const d = await r.json();
+					if (!r.ok) {
+						err.textContent = {
+							INVALID_CREDENTIALS: '用户名或密码错误',
+							ADMIN_PASSWORD_NOT_SET: '服务端未配置后台密码',
+							AGENT_DISABLED: '代理账号已停用'
+						} [d.error] || d.error || '登录失败';
+						return;
+					}
+					setTok(d.token || '');
+					currentUser = d.user || {
+						username,
+						displayName: username,
+						role: 'admin',
+						permissions: {
+							giveItems: true,
+							recharge: true
+						}
+					};
+					setUser(currentUser);
+					applyRoleView();
+					setLogin(false);
+					$('lp').value = '';
+					tab(tabName);
+				} catch (e) {
+					err.textContent = '网络错误：' + e.message;
+				}
+			}
+			async function logout() {
+				try {
+					if (tok()) await fetch(location.origin + '/api/admin/auth/logout', {
+						method: 'POST',
+						headers: {
+							Authorization: 'Bearer ' + tok()
+						}
+					})
+				} catch {}
+				sessionStorage.removeItem('admin_token');
+				sessionStorage.removeItem('admin_user');
+				currentUser = null;
+				setLogin(true)
+			}
+			async function auth() {
+				currentUser = getSavedUser();
+				applyRoleView();
+				if (!tok()) {
+					setLogin(true);
+					return;
+				}
+				try {
+					const r = await fetch(location.origin + '/api/admin/auth/me', {
+						headers: {
+							Authorization: 'Bearer ' + tok()
+						}
+					});
+					if (r.status === 401) {
+						sessionStorage.removeItem('admin_token');
+						sessionStorage.removeItem('admin_user');
+						currentUser = null;
+						setLogin(true);
+						return;
+					}
+					const d = await r.json();
+					currentUser = d.user || currentUser;
+					setUser(currentUser);
+					applyRoleView();
+					setLogin(false);
+					tab(tabName);
+				} catch {
+					setLogin(true)
+				}
+			}
+
+			function tab(n) {
+				n = normalizeModuleName(n);
+				if (!isAdmin() && (n === 'servers' || n === 'agents' || n === 'rechargeConfigs' || n === 'redeemCodes' || n === 'mails' || n === 'chats')) n = 'players';
+				if (standaloneModule && n !== standaloneModule) n = standaloneModule;
+				tabName = n;
+				sessionStorage.setItem('admin_tab', n);
+				if (location.hash.slice(1) !== n) history.replaceState(null, '', `${location.pathname}${location.search}#${n}`);
+				$('tp').classList.toggle('on', n === 'players');
+				$('ta').classList.toggle('on', n === 'agents');
+				$('trc').classList.toggle('on', n === 'rechargeConfigs');
+				$('tredeem').classList.toggle('on', n === 'redeemCodes');
+				$('tm').classList.toggle('on', n === 'mails');
+				$('tc').classList.toggle('on', n === 'chats');
+				$('tl').classList.toggle('on', n === 'logs');
+				$('ts').classList.toggle('on', n === 'servers');
+				$('players').classList.toggle('on', n === 'players');
+				$('agents').classList.toggle('on', n === 'agents');
+				$('rechargeConfigs').classList.toggle('on', n === 'rechargeConfigs');
+				$('redeemCodes').classList.toggle('on', n === 'redeemCodes');
+				$('mails').classList.toggle('on', n === 'mails');
+				$('chats').classList.toggle('on', n === 'chats');
+				$('logs').classList.toggle('on', n === 'logs');
+				$('servers').classList.toggle('on', n === 'servers');
+				applyStandaloneModuleView();
+				if (!tok()) return;
+				if (n === 'players') loadPlayers(page);
+				else if (n === 'agents') loadAgents();
+				else if (n === 'rechargeConfigs') loadRechargeConfigs();
+				else if (n === 'redeemCodes') loadRedeemCodes();
+				else if (n === 'mails') loadMails();
+				else if (n === 'chats') loadChats();
+				else if (n === 'logs') loadActionLogs(logPage);
+				else loadServers()
+			}
+
+			function clearSearch() {
+				$('search').value = '';
+				search = '';
+				loadPlayers(1)
+			}
+
+			function renderPg(p, ps) {
+				$('pg').innerHTML = !ps || ps <= 1 ? '' :
+					`<button class="btn g" onclick="loadPlayers(1)" ${p<=1?'disabled':''}>首页</button><button class="btn g" onclick="loadPlayers(${p-1})" ${p<=1?'disabled':''}>上一页</button><span>第 ${p} / ${ps} 页</span><button class="btn g" onclick="loadPlayers(${p+1})" ${p>=ps?'disabled':''}>下一页</button><button class="btn g" onclick="loadPlayers(${ps})" ${p>=ps?'disabled':''}>末页</button>`
+			}
+
+			function renderLogPg(p, ps) {
+				$('logPg').innerHTML = !ps || ps <= 1 ? '' :
+					`<button class="btn g" onclick="loadActionLogs(1)" ${p<=1?'disabled':''}>首页</button><button class="btn g" onclick="loadActionLogs(${p-1})" ${p<=1?'disabled':''}>上一页</button><span>第 ${p} / ${ps} 页</span><button class="btn g" onclick="loadActionLogs(${p+1})" ${p>=ps?'disabled':''}>下一页</button><button class="btn g" onclick="loadActionLogs(${ps})" ${p>=ps?'disabled':''}>末页</button>`
+			}
+
+			function clearActionLogSearch() {
+				$('logKeyword').value = '';
+				$('logAction').value = '';
+				$('logResult').value = '';
+				loadActionLogs(1);
+			}
+
+			function clearChatSearch() {
+				$('chatKeyword').value = '';
+				$('chatUserId').value = '';
+				$('chatChannel').value = 'all';
+				$('chatLimit').value = '50';
+				loadChats();
+			}
+
+			function updateChatAutoRefresh() {
+				if (chatRefreshTimer) {
+					clearInterval(chatRefreshTimer);
+					chatRefreshTimer = null;
+				}
+				const seconds = Number($('chatAutoRefresh') && $('chatAutoRefresh').value || 0);
+				if (seconds > 0) chatRefreshTimer = setInterval(() => {
+					if (tabName === 'chats') loadChats(true);
+				}, seconds * 1000);
+			}
+
+			async function loadChats(silent = false) {
+				if (!silent) $('chatWrap').innerHTML = '<div class="loading">正在加载聊天记录...</div>';
+				try {
+					const keyword = str('chatKeyword');
+					const userId = str('chatUserId');
+					const channel = str('chatChannel') || 'all';
+					const limit = str('chatLimit') || '50';
+					const d = await api('GET', `/api/admin/chats?channel=${encodeURIComponent(channel)}&limit=${encodeURIComponent(limit)}&keyword=${encodeURIComponent(keyword)}&userId=${encodeURIComponent(userId)}`);
+					const arr = Array.isArray(d.chats) ? d.chats : [];
+					$('chTotal').textContent = fmt(d.total || arr.length);
+					$('chWorld').textContent = fmt(arr.filter(row => Number(row.channel || 0) === 0).length);
+					$('chSystem').textContent = fmt(arr.filter(row => Number(row.channel || 0) === 1).length);
+					$('chUpdated').textContent = new Date().toLocaleTimeString('zh-CN');
+					if (!arr.length) {
+						$('chatWrap').innerHTML = '<div class="empty">暂无匹配的聊天记录</div>';
+						return;
+					}
+					$('chatWrap').innerHTML = `<table><thead><tr><th>时间</th><th>频道</th><th>玩家</th><th>内容</th><th>类型</th><th>操作</th></tr></thead><tbody>${arr.map(row=>{
+						const summary = row.summary || {};
+						const uid = summary.userId || '';
+						const name = summary.name || (row.sys ? '系统' : '-');
+						const canMute = isAdmin() && uid && !row.sys;
+						return `<tr><td>${date(row.time)}</td><td>${Number(row.channel||0)===1?'<span class="tag to">系统</span>':'<span class="tag tb">世界</span>'}</td><td><b>${esc(name)}</b><span class="sub">userId: ${esc(uid || '-')}</span><span class="sub">dbid: ${esc(summary.dbid || '-')}</span><span class="sub">Lv.${fmt(summary.level || 0)} / S${esc(summary.serverId || '-')}</span></td><td><div>${esc(row.text || row.rawContent || '-')}</div>${row.rawContent && row.rawContent !== row.text ? `<span class="sub">raw: ${esc(row.rawContent)}</span>` : ''}</td><td><span class="sub">msgType: ${esc(row.msgType)}</span><span class="sub">reportId: ${esc(row.reportId || '-')}</span></td><td>${canMute ? `<button class="btn w" onclick="adminMutePlayer('${esc(uid)}','${esc(name)}')">禁言</button>` : '<span class="hint">无</span>'}</td></tr>`;
+					}).join('')}</tbody></table>`;
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					$('chatWrap').innerHTML = `<div class="empty" style="color:#b42318">加载失败：${esc(e.message)}</div>`;
+				}
+			}
+
+			async function loadActionLogs(p = 1) {
+				logPage = p;
+				$('logWrap').innerHTML = '<div class="loading">正在加载操作日志...</div>';
+				try {
+					const keyword = str('logKeyword');
+					const action = str('logAction');
+					const result = str('logResult');
+					const d = await api('GET', `/api/admin/action-logs?page=${p}&limit=20&keyword=${encodeURIComponent(keyword)}&action=${encodeURIComponent(action)}&result=${encodeURIComponent(result)}`);
+					const arr = Array.isArray(d.logs) ? d.logs : [];
+					$('lgTotal').textContent = fmt(d.total || 0);
+					$('lgPage').textContent = d.page || 1;
+					$('lgPages').textContent = d.pages || 0;
+					if (!arr.length) {
+						$('logWrap').innerHTML = '<div class="empty">暂无匹配的操作日志</div>';
+						$('logPg').innerHTML = '';
+						return;
+					}
+					$('logWrap').innerHTML = `<table><thead><tr><th>时间</th><th>操作人</th><th>动作</th><th>目标</th><th>结果</th><th>原因</th><th>详情</th></tr></thead><tbody>${arr.map(row=>`<tr><td>${date(row.createdAt)}</td><td><b>${esc(row.operatorUsername||'-')}</b><span class="sub">${esc(row.operatorRole||'-')} / ${esc(row.operatorAgentId||'-')}</span></td><td>${esc(row.action||'-')}</td><td><div>${esc(row.targetPlayerName||row.targetUserId||'-')}</div><span class="sub">userId: ${esc(row.targetUserId||'-')}</span><span class="sub">agentId: ${esc(row.targetAgentId||'-')}</span></td><td>${row.result==='success'?'<span class="tag tg">成功</span>':row.result==='rejected'?'<span class="tag to">拒绝</span>':'<span class="tag tr">失败</span>'}</td><td>${esc(row.reason||'-')}</td><td><span class="sub">${esc(JSON.stringify(row.detail||{}))}</span></td></tr>`).join('')}</tbody></table>`;
+					renderLogPg(d.page || 1, d.pages || 0);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					$('logWrap').innerHTML = `<div class="empty" style="color:#b42318">加载失败：${esc(e.message)}</div>`;
+				}
+			}
+
+			function renderPlayerActions(p) {
+				const acts = [];
+				if (isAdmin()) {
+					acts.push(`<button class="btn g" onclick="openEdit('${esc(p.userId)}')">编辑</button>`);
+					acts.push(`<button class="btn w" onclick="openEditAndTask('${esc(p.userId)}')">任务</button>`);
+					acts.push(`<button class="btn g" onclick="resetPlayerPassword('${esc(p.userId)}','${esc(p.name)}')">重置密码</button>`);
+					acts.push(p.chatMuted ? `<button class="btn s" onclick="adminUnmutePlayer('${esc(p.userId)}','${esc(p.name)}')">解禁言</button>` : `<button class="btn w" onclick="adminMutePlayer('${esc(p.userId)}','${esc(p.name)}')">禁言</button>`);
+					acts.push(Number(p.accountStatus || 1) <= 0 ? `<button class="btn s" onclick="adminUnbanPlayerAccount('${esc(p.userId)}','${esc(p.name)}')">解封账号</button>` : `<button class="btn r" onclick="adminBanPlayerAccount('${esc(p.userId)}','${esc(p.name)}')">封禁账号</button>`);
+				}
+				if (hasPerm('giveItems')) acts.push(`<button class="btn w" onclick="openGive('${esc(p.userId)}')">发放</button>`);
+				if (hasPerm('recharge')) acts.push(`<button class="btn s" onclick="openRecharge('${esc(p.userId)}','${esc(p.name)}')">充值</button>`);
+				if (isAdmin()) {
+					acts.push(`<button class="btn s" onclick="unlockAllSystems('${esc(p.userId)}','${esc(p.name)}')">解锁系统</button>`);
+					acts.push(`<button class="btn w" onclick="openWhitelist('${esc(p.userId)}','${esc(p.name)}')">免充</button>`);
+					acts.push(`<button class="btn r" onclick="openDel('${esc(p.userId)}','${esc(p.name)}')">删除</button>`);
+				}
+				return acts.length ? `<div class="acts">${acts.join('')}</div>` : '<span class="hint">无可用操作</span>';
+			}
+			async function loadPlayers(p = 1) {
+				page = p;
+				search = $('search').value.trim();
+				$('tableWrap').innerHTML = '<div class="loading">正在加载玩家数据...</div>';
+				try {
+					const d = await api('GET', `/api/admin/players?page=${p}&limit=20&search=${encodeURIComponent(search)}`),
+						arr = Array.isArray(d.players) ? d.players : [];
+					$('totalBadge').textContent = d.total || 0;
+					$('stTotal').textContent = fmt(d.total);
+					$('stPage').textContent = d.page || 1;
+					$('stPages').textContent = d.pages || 0;
+					if (!arr.length) {
+						$('tableWrap').innerHTML = '<div class="empty">没有找到匹配的玩家数据</div>';
+						$('pg').innerHTML = '';
+						return;
+					}
+					$('tableWrap').innerHTML = `<table><thead><tr><th><input id="checkAllPlayersHead" type="checkbox" onchange="toggleAllPlayerChecks(this.checked)"></th><th>玩家</th><th>账号 / 区服</th><th>进度</th><th>资产</th><th>关系</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${arr.map(p=>`<tr><td><input class="player-check" type="checkbox" value="${esc(p.userId)}" ${selectedPlayers.has(p.userId)?'checked':''} onchange="togglePlayerCheck('${esc(p.userId)}', this.checked)"></td><td><b>${esc(p.name)}</b><span class="sub">userId: ${esc(p.userId)}</span><span class="sub">playerId: ${esc(p.playerId)}</span>${p.chatMuted?`<span class="sub" style="color:#b42318">已禁言：${esc(p.muteReason||'-')}</span>`:''}</td><td><div>${p.accountId?esc(p.accountId):'<span style="color:#94a3b8">未绑定账号</span>'}</div><span class="sub">roleId: ${p.roleId||'-'}</span><span class="sub">serverId: ${p.serverId||'-'}</span>${Number(p.accountStatus||1)<=0?'<span class="tag tr">账号封禁</span>':''}</td><td><span class="tag tb">Lv.${p.level||1}</span><span class="sub">章节 ${p.chapter||1}-${p.raidLevel||1}</span><span class="sub">境界 ${p.stage||1} / VIP ${p.vipLevel||0}</span><span class="sub">法相 ${p.spiritRank||1} 阶</span></td><td><div>元宝 ${fmt(p.diamond)}</div><span class="sub">加速符 ${fmt(p.gold)} / 银币 ${fmt(p.silver)}</span><span class="sub">天衍令 小/中/大 ${fmt(p.tianyanSmall)} / ${fmt(p.tianyanMedium)} / ${fmt(p.tianyanLarge)}</span><span class="sub">包子 ${fmt(p.baozi)} / 累充 ${fmt(p.totalRecharge)}</span></td><td><div>agentId: ${p.agentId?esc(p.agentId):'-'}</div><span class="sub">inviteCode: ${p.inviteCode?esc(p.inviteCode):'-'}</span></td><td><div>${date(p.updatedAt)}</div><span class="sub">创建于 ${date(p.createdAt)}</span><span class="sub">最后登录 ${date(p.lastLoginTime)}</span></td><td>${renderPlayerActions(p)}</td></tr>`).join('')}</tbody></table>`;
+					updateSelectedPlayersTip();
+					renderPg(d.page || 1, d.pages || 0);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					$('tableWrap').innerHTML = `<div class="empty" style="color:#b42318">加载失败：${esc(e.message)}</div>`;
+					msg('加载玩家数据失败：' + e.message, false)
+				}
+			}
+			async function openEdit(uid) {
+				if (!isAdmin()) return msg('当前账号无权编辑玩家完整资料', false);
+				try {
+					const d = await api('GET', `/api/admin/players/${uid}`),
+						p = d.player || {};
+					$('eu').value = p.userId || '';
+					$('editT').textContent = `编辑玩家：${p.name||p.userId||''}`;
+					$('taskManagerTitle').textContent = `任务进度管理：${p.name||p.userId||''}`;
+					$('f_name').value = p.name || '';
+					$('f_level').value = p.level || 1;
+					$('f_exp').value = p.exp || 0;
+					$('f_avatar').value = p.avatar ?? 0;
+					$('f_avatarFrame').value = p.avatarFrame ?? -1;
+					$('f_title').value = p.title ?? -1;
+					$('f_chapter').value = p.raidInfo && p.raidInfo.chapter || 1;
+					$('f_raidLevel').value = p.raidInfo && p.raidInfo.level || 1;
+					$('f_hangUpChapter').value = p.progressInfo && p.progressInfo.raid && p.progressInfo.raid.hangUpChapter || p.raidInfo && p.raidInfo.hangUpChapter || p.raidInfo && p.raidInfo.chapter || 1;
+					$('f_hangUpTime').value = p.progressInfo && p.progressInfo.raid && p.progressInfo.raid.hangUpTime || p.raidInfo && p.raidInfo.hangUpTime || 0;
+					$('f_rewardChapter').value = p.progressInfo && p.progressInfo.raid && p.progressInfo.raid.rewardChapter || p.raidInfo && p.raidInfo.rewardChapter || 0;
+					$('f_claimedChapters').value = Array.isArray(p.progressInfo && p.progressInfo.raid && p.progressInfo.raid.claimedChapters) ? p.progressInfo.raid.claimedChapters.join(',') : Array.isArray(p.raidInfo && p.raidInfo.claimedChapters) ? p.raidInfo.claimedChapters.join(',') : '';
+					$('f_stage').value = p.roleInfo && p.roleInfo.stage || 1;
+					$('f_rewardedStage').value = p.progressInfo && p.progressInfo.realm && p.progressInfo.realm.rewardedStage || p.roleInfo && p.roleInfo.rewardedStage || 0;
+					$('f_stageFailedTime').value = p.progressInfo && p.progressInfo.realm && p.progressInfo.realm.failedTime || p.roleInfo && p.roleInfo.stageFailedTime || 0;
+					$('f_kungfuId').value = p.roleInfo && p.roleInfo.kungfuId || 4;
+					$('f_subJob').value = p.roleInfo && p.roleInfo.subJob || 0;
+					$('f_boxLevel').value = p.boxInfo && p.boxInfo.level || 1;
+					$('f_vip').value = p.rechargeInfo && p.rechargeInfo.vipLevel || 0;
+					$('f_totalRecharge').value = p.rechargeInfo && p.rechargeInfo.totalRecharge || 0;
+					$('f_spiritId').value = p.spiritInfo && p.spiritInfo.id != null ? p.spiritInfo.id : -1;
+					$('f_spiritRank').value = p.spiritInfo && p.spiritInfo.rank || 1;
+					$('f_diamond').value = p.currencies && p.currencies.diamond || 0;
+					$('f_gold').value = p.currencies && p.currencies.gold || 0;
+					$('f_silver').value = p.currencies && p.currencies.silver || 0;
+					$('f_baozi').value = p.items && p.items[4] || 0;
+					$('f_lingyun').value = p.items && p.items[7] || 0;
+					$('f_faxiang').value = p.items && p.items[8] || 0;
+					$('f_tianyanSmall').value = p.items && p.items[1001] || 0;
+					$('f_tianyanMedium').value = p.items && p.items[1002] || 0;
+					$('f_tianyanLarge').value = p.items && p.items[1003] || 0;
+					$('f_coupon').value = p.items && p.items[7010] || 0;
+					$('f_powerScore').value = p.combatInfo && p.combatInfo.power || 0;
+					$('f_equipCount').value = p.combatInfo && p.combatInfo.equipCount || 0;
+					renderAttrRows(p.combatInfo && p.combatInfo.attrRows || []);
+					renderEquipRows(p.combatInfo && p.combatInfo.equipRows || []);
+					$('f_formationEquippedId').value = p.formationInfo && (p.formationInfo.equippedId || p.formationInfo.curFormation) || 0;
+					$('f_formationLevel').value = p.formationInfo && p.formationInfo.level || 1;
+					$('f_formationGrade').value = p.formationInfo && p.formationInfo.grade || 1;
+					$('f_formationExp').value = p.formationInfo && p.formationInfo.exp || 0;
+					$('f_formationOwns').value = Array.isArray(p.formationInfo && p.formationInfo.owns) ? p.formationInfo.owns.join(',') : '';
+					$('f_formationEnchant').value = Array.isArray(p.formationInfo && p.formationInfo.enchant) ? p.formationInfo.enchant.join(',') : '';
+					setJsonField('f_equipInfo', p.equipInfo || {});
+					setJsonField('f_formationInfo', p.formationInfo || {});
+					$('f_guideStep').value = p.systemUnlockInfo && p.systemUnlockInfo.guideStep || 0;
+					$('f_unlockedSystem').value = Array.isArray(p.systemUnlockInfo && p.systemUnlockInfo.unlockedSystem) ? p.systemUnlockInfo.unlockedSystem.join(',') : '';
+					$('f_rewardedSystem').value = Array.isArray(p.systemUnlockInfo && p.systemUnlockInfo.rewardedSystem) ? p.systemUnlockInfo.rewardedSystem.join(',') : '';
+					$('f_seenNewFeatures').value = Array.isArray(p.systemUnlockInfo && p.systemUnlockInfo.settings && p.systemUnlockInfo.settings.seenNewFeatures) ? p.systemUnlockInfo.settings.seenNewFeatures.join(',') : '';
+					$('f_pendingNewFeatures').value = Array.isArray(p.systemUnlockInfo && p.systemUnlockInfo.pendingNewFeatures) ? p.systemUnlockInfo.pendingNewFeatures.join(',') : '';
+					const unlockBtn = $('f_unlockAllSystemsBtn');
+					const unlockHint = $('f_unlockAllSystemsHint');
+					const canUnlockAllSystems = !!(p.systemUnlockInfo && p.systemUnlockInfo.canUnlockAllSystems);
+					if (unlockBtn) {
+						unlockBtn.disabled = !canUnlockAllSystems;
+						unlockBtn.textContent = canUnlockAllSystems ? '一键解锁所有系统' : '已全部解锁';
+					}
+					if (unlockHint) {
+						const allCount = Number(p.systemUnlockInfo && p.systemUnlockInfo.allSystemCount || 0);
+						const unlockedCount = Number(p.systemUnlockInfo && p.systemUnlockInfo.unlockedSystemCount || 0);
+						unlockHint.textContent = canUnlockAllSystems ? `当前已解锁 ${unlockedCount} / ${allCount} 个系统，点击后会一次性补齐剩余系统与新功能状态。` : `当前已解锁 ${unlockedCount} / ${allCount} 个系统，已无需再次解锁。`;
+					}
+					setJsonField('f_systemSettings', p.systemUnlockInfo && p.systemUnlockInfo.settings || {});
+					$('f_agentId').value = p.agentId || '';
+					$('f_inviteCode').value = p.inviteCode || '';
+					$('f_accountId').value = p.accountInfo && p.accountInfo.accountId || '';
+					$('f_roleId').value = p.accountInfo && p.accountInfo.roleId || '';
+					$('f_serverId').value = p.accountInfo && p.accountInfo.serverId || '';
+					$('f_lastLogin').value = date(p.accountInfo && p.accountInfo.lastLoginTime);
+					$('f_userId').value = p.userId || '';
+					$('f_playerId').value = p.playerId || '';
+					$('f_createdAt').value = date(p.createdAt);
+					$('f_updatedAt').value = date(p.updatedAt);
+					renderTaskManagement(p);
+					$('editO').classList.add('on')
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('加载玩家详情失败：' + e.message, false)
+				}
+			}
+
+			async function openEditAndTask(uid) {
+				if (!isAdmin()) return msg('当前账号无权管理任务', false);
+				await openEdit(uid);
+				openTaskManager();
+			}
+
+			function closeEdit() {
+				closeTaskManager();
+				$('editO').classList.remove('on')
+			}
+			async function normalizeOrbCurrentPlayer() {
+				if (!isAdmin()) return msg('当前账号无权初始化魂玉', false);
+				const uid = $('eu').value;
+				if (!uid) return msg('请先打开玩家编辑弹窗', false);
+				try {
+					const res = await api('POST', `/api/admin/players/${encodeURIComponent(uid)}/normalize-orb`);
+					if (!res || res.ok === false) throw new Error(res && res.message || '初始化失败');
+					msg('魂玉已初始化', true);
+					await openEdit(uid);
+				} catch (e) {
+					msg('初始化魂玉失败：' + e.message, false);
+				}
+			}
+
+			async function savePlayer() {
+				if (!isAdmin()) return msg('当前账号无权保存玩家完整资料', false);
+				const uid = $('eu').value,
+					namev = str('f_name'),
+					tasks = collectTaskEditorRows(),
+					mainTaskProgress = collectCounterEditorRows();
+				if (!namev) {
+					msg('玩家名称不能为空', false);
+					return;
+				}
+				let systemSettings;
+				let equipInfoData;
+				let formationInfoData;
+				try {
+					systemSettings = parseJsonField('f_systemSettings', {});
+					equipInfoData = parseJsonField('f_equipInfo', {});
+					formationInfoData = parseJsonField('f_formationInfo', {});
+				} catch (e) {
+					msg('JSON 格式错误：' + e.message, false);
+					return;
+				}
+				systemSettings = systemSettings && typeof systemSettings === 'object' ? systemSettings : {};
+				systemSettings.seenNewFeatures = parseNumberList(str('f_seenNewFeatures'));
+				equipInfoData = equipInfoData && typeof equipInfoData === 'object' ? equipInfoData : {};
+				formationInfoData = formationInfoData && typeof formationInfoData === 'object' ? formationInfoData : {};
+				formationInfoData.equippedId = num('f_formationEquippedId') ?? formationInfoData.equippedId;
+				formationInfoData.curFormation = num('f_formationEquippedId') ?? formationInfoData.curFormation;
+				formationInfoData.level = num('f_formationLevel') ?? formationInfoData.level;
+				formationInfoData.grade = num('f_formationGrade') ?? formationInfoData.grade;
+				formationInfoData.exp = num('f_formationExp') ?? formationInfoData.exp;
+				formationInfoData.owns = parseNumberList(str('f_formationOwns'));
+				formationInfoData.enchant = parseNumberList(str('f_formationEnchant'));
+				const body = compact({
+					name: namev,
+					level: num('f_level'),
+					exp: num('f_exp'),
+					avatar: num('f_avatar'),
+					avatarFrame: num('f_avatarFrame'),
+					title: num('f_title'),
+					agentId: str('f_agentId'),
+					inviteCode: str('f_inviteCode'),
+					currencies: {
+						diamond: num('f_diamond'),
+						gold: num('f_gold'),
+						silver: num('f_silver')
+					},
+					items: {
+						4: num('f_baozi'),
+						7: num('f_lingyun'),
+						8: num('f_faxiang'),
+						1001: num('f_tianyanSmall'),
+						1002: num('f_tianyanMedium'),
+						1003: num('f_tianyanLarge'),
+						7010: num('f_coupon')
+					},
+					raidInfo: {
+						chapter: num('f_chapter'),
+						level: num('f_raidLevel'),
+						hangUpChapter: num('f_hangUpChapter'),
+						hangUpTime: num('f_hangUpTime'),
+						rewardChapter: num('f_rewardChapter'),
+						claimedChapters: parseNumberList(str('f_claimedChapters')),
+						chapterInfo: {
+							rewardChapter: num('f_rewardChapter')
+						}
+					},
+					roleInfo: {
+						stage: num('f_stage'),
+						rewardedStage: num('f_rewardedStage'),
+						stageFailedTime: num('f_stageFailedTime'),
+						kungfuId: num('f_kungfuId'),
+						subJob: num('f_subJob')
+					},
+					boxInfo: {
+						level: num('f_boxLevel')
+					},
+					rechargeInfo: {
+						vipLevel: num('f_vip'),
+						totalRecharge: num('f_totalRecharge')
+					},
+					spiritInfo: {
+						id: num('f_spiritId'),
+						rank: num('f_spiritRank')
+					},
+					equipInfo: equipInfoData,
+					formationInfo: formationInfoData,
+					systemUnlockInfo: {
+						guideStep: num('f_guideStep'),
+						unlockedSystem: parseNumberList(str('f_unlockedSystem')),
+						rewardedSystem: parseNumberList(str('f_rewardedSystem')),
+						settings: systemSettings
+					},
+					taskInfo: {
+						tasks
+					},
+					other_attr_info: {
+						mainTaskProgress
+					}
+				});
+				try {
+					await api('PATCH', `/api/admin/players/${uid}`, body);
+					msg('玩家数据已保存，并已推送在线角色同步');
+					closeEdit();
+					loadPlayers(page)
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('保存玩家失败：' + e.message, false)
+				}
+			}
+
+			function openGive(uid) {
+				if (!hasPerm('giveItems')) return msg('当前账号无权发放道具', false);
+				loadGiveItemOptions().catch(e => {
+					if (e.message !== 'SESSION_EXPIRED') msg('加载道具下拉失败：' + e.message, false);
+				});
+				currentGiveUserIds = Array.isArray(uid) ? uid.slice() : [uid];
+				$('gu').value = currentGiveUserIds.join(',');
+				['g_diamond', 'g_gold', 'g_silver', 'g_baozi', 'g_lingyun', 'g_faxiang', 'g_tianyanSmall', 'g_tianyanMedium',
+					'g_tianyanLarge', 'g_coupon', 'g_customId', 'g_customCount'
+				]
+				.forEach(id => $(id).value = '');
+				$('grow').innerHTML = '';
+				grow = 0;
+				$('giveO').classList.add('on')
+			}
+
+			function closeGive() {
+				currentGiveUserIds = [];
+				$('giveO').classList.remove('on')
+			}
+
+			function renderGiveItemOptions() {
+				const el = $('giveItemOptions');
+				if (!el) return;
+				el.innerHTML = giveItemConfigCache.map(row => `<option value="${row.itemId}">${esc(row.name||row.cn||'未命名道具')} (#${row.itemId})</option>`).join('');
+			}
+
+			async function loadGiveItemOptions() {
+				if (giveItemConfigCache.length) return giveItemConfigCache;
+				if (giveItemConfigLoading) return giveItemConfigLoading;
+				giveItemConfigLoading = (async () => {
+					const all = [];
+					let pageNo = 1,
+						pages = 1;
+					do {
+						const d = await api('GET', `/api/admin/item-dictionaries?page=${pageNo}&limit=200&keyword=`);
+						all.push(...(Array.isArray(d.items) ? d.items : []));
+						pages = Number(d.pages || 0) || 0;
+						pageNo++;
+					} while (pageNo <= pages);
+					giveItemConfigCache = all.sort((a, b) => Number(a.itemId || 0) - Number(b.itemId || 0));
+					renderGiveItemOptions();
+					return giveItemConfigCache;
+				})().finally(() => {
+					giveItemConfigLoading = null;
+				});
+				return giveItemConfigLoading;
+			}
+
+			function addGive() {
+				grow++;
+				const id = 'gr' + grow,
+					d = document.createElement('div');
+				d.id = id;
+				d.style.display = 'grid';
+				d.style.gridTemplateColumns = '1fr 1fr auto';
+				d.style.gap = '10px';
+				d.innerHTML =
+					`<div class="fg"><label>道具 ID #${grow+1}</label><input id="gid${grow}" type="number" min="1" list="giveItemOptions" placeholder="输入或选择道具"></div><div class="fg"><label>数量增减</label><input id="gct${grow}" type="number"></div><button class="btn g" style="align-self:end" onclick="$('${id}').remove()">移除</button>`;
+				$('grow').appendChild(d)
+			}
+			async function give() {
+				if (!hasPerm('giveItems')) return msg('当前账号无权发放道具', false);
+				const ids = currentGiveUserIds.length ? currentGiveUserIds.slice() : String($('gu').value || '').split(',').map(v => String(v).trim()).filter(Boolean),
+					body = {},
+					items = {};
+				[
+					['diamond', 'g_diamond'],
+					['gold', 'g_gold'],
+					['silver', 'g_silver']
+				].forEach(([k, id]) => {
+					const v = num(id);
+					if (v) body[k] = v
+				});
+				[
+					[4, 'g_baozi'],
+					[7, 'g_lingyun'],
+					[8, 'g_faxiang'],
+					[1001, 'g_tianyanSmall'],
+					[1002, 'g_tianyanMedium'],
+					[1003, 'g_tianyanLarge'],
+					[7010, 'g_coupon']
+				].forEach(([k, id]) => {
+					const v = num(id);
+					if (v) items[k] = v
+				});
+				const cid = num('g_customId'),
+					cct = num('g_customCount');
+				if (cid && cct) items[cid] = cct;
+				for (let i = 1; i <= grow; i++) {
+					const id = num(`gid${i}`),
+						ct = num(`gct${i}`);
+					if (id && ct) items[id] = ct
+				}
+				if (Object.keys(items).length) body.items = items;
+				if (!Object.keys(body).length) {
+					msg('请至少填写一项发放内容', false);
+					return;
+				}
+				try {
+					if (ids.length > 1) {
+						const d = await api('POST', '/api/admin/players/batch-give', { ...body, userIds: ids });
+						msg(`批量发放成功，成功 ${fmt(d.successCount||0)} / ${fmt(d.total||ids.length)}`);
+					} else {
+						await api('POST', `/api/admin/players/${ids[0]}/give`, body);
+						msg('发放成功，在线角色已同步');
+					}
+					closeGive();
+					loadPlayers(page)
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('发放失败：' + e.message, false)
+				}
+			}
+
+			async function openRecharge(uid, namev) {
+				if (!hasPerm('recharge')) return msg('当前账号无权执行充值', false);
+				if (!rechargeConfigCache.length && isAdmin()) {
+					try {
+						const d = await api('GET', '/api/admin/recharge-configs');
+						rechargeConfigCache = Array.isArray(d.configs) ? d.configs : [];
+					} catch (_e) {}
+				}
+				currentRechargeUserId = uid || '';
+				$('ru').value = currentRechargeUserId;
+				$('r_target').value = `${namev || uid || ''} (${uid || '-'})`;
+				renderRechargeConfigOptions();
+				$('r_configProduct').value = '';
+				$('r_amount').value = '';
+				$('r_productId').value = '';
+				$('rechargeO').classList.add('on');
+			}
+
+			async function resetPlayerPassword(uid, namev) {
+				if (!isAdmin()) return msg('当前账号无权重置玩家密码', false);
+				if (!uid) return msg('缺少玩家 userId', false);
+				if (!confirm(`确定将玩家“${namev||uid}”的账号密码重置为 123456 吗？`)) return;
+				try {
+					const d = await api('POST', `/api/admin/players/${encodeURIComponent(uid)}/reset-password`);
+					msg(`密码已重置为 123456${d&&d.accountId ? `（账号：${d.accountId}）` : ''}`);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('重置密码失败：' + e.message, false);
+				}
+			}
+
+			function closeRecharge() {
+				currentRechargeUserId = '';
+				$('rechargeO').classList.remove('on');
+			}
+
+			function applyRechargeConfigSelection() {
+				const productId = str('r_configProduct');
+				if (!productId) return;
+				const row = rechargeConfigCache.find(item => String(item.productId) === productId);
+				if (!row) return;
+				$('r_productId').value = row.productId || '';
+				$('r_amount').value = row.amount || '';
+			}
+
+			async function submitRecharge() {
+				if (!hasPerm('recharge')) return msg('当前账号无权执行充值', false);
+				const uid = currentRechargeUserId || $('ru').value;
+				const amount = num('r_amount');
+				if (!uid || !amount || amount <= 0) return msg('请填写有效的充值金额', false);
+				try {
+					const d = await api('POST', `/api/admin/players/${uid}/recharge`, {
+						amount,
+						productId: str('r_productId') || 'manual-admin-recharge'
+					});
+					msg(`充值成功：金额 ${fmt(amount)} 元，到账元宝 ${fmt(d.recharge&&d.recharge.diamond||0)}`);
+					closeRecharge();
+					loadPlayers(page);
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('充值失败：' + e.message, false)
+				}
+			}
+
+			function openDel(uid, n) {
+				if (!isAdmin()) return msg('当前账号无权删除玩家', false);
+				$('du').value = uid;
+				$('dn').textContent = n || uid;
+				$('delO').classList.add('on')
+			}
+
+			function closeDel() {
+				$('delO').classList.remove('on')
+			}
+			async function delPlayer() {
+				if (!isAdmin()) return msg('当前账号无权删除玩家', false);
+				const uid = $('du').value;
+				try {
+					await api('DELETE', `/api/admin/players/${uid}`);
+					msg('玩家已删除，对应账号角色映射也已清理');
+					closeDel();
+					loadPlayers(page)
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('删除失败：' + e.message, false)
+				}
+			}
+
+			function clearAgentSearch() {
+				$('agentSearch').value = '';
+				loadAgents();
+			}
+
+			async function loadAgents() {
+				if (!isAdmin()) return;
+				const keyword = str('agentSearch');
+				$('agentWrap').innerHTML = '<div class="loading">正在加载代理商数据...</div>';
+				try {
+					const d = await api('GET', `/api/admin/agents?keyword=${encodeURIComponent(keyword)}`);
+					agentCache = Array.isArray(d.agents) ? d.agents : [];
+					$('agTotal').textContent = fmt(agentCache.length);
+					$('agGive').textContent = fmt(agentCache.filter(row => row.permissions && row.permissions.giveItems).length);
+					$('agRecharge').textContent = fmt(agentCache.filter(row => row.permissions && row.permissions.recharge).length);
+					if (!agentCache.length) {
+						$('agentWrap').innerHTML = '<div class="empty">暂无代理商账号</div>';
+						return;
+					}
+					$('agentWrap').innerHTML = `<table><thead><tr><th>账号</th><th>agentId</th><th>名称</th><th>权限</th><th>限制</th><th>状态</th><th>最后登录</th><th>操作</th></tr></thead><tbody>${agentCache.map(row=>`<tr><td><b>${esc(row.username)}</b><span class="sub">创建：${date(row.createdAt)}</span></td><td>${esc(row.agentId||'-')}</td><td>${esc(row.name||'-')}<span class="sub">备注：${esc(row.note||'-')}</span></td><td><span class="sub">发放：${row.permissions&&row.permissions.giveItems?'是':'否'}</span><span class="sub">充值：${row.permissions&&row.permissions.recharge?'是':'否'}</span></td><td><span class="sub">货币白名单：${row.limits&&row.limits.giveCurrencyWhitelist&&row.limits.giveCurrencyWhitelist.length?esc(row.limits.giveCurrencyWhitelist.join(',')):'不限'}</span><span class="sub">道具白名单：${row.limits&&row.limits.giveItemWhitelist&&row.limits.giveItemWhitelist.length?esc(row.limits.giveItemWhitelist.join(',')):'不限'}</span><span class="sub">单笔/单日充值：${fmt(row.limits&&row.limits.rechargeSingleLimit||0)} / ${fmt(row.limits&&row.limits.rechargeDailyLimit||0)} 元</span></td><td>${row.status==='active'?'<span class="tag tg">启用</span>':'<span class="tag tr">停用</span>'}</td><td>${date(row.lastLoginAt)}</td><td><div class="acts"><button class="btn g" onclick="openAgentEditor('${esc(row.agentId)}')">编辑</button>${row.status==='active'?`<button class="btn r" onclick="adminBanAgent('${esc(row.agentId)}','${esc(row.username)}')">封禁</button>`:`<button class="btn s" onclick="adminUnbanAgent('${esc(row.agentId)}','${esc(row.username)}')">解封</button>`}</div></td></tr>`).join('')}</tbody></table>`;
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					$('agentWrap').innerHTML = `<div class="empty" style="color:#b42318">加载失败：${esc(e.message)}</div>`;
+				}
+			}
+
+			function openAgentEditor(agentId) {
+				if (!isAdmin()) return msg('当前账号无权管理代理商', false);
+				const row = agentCache.find(item => item.agentId === agentId) || {};
+				const limits = row.limits || {};
+				$('agentMode').value = agentId ? 'edit' : 'create';
+				$('agentCurrentId').value = row.agentId || '';
+				$('agentT').textContent = agentId ? '编辑代理商' : '新增代理商';
+				$('a_username').value = row.username || '';
+				$('a_agentId').value = row.agentId || '';
+				$('a_name').value = row.name || '';
+				$('a_status').value = row.status || 'active';
+				$('a_password').value = '';
+				$('a_note').value = row.note || '';
+				$('a_permGive').checked = !!(row.permissions && row.permissions.giveItems);
+				$('a_permRecharge').checked = !!(row.permissions && row.permissions.recharge);
+				$('a_giveCurrencies').value = Array.isArray(limits.giveCurrencyWhitelist) ? limits.giveCurrencyWhitelist.join(',') : '';
+				$('a_giveItems').value = Array.isArray(limits.giveItemWhitelist) ? limits.giveItemWhitelist.join(',') : '';
+				$('a_rechargeSingleLimit').value = limits.rechargeSingleLimit || 0;
+				$('a_rechargeDailyLimit').value = limits.rechargeDailyLimit || 0;
+				$('agentO').classList.add('on');
+			}
+
+			function closeAgentEditor() {
+				$('agentO').classList.remove('on');
+			}
+
+			async function saveAgent() {
+				if (!isAdmin()) return msg('当前账号无权管理代理商', false);
+				const mode = $('agentMode').value;
+				const body = {
+					username: str('a_username'),
+					agentId: str('a_agentId'),
+					name: str('a_name'),
+					status: str('a_status') || 'active',
+					note: str('a_note'),
+					permissions: {
+						giveItems: $('a_permGive').checked,
+						recharge: $('a_permRecharge').checked
+					},
+					limits: {
+						giveCurrencyWhitelist: parseTextList(str('a_giveCurrencies')),
+						giveItemWhitelist: parseNumberList(str('a_giveItems')),
+						rechargeSingleLimit: num('a_rechargeSingleLimit') || 0,
+						rechargeDailyLimit: num('a_rechargeDailyLimit') || 0
+					}
+				};
+				const password = $('a_password').value;
+				if (mode === 'create' && !password) return msg('新增代理商时必须设置登录密码', false);
+				if (password) body.password = password;
+				try {
+					if (mode === 'edit') {
+						await api('PATCH', `/api/admin/agents/${encodeURIComponent($('agentCurrentId').value)}`, body);
+						msg('代理商已更新');
+					} else {
+						await api('POST', '/api/admin/agents', body);
+						msg('代理商已创建');
+					}
+					closeAgentEditor();
+					loadAgents();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('保存代理商失败：' + e.message, false)
+				}
+			}
+
+			function clearRechargeConfigSearch() {
+				$('rechargeConfigSearch').value = '';
+				loadRechargeConfigs();
+			}
+
+			function renderRechargeConfigOptions() {
+				const select = $('r_configProduct');
+				if (!select) return;
+				const currentValue = select.value;
+				const rows = rechargeConfigCache.filter(row => row.enabled !== false);
+				select.innerHTML = '<option value="">手动填写</option>' + rows.map(row =>
+					`<option value="${esc(row.productId)}">${esc(row.productId)} · ${esc(row.name||'-')} · ${fmt(row.amount||0)}元</option>`
+				).join('');
+				select.value = rows.some(row => String(row.productId) === String(currentValue)) ? currentValue : '';
+			}
+
+			async function loadRechargeConfigs() {
+				if (!isAdmin()) return;
+				const keyword = str('rechargeConfigSearch').toLowerCase();
+				$('rechargeConfigWrap').innerHTML = '<div class="loading">正在加载充值配置...</div>';
+				try {
+					const d = await api('GET', '/api/admin/recharge-configs');
+					rechargeConfigCache = Array.isArray(d.configs) ? d.configs : [];
+					const rows = keyword ? rechargeConfigCache.filter(row => [row.productId, row.name, row.payType].some(v => String(v || '').toLowerCase().includes(keyword))) : rechargeConfigCache.slice();
+					$('rcTotal').textContent = fmt(rows.length);
+					$('rcEnabled').textContent = fmt(rows.filter(row => row.enabled !== false).length);
+					$('rcCustom').textContent = fmt(rows.filter(row => String(row.source || '').includes('custom')).length);
+					renderRechargeConfigOptions();
+					if (!rows.length) {
+						$('rechargeConfigWrap').innerHTML = '<div class="empty">暂无充值配置</div>';
+						return;
+					}
+					$('rechargeConfigWrap').innerHTML = `<table><thead><tr><th>商品</th><th>金额/元宝</th><th>首充</th><th>附加奖励</th><th>支付</th><th>来源</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${rows.map(row=>`<tr><td><b>${esc(row.name||'-')}</b><span class="sub">productId: ${esc(row.productId||'-')}</span><span class="sub">备注：${esc(row.note||'-')}</span></td><td><div>${fmt(row.amount||0)} 元</div><span class="sub">基础元宝：${fmt(row.diamond||0)}</span></td><td><div>${fmt(row.firstBonus||0)}</div><span class="sub">首充额外赠送</span></td><td><div>${esc(attachmentRewardText(row.attachments || []))}</div><span class="sub">到账说明：${esc(row.mailTitle || row.name || '-')}</span></td><td><div>${esc(row.payType||'-')}</div><span class="sub">排序：${fmt(row.sort||0)}</span></td><td><span class="sub">${esc(row.source||'builtin')}</span></td><td>${row.enabled!==false?'<span class="tag tg">启用</span>':'<span class="tag tr">停用</span>'}</td><td><div>${date(row.updatedAt)}</div><span class="sub">创建：${date(row.createdAt)}</span></td><td><div class="acts"><button class="btn g" onclick="openRechargeConfigEditor('${esc(row.productId)}')">编辑</button>${String(row.source||'').includes('custom')?`<button class="btn r" onclick="deleteRechargeConfig('${esc(row.productId)}')">删除覆盖</button>`:''}</div></td></tr>`).join('')}</tbody></table>`;
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					$('rechargeConfigWrap').innerHTML = `<div class="empty" style="color:#b42318">加载失败：${esc(e.message)}</div>`;
+				}
+			}
+
+			function openRechargeConfigEditor(productId) {
+				if (!isAdmin()) return msg('当前账号无权管理充值配置', false);
+				const row = rechargeConfigCache.find(item => String(item.productId) === String(productId)) || {};
+				$('rechargeConfigMode').value = productId ? 'edit' : 'create';
+				$('rechargeConfigCurrentId').value = row.productId || '';
+				$('rechargeConfigT').textContent = productId ? '编辑充值配置' : '新增充值配置';
+				$('rc_productId').value = row.productId || '';
+				$('rc_productId').disabled = !!productId;
+				$('rc_name').value = row.name || '';
+				$('rc_amount').value = row.amount || 0;
+				$('rc_diamond').value = row.diamond || 0;
+				$('rc_firstBonus').value = row.firstBonus || 0;
+				$('rc_payType').value = row.payType || '';
+				$('rc_sort').value = row.sort || 0;
+				$('rc_enabled').value = row.enabled === false ? '0' : '1';
+				$('rc_mailTitle').value = row.mailTitle || '';
+				$('rc_mailContent').value = row.mailContent || '';
+				$('rc_addItemId').value = '';
+				$('rc_addItemCount').value = '';
+				renderRechargeAttachmentRows(row.attachments || []);
+				$('rc_note').value = row.note || '';
+				$('rechargeConfigO').classList.add('on');
+			}
+
+			function closeRechargeConfigEditor() {
+				$('rechargeConfigO').classList.remove('on');
+			}
+
+			async function saveRechargeConfig() {
+				if (!isAdmin()) return msg('当前账号无权管理充值配置', false);
+				const mode = $('rechargeConfigMode').value;
+				const productId = mode === 'edit' ? $('rechargeConfigCurrentId').value : str('rc_productId');
+				const body = {
+					productId,
+					name: str('rc_name'),
+					amount: Number($('rc_amount').value || 0),
+					diamond: num('rc_diamond') || 0,
+					firstBonus: num('rc_firstBonus') || 0,
+					payType: str('rc_payType'),
+					attachments: collectRechargeAttachments(),
+					mailTitle: str('rc_mailTitle'),
+					mailContent: str('rc_mailContent'),
+					sort: num('rc_sort') || 0,
+					enabled: $('rc_enabled').value !== '0',
+					note: str('rc_note'),
+				};
+				if (!body.productId) return msg('请填写商品标识', false);
+				if (!(body.amount > 0)) return msg('充值金额必须大于 0', false);
+				if (!body.attachments.length) return msg('请至少配置一个附加奖励道具', false);
+				try {
+					if (mode === 'edit') await api('PATCH', `/api/admin/recharge-configs/${encodeURIComponent(productId)}`, body);
+					else await api('POST', '/api/admin/recharge-configs', body);
+					msg('充值配置已保存');
+					closeRechargeConfigEditor();
+					loadRechargeConfigs();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('保存充值配置失败：' + e.message, false);
+				}
+			}
+
+			async function deleteRechargeConfig(productId) {
+				if (!isAdmin()) return msg('当前账号无权管理充值配置', false);
+				if (!productId || !confirm(`确定删除充值配置覆盖 ${productId} 吗？`)) return;
+				try {
+					await api('DELETE', `/api/admin/recharge-configs/${encodeURIComponent(productId)}`);
+					msg('充值配置覆盖已删除');
+					loadRechargeConfigs();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('删除充值配置失败：' + e.message, false);
+				}
+			}
+
+			function clearRedeemSearch() {
+				$('redeemSearch').value = '';
+				$('redeemStatus').value = '';
+				loadRedeemCodes();
+			}
+
+			function redeemRewardText(rewards = {}) {
+				const parts = [];
+				[['diamond', '元宝'], ['gold', '加速符'], ['silver', '银币']].forEach(([key, label]) => {
+					if (Number(rewards[key] || 0)) parts.push(`${label} ${fmt(rewards[key])}`);
+				});
+				const items = rewards.items && typeof rewards.items === 'object' ? rewards.items : {};
+				Object.keys(items).sort((a, b) => Number(a) - Number(b)).forEach(id => {
+					if (Number(items[id] || 0)) parts.push(`item${id} x${fmt(items[id])}`);
+				});
+				return parts.length ? parts.join('，') : '-';
+			}
+
+			async function loadRedeemCodes() {
+				if (!isAdmin()) return;
+				$('redeemWrap').innerHTML = '<div class="loading">正在加载兑换码...</div>';
+				try {
+					const q = new URLSearchParams();
+					if (str('redeemSearch')) q.set('keyword', str('redeemSearch'));
+					if (str('redeemStatus')) q.set('status', str('redeemStatus'));
+					const d = await api('GET', '/api/admin/redeem-codes' + (q.toString() ? '?' + q.toString() : ''));
+					const rows = Array.isArray(d.codes) ? d.codes : [];
+					$('rdTotal').textContent = fmt(rows.length);
+					$('rdActive').textContent = fmt(rows.filter(row => row.status !== 'disabled').length);
+					$('rdUsed').textContent = fmt(rows.reduce((sum, row) => sum + Number(row.usedCount || 0), 0));
+					if (!rows.length) {
+						$('redeemWrap').innerHTML = '<div class="empty">暂无兑换码</div>';
+						return;
+					}
+					$('redeemWrap').innerHTML = `<table><thead><tr><th>兑换码</th><th>奖励</th><th>次数</th><th>有效期</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody>${rows.map(row=>`<tr><td><b>${esc(row.code||'-')}</b><span class="sub">${esc(row.name||'-')}</span><span class="sub">备注：${esc(row.note||'-')}</span></td><td>${esc(redeemRewardText(row.rewards||{}))}</td><td><div>已用：${fmt(row.usedCount||0)}</div><span class="sub">总次数：${Number(row.maxUses||0)>0?fmt(row.maxUses):'不限'} · 每人：${fmt(row.perUserLimit||1)}</span></td><td><div>开始：${date(row.startsAt)}</div><span class="sub">结束：${date(row.expiresAt)}</span></td><td>${row.status==='disabled'?'<span class="tag tr">停用</span>':'<span class="tag tg">启用</span>'}</td><td><div>${date(row.updatedAt)}</div><span class="sub">创建：${date(row.createdAt)}</span></td><td><div class="acts"><button class="btn g" onclick='openRedeemEditor(${JSON.stringify(row).replace(/'/g,"&#39;")})'>编辑</button><button class="btn r" onclick="deleteRedeemCode('${esc(row.code)}')">删除</button></div></td></tr>`).join('')}</tbody></table>`;
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					$('redeemWrap').innerHTML = `<div class="empty" style="color:#b42318">加载失败：${esc(e.message)}</div>`;
+				}
+			}
+
+			function addRedeemItemRow(itemId = '', count = '') {
+				redeemItemRow++;
+				const id = 'rdi' + redeemItemRow;
+				const d = document.createElement('div');
+				d.id = id;
+				d.style.display = 'grid';
+				d.style.gridTemplateColumns = '1fr 1fr auto';
+				d.style.gap = '10px';
+				d.innerHTML = `<div class="fg"><label>道具 ID</label><input data-rd-item-id type="number" min="1" value="${esc(itemId)}"></div><div class="fg"><label>数量</label><input data-rd-item-count type="number" value="${esc(count)}"></div><button class="btn g" style="align-self:end" onclick="$('${id}').remove()">移除</button>`;
+				$('rd_items').appendChild(d);
+			}
+
+			function openRedeemEditor(row = {}) {
+				if (!isAdmin()) return msg('当前账号无权管理兑换码', false);
+				const rewards = row.rewards || {};
+				const items = rewards.items && typeof rewards.items === 'object' ? rewards.items : {};
+				$('redeemTitle').textContent = row.code ? '编辑兑换码' : '新增兑换码';
+				$('rd_originalCode').value = row.code || '';
+				$('rd_code').value = row.code || '';
+				$('rd_code').disabled = !!row.code;
+				$('rd_name').value = row.name || '';
+				$('rd_status').value = row.status === 'disabled' ? 'disabled' : 'active';
+				$('rd_maxUses').value = row.maxUses || '';
+				$('rd_perUserLimit').value = row.perUserLimit || 1;
+				$('rd_startsAt').value = row.startsAt ? date(row.startsAt) : '';
+				$('rd_expiresAt').value = row.expiresAt ? date(row.expiresAt) : '';
+				$('rd_note').value = row.note || '';
+				[['rd_diamond', rewards.diamond], ['rd_gold', rewards.gold], ['rd_silver', rewards.silver], ['rd_baozi', items[4]], ['rd_lingyun', items[7]], ['rd_faxiang', items[8]], ['rd_tianyanSmall', items[1001]], ['rd_tianyanMedium', items[1002]], ['rd_tianyanLarge', items[1003]], ['rd_coupon', items[7010]], ['rd_customId', ''], ['rd_customCount', '']].forEach(([id, value]) => { $(id).value = value || ''; });
+				$('rd_items').innerHTML = '';
+				redeemItemRow = 0;
+				Object.keys(items).filter(id => ![4, 7, 8, 1001, 1002, 1003, 7010].includes(Number(id))).forEach(id => addRedeemItemRow(id, items[id]));
+				$('redeemO').classList.add('on');
+			}
+
+			function closeRedeemEditor() {
+				$('redeemO').classList.remove('on');
+			}
+
+			function collectRedeemRewards() {
+				const rewards = {}, items = {};
+				[['diamond', 'rd_diamond'], ['gold', 'rd_gold'], ['silver', 'rd_silver']].forEach(([key, id]) => {
+					const v = num(id);
+					if (v) rewards[key] = v;
+				});
+				[[4, 'rd_baozi'], [7, 'rd_lingyun'], [8, 'rd_faxiang'], [1001, 'rd_tianyanSmall'], [1002, 'rd_tianyanMedium'], [1003, 'rd_tianyanLarge'], [7010, 'rd_coupon']].forEach(([key, id]) => {
+					const v = num(id);
+					if (v) items[key] = v;
+				});
+				const cid = num('rd_customId'), cct = num('rd_customCount');
+				if (cid && cct) items[cid] = cct;
+				document.querySelectorAll('#rd_items > div').forEach(row => {
+					const itemId = Number(row.querySelector('[data-rd-item-id]')?.value || 0);
+					const count = Number(row.querySelector('[data-rd-item-count]')?.value || 0);
+					if (Number.isFinite(itemId) && itemId > 0 && Number.isFinite(count) && count) items[Math.floor(itemId)] = count;
+				});
+				if (Object.keys(items).length) rewards.items = items;
+				return rewards;
+			}
+
+			async function saveRedeemCode() {
+				if (!isAdmin()) return msg('当前账号无权管理兑换码', false);
+				const originalCode = $('rd_originalCode').value;
+				const rewards = collectRedeemRewards();
+				const body = {
+					code: str('rd_code'),
+					name: str('rd_name'),
+					status: str('rd_status') || 'active',
+					maxUses: num('rd_maxUses') || 0,
+					perUserLimit: num('rd_perUserLimit') || 1,
+					startsAt: str('rd_startsAt'),
+					expiresAt: str('rd_expiresAt'),
+					note: str('rd_note'),
+					rewards,
+				};
+				if (!body.code) return msg('请填写兑换码', false);
+				if (!Object.keys(rewards).length) return msg('请至少配置一项奖励', false);
+				try {
+					if (originalCode) await api('PATCH', `/api/admin/redeem-codes/${encodeURIComponent(originalCode)}`, body);
+					else await api('POST', '/api/admin/redeem-codes', body);
+					msg('兑换码已保存');
+					closeRedeemEditor();
+					loadRedeemCodes();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('保存兑换码失败：' + e.message, false);
+				}
+			}
+
+			async function deleteRedeemCode(code) {
+				if (!isAdmin()) return msg('当前账号无权管理兑换码', false);
+				if (!code || !confirm(`确定删除兑换码 ${code} 吗？`)) return;
+				try {
+					await api('DELETE', `/api/admin/redeem-codes/${encodeURIComponent(code)}`);
+					msg('兑换码已删除');
+					loadRedeemCodes();
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					msg('删除兑换码失败：' + e.message, false);
+				}
+			}
+
+			function dt(v) {
+				if (!v) return '';
+				const d = new Date(Number(v));
+				if (Number.isNaN(d.getTime())) return '';
+				const p = n => String(n).padStart(2, '0');
+				return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`
+			}
+
+			function dtv(id) {
+				const v = str(id);
+				if (!v) return null;
+				const t = new Date(v).getTime();
+				return Number.isFinite(t) ? t : null
+			}
+
+			function grp(arr) {
+				const m = {};
+				arr.forEach(s => {
+					const k = Number(s.pageId || 0);
+					if (!m[k]) m[k] = {
+						pageId: k,
+						pageName: s.pageName || (`分页 ${k}`),
+						servers: [],
+						totalPlayers: 0,
+						recentActive: 0,
+						online: 0
+					};
+					m[k].servers.push(s);
+					m[k].totalPlayers += Number(s.totalPlayers || 0);
+					m[k].recentActive += Number(s.recentActive || 0);
+					m[k].online += Number(s.online || 0)
+				});
+				return Object.values(m).sort((a, b) => a.pageId - b.pageId)
+			}
+
+			function serverStatusTag(status) {
+				const safeStatus = Number(status || 0);
+				if (safeStatus === 2) return '<span class="tag to">爆满</span>';
+				return safeStatus > 0 ? '<span class="tag tg">启用</span>' : '<span class="tag tr">停用</span>'
+			}
+
+			function renderSrv(s) {
+				const tags = [serverStatusTag(s.status), s
+					.running === false ? '<span class="tag tr">未运行</span>' : '<span class="tag tb">运行中</span>', s.isNew ?
+					'<span class="tag to">新区</span>' : '', s.isRecommend ? '<span class="tag tb">推荐</span>' : ''
+				].join('');
+				return `<div class="sc"><h3><span>${esc(s.serverName||('区服 '+s.serverId))}</span><span style="color:#94a3b8">#${s.serverId}</span></h3><div class="meta">${tags}</div><div class="kv"><span>分页</span><b>${s.pageId} / ${esc(s.pageName||'-')}</b></div><div class="kv"><span>开服时间</span><b>${date(s.openTime)}</b></div><div class="kv"><span>总角色</span><b>${fmt(s.totalPlayers)}</b></div><div class="kv"><span>近 7 日活跃</span><b>${fmt(s.recentActive)}</b></div><div class="acts" style="margin-top:12px"><button class="btn g" onclick="openServer(${s.serverId})">编辑</button><button class="btn r" onclick="delServer(${s.serverId})">删除</button></div></div>`
+			}
+			async function loadServers() {
+				$('serverWrap').innerHTML = '<div class="loading">正在加载大区数据...</div>';
+				Object.keys(cache).forEach(k => delete cache[k]);
+				try {
+					const d = await api('GET', '/api/admin/servers'),
+						arr = Array.isArray(d.servers) ? d.servers : [];
+					arr.forEach(s => cache[String(s.serverId)] = s);
+					$('svTotal').textContent = fmt(arr.reduce((a, b) => a + Number(b.totalPlayers || 0), 0));
+					$('svOn').textContent = fmt(Number(d.onlineTotal || 0));
+					$('svAct').textContent = fmt(arr.reduce((a, b) => a + Number(b.recentActive || 0), 0));
+					$('svCnt').textContent = arr.length;
+					if (!arr.length) {
+						$('serverWrap').innerHTML = '<div class="empty">暂无大区数据</div>';
+						return;
+					}
+					const pages = (Array.isArray(d.pages) && d.pages.length ? d.pages : grp(arr));
+					pages.forEach(p => {
+						if (!Array.isArray(p.servers) || !p.servers.length) p.servers = arr.filter(s => Number(s.pageId || 0) ===
+							Number(p.pageId || 0))
+					});
+					$('serverWrap').innerHTML =
+						`<div class="pages">${pages.map(p=>`<div class="card"><div class="ph"><div><b>${esc(p.pageName||('分页 '+p.pageId))}</b><div class="hint">pageId: ${p.pageId} · 区服 ${p.servers.length} 个</div></div><div class="hint">角色 ${fmt(p.totalPlayers||0)} · 活跃 ${fmt(p.recentActive||0)} · 在线 ${fmt(p.online||0)}</div></div><div class="sg">${p.servers.map(renderSrv).join('')}</div></div>`).join('')}</div>`
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					$('serverWrap').innerHTML = `<div class="empty" style="color:#b42318">加载失败：${esc(e.message)}</div>`;
+					msg('加载大区数据失败：' + e.message, false)
+				}
+			}
+
+			function openServer(id) {
+				$('srvMode').value = id ? 'edit' : 'create';
+				$('srvT').textContent = id ? '编辑大区' : '新增大区';
+				$('s_serverId').disabled = !!id;
+				const s = id ? cache[String(id)] || {} : {};
+				$('s_serverId').value = s.serverId || '';
+				$('s_serverName').value = s.serverName || '';
+				$('s_pageId').value = s.pageId || '';
+				$('s_pageName').value = s.pageName || '';
+				$('s_status').value = s.status ?? 1;
+				$('s_running').checked = s.running !== false;
+				$('s_isNew').checked = !!s.isNew;
+				$('s_isRecommend').checked = !!s.isRecommend;
+				$('s_openTime').value = dt(s.openTime || Date.now());
+				$('srvO').classList.add('on')
+			}
+
+			function closeServer() {
+				$('srvO').classList.remove('on')
+			}
+			async function saveServer() {
+				const mode = $('srvMode').value,
+					sid = num('s_serverId'),
+					namev = str('s_serverName'),
+					pid = num('s_pageId');
+				if (!sid || !namev || !pid) {
+					msg('请完整填写大区 ID、大区名称和分页 ID', false);
+					return;
+				}
+				const body = compact({
+					serverId: sid,
+					serverName: namev,
+					pageId: pid,
+					pageName: str('s_pageName'),
+					status: num('s_status'),
+					running: $('s_running').checked,
+					isNew: $('s_isNew').checked,
+					isRecommend: $('s_isRecommend').checked,
+					openTime: dtv('s_openTime')
+				});
+				try {
+					if (mode === 'edit') {
+						await api('PATCH', `/api/admin/servers/${sid}`, body);
+						msg('大区数据已更新')
+					} else {
+						await api('POST', '/api/admin/servers', body);
+						msg('大区已创建')
+					}
+					closeServer();
+					loadServers()
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					const m = {
+						SERVER_ID_DUPLICATE: '大区 ID 已存在',
+						INVALID_SERVER_ID: '大区 ID 不合法',
+						INVALID_PAGE_ID: '分页 ID 不合法',
+						SERVER_NOT_FOUND: '大区不存在'
+					};
+					msg(m[e.message] || ('保存大区失败：' + e.message), false)
+				}
+			}
+			async function delServer(id) {
+				const s = cache[String(id)] || {};
+				if (!confirm(`确定删除大区“${s.serverName||id}”吗？`)) return;
+				try {
+					await api('DELETE', `/api/admin/servers/${id}`);
+					msg('大区已删除');
+					loadServers()
+				} catch (e) {
+					if (e.message === 'SESSION_EXPIRED') return;
+					if (e.message === 'SERVER_NOT_EMPTY') {
+						msg('该大区下还有角色数据，不能直接删除', false);
+						return;
+					}
+					msg('删除大区失败：' + e.message, false)
+				}
+			}
+			$('search').addEventListener('keydown', e => {
+				if (e.key === 'Enter') loadPlayers(1)
+			});
+			$('lu').addEventListener('keydown', e => {
+				if (e.key === 'Enter') $('lp').focus()
+			});
+			$('lp').addEventListener('keydown', e => {
+				if (e.key === 'Enter') login()
+			});
+			tab(tabName);
+			auth();
+		</script>
+	</body>
+</html>

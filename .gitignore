@@ -1,0 +1,24 @@
+# 依赖
+node_modules/
+# 运行时
+logs/
+reports/
+data/
+*.log
+# 敏感配置
+.env
+.env.*
+!.env.example
+# 配置表导出（数据，非代码）
+scripts/_tables_dump/
+# 备份
+*.bak
+*.bak.*
+*.bak-*
+*.pre-*
+# 系统
+.DS_Store
+Thumbs.db
+
+# 部署本地配置（含密码）
+deploy.env

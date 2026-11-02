@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>用户数据管理 - 独立模块</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;font:14px "Microsoft YaHei",sans-serif;background:linear-gradient(180deg,#eff4fa,#f7fbff);color:#172033}
+    .boot-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .boot{max-width:540px;padding:22px 24px;border-radius:22px;background:#fff;border:1px solid #dbe6f3;box-shadow:0 22px 56px rgba(23,50,77,.08);line-height:1.8}
+    .boot strong{display:block;font-size:20px;color:#17324d;margin-bottom:8px}
+    .boot.error{color:#b42318;border-color:#f2c7c4;background:#fff7f6}
+  </style>
+</head>
+<body data-module="players">
+  <main class="boot-shell">
+    <div id="bootMessage" class="boot"><strong>用户数据管理</strong>正在加载独立模块页面...</div>
+  </main>
+  <script src="game-module-loader.js"></script>
+</body>
+</html>

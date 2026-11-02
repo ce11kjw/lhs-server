@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>游戏后台模块中心</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;font:15px "Microsoft YaHei",sans-serif;background:linear-gradient(180deg,#f2f6fb,#f8fbff 42%,#eef3f8);color:#172033}
+    .shell{max-width:1220px;margin:0 auto;padding:34px 20px 42px}
+    .hero{padding:28px;border-radius:28px;background:linear-gradient(135deg,#17324d,#1f5b8d 58%,#4f8bd6);color:#fff;box-shadow:0 20px 56px rgba(23,50,77,.18)}
+    .hero h1{font-size:30px;margin-bottom:10px}
+    .hero p{max-width:760px;line-height:1.8;opacity:.9}
+    .ops{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .ops a{display:inline-flex;align-items:center;padding:10px 14px;border-radius:999px;text-decoration:none;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:20px}
+    .card{display:flex;flex-direction:column;gap:10px;min-height:190px;padding:22px;border-radius:24px;background:#fff;border:1px solid #dde6f2;box-shadow:0 18px 44px rgba(23,50,77,.08);text-decoration:none;color:#172033}
+    .card b{display:inline-block;width:max-content;padding:4px 10px;border-radius:999px;background:#e8f0ff;color:#1d4e89;font-size:12px}
+    .card strong{font-size:21px}
+    .card span{line-height:1.7;color:#5a677b}
+    .card:hover{transform:translateY(-3px);transition:.18s ease;box-shadow:0 22px 50px rgba(23,50,77,.14)}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>游戏后台模块中心</h1>
+      <p>把原来堆在 `admin-users.html` 里的后台能力拆成单独入口。每个模块都可以直接打开、单独登录和独立使用，同时保留完整后台总入口，方便继续做联动操作。</p>
+      <div class="ops">
+        <a href="admin-users.html">完整后台</a>
+        <a href="index.html">总控首页</a>
+      </div>
+    </section>
+    <section class="grid">
+      <a class="card" href="game-users.html">
+        <b>独立模块</b>
+        <strong>用户数据管理</strong>
+        <span>玩家查询、编辑、批量发放、手动充值、任务与成长调整。</span>
+      </a>
+      <a class="card" href="game-agents.html">
+        <b>独立模块</b>
+        <strong>代理商管理</strong>
+        <span>代理账号开通、权限配置、额度限制和资料维护。</span>
+      </a>
+      <a class="card" href="game-recharge-configs.html">
+        <b>独立模块</b>
+        <strong>充值配置</strong>
+        <span>商品档位、支付方式和后台充值商品配置的统一维护。</span>
+      </a>
+      <a class="card" href="game-logs.html">
+        <b>独立模块</b>
+        <strong>操作日志</strong>
+        <span>按操作人、玩家、动作和结果筛查后台行为记录。</span>
+      </a>
+      <a class="card" href="game-chats.html">
+        <b>独立模块</b>
+        <strong>聊天管理</strong>
+        <span>查看世界和系统频道近期聊天动态，辅助处理禁言和投诉。</span>
+      </a>
+      <a class="card" href="game-mails.html">
+        <b>独立模块</b>
+        <strong>信件管理</strong>
+        <span>配置系统信件，支持指定玩家和区组批量推送。</span>
+      </a>
+      <a class="card" href="game-servers.html">
+        <b>独立模块</b>
+        <strong>大区数据管理</strong>
+        <span>独立维护大区、活跃统计、在线数据和区服生命周期。</span>
+      </a>
+    </section>
+  </main>
+</body>
+</html>

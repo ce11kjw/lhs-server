@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LHS Distribution</title>
+  <style>
+    :root{--ink:#172033;--muted:#667085;--line:#e5e7eb;--paper:#fff;--wash:#f4f7fb;--blue:#175cd3;--green:#087443;--red:#b42318}
+    *{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font:14px/1.5 Arial,"Microsoft YaHei",sans-serif}
+    header{height:62px;background:#17324d;color:#fff;display:flex;align-items:center;padding:0 24px;gap:18px}header h1{font-size:18px;margin:0}header .grow{flex:1}header button{border:1px solid #ffffff55;background:transparent;color:#fff;padding:8px 12px;border-radius:6px;cursor:pointer}
+    main{max-width:1440px;margin:0 auto;padding:24px}.user{font-size:12px;color:#d5e6ff}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}.stat,.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px}.stat{padding:16px}.stat b{display:block;font-size:25px;margin-top:5px}.stat span,.hint{color:var(--muted);font-size:12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tabs button{border:1px solid #b8c2d0;background:#fff;color:#344054;border-radius:6px;padding:9px 13px;cursor:pointer}.tabs button.active{background:var(--blue);border-color:var(--blue);color:#fff}.panel{padding:18px;margin-bottom:18px}.panel h2{font-size:16px;margin:0 0 13px}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select{border:1px solid #cbd5e1;border-radius:5px;padding:8px 9px;background:#fff}.toolbar button{border:0;background:var(--blue);color:#fff;border-radius:5px;padding:8px 12px;cursor:pointer}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:640px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:10px 8px;white-space:nowrap}th{background:#f8fafc;color:#475467;font-size:12px}td small{color:var(--muted)}.empty{padding:20px;color:var(--muted);text-align:center}.ok{color:var(--green)}.danger{color:var(--red)}.error{background:#fff4f2;border:1px solid #fecdca;color:var(--red);padding:10px;border-radius:6px;margin-bottom:14px;display:none}.section{display:none}.section.active{display:block}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.kv{display:grid;grid-template-columns:150px 1fr;gap:8px;border-bottom:1px solid var(--line);padding:8px 0}.kv:last-child{border:0}@media(max-width:800px){main{padding:14px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:1fr}header{padding:0 14px}.kv{grid-template-columns:110px 1fr}}
+  </style>
+</head>
+<body>
+<header><h1>LHS Distribution</h1><span id="role" class="user"></span><span class="grow"></span><button id="refreshBtn">Refresh</button><button id="logoutBtn">Logout</button></header>
+<main>
+  <div id="error" class="error"></div>
+  <section class="grid" id="stats"></section>
+  <nav class="tabs" id="tabs">
+    <button class="active" data-tab="overview">Overview</button><button data-tab="players">Players</button><button data-tab="orders">Orders</button><button data-tab="commission">Commission</button><button data-tab="team">Team</button><button data-tab="withdrawals">Withdrawals</button>
+  </nav>
+  <section id="overview" class="section active"><div class="cards"><div class="panel"><h2>Profile</h2><div id="profile"></div></div><div class="panel"><h2>Weekly settlements</h2><div id="weekly"></div></div></div></section>
+  <section id="players" class="section"><div class="panel"><h2>Bound players</h2><div class="toolbar"><input id="playerKeyword" placeholder="Player ID"><button id="playerSearch">Search</button></div><div id="playerTable"></div></div></section>
+  <section id="orders" class="section"><div class="panel"><h2>Recharge orders</h2><div class="toolbar"><input id="orderKeyword" placeholder="Order / player / invite code"><button id="orderSearch">Search</button></div><div id="orderTable"></div></div></section>
+  <section id="commission" class="section"><div class="panel"><h2>Commission history</h2><div id="commissionTable"></div></div></section>
+  <section id="team" class="section"><div class="panel"><h2>Team</h2><div id="teamTable"></div></div></section>
+  <section id="withdrawals" class="section"><div class="panel"><h2>Withdrawals</h2><div id="withdrawalTable"></div></div></section>
+</main>
+<script src="js/api.js"></script><script src="js/auth.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const money = (v) => (Number(v || 0) / 100).toFixed(2);
+  const date = (v) => v ? new Date(v).toLocaleString() : '-';
+  const rows = (items, cols) => items.length ? `<div class="table-wrap"><table><thead><tr>${cols.map((c) => `<th>${c[0]}</th>`).join('')}</tr></thead><tbody>${items.map((x) => `<tr>${cols.map((c) => `<td>${c[1](x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '<div class="empty">No data</div>';
+  function showError(error){ $('error').textContent = error.message || String(error); $('error').style.display = 'block'; }
+  function clearError(){ $('error').style.display = 'none'; }
+  function dataOf(result){ return result && result.data !== undefined ? result.data : {}; }
+  async function load(){
+    clearError();
+    try {
+      const [user, overview, stats, summary, weekly] = await Promise.all([api.getProfile(), api.getPortalOverview(), api.getStats(), api.getCommissionSummary(), api.getWeeklySettlements()]);
+      $('role').textContent = `${esc(user.data.username)} / ${esc(user.data.role || user.data.businessRole || 'agent')}`;
+      const o = dataOf(overview), s = dataOf(stats), c = dataOf(summary);
+      $('stats').innerHTML = [['Balance',money(o.balance)],['Total earned',money(o.totalEarned)],['Downline',s.directChildren || 0],['Commission records',c.count || 0]].map((x) => `<div class="stat"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');
+      $('profile').innerHTML = [['Username',user.data.username],['Invite code',user.data.inviteCode],['Business role',user.data.businessRole],['Status',user.data.status]].map((x) => `<div class="kv"><span class="hint">${x[0]}</span><strong>${esc(x[1] || '-')}</strong></div>`).join('');
+      const w = dataOf(weekly).data || []; $('weekly').innerHTML = rows(w,[['Week',(x)=>esc(x.week)],['Amount',(x)=>money(x.amount)],['Commission',(x)=>money(x.commission)],['Count',(x)=>x.count || 0]]);
+      await Promise.all([loadPlayers(),loadOrders(),loadCommission(),loadTeam(),loadWithdrawals()]);
+    } catch (e) { showError(e); }
+  }
+  async function loadPlayers(){ const r=dataOf(await api.getPlayers(1,50,$('playerKeyword').value)); $('playerTable').innerHTML=rows(r.list||r.data||[],[['Player',(x)=>esc(x.playerId)],['Invite',(x)=>esc(x.inviteCode)],['Bound',(x)=>date(x.bindAt||x.createdAt)]]); }
+  async function loadOrders(){ const r=dataOf(await api.getMallOrders(1,50,$('orderKeyword').value)); $('orderTable').innerHTML=rows(r.list||r.data||[],[['Order',(x)=>esc(x.orderId)],['Player',(x)=>esc(x.playerId)],['Amount',(x)=>money(x.amount)],['Processed',(x)=>date(x.processedAt||x.createdAt)]]); }
+  async function loadCommission(){ const r=dataOf(await api.getCommissionList(1,50)); $('commissionTable').innerHTML=rows(r.list||r.data||[],[['Order',(x)=>esc(x.orderId)],['Player',(x)=>esc(x.playerId)],['Amount',(x)=>money(x.amount)],['Commission',(x)=>money(x.commission)],['Time',(x)=>date(x.createdAt)]]); }
+  async function loadTeam(){ const r=dataOf(await api.getChildren(1,50)); $('teamTable').innerHTML=rows(r.list||r.data||[],[['Username',(x)=>esc(x.username)],['Role',(x)=>esc(x.businessRole)],['Status',(x)=>esc(x.status)],['Created',(x)=>date(x.createdAt)]]); }
+  async function loadWithdrawals(){ const r=dataOf(await api.getWithdrawalList(1,50)); $('withdrawalTable').innerHTML=rows(r.list||r.data||[],[['Amount',(x)=>money(x.amount)],['Status',(x)=>esc(x.status)],['Created',(x)=>date(x.createdAt)],['Reviewed',(x)=>date(x.reviewedAt)]]); }
+  $('tabs').addEventListener('click',(e)=>{const b=e.target.closest('button[data-tab]');if(!b)return;document.querySelectorAll('.tabs button').forEach((x)=>x.classList.toggle('active',x===b));document.querySelectorAll('.section').forEach((x)=>x.classList.toggle('active',x.id===b.dataset.tab));});
+  $('playerSearch').onclick=loadPlayers;$('orderSearch').onclick=loadOrders;$('refreshBtn').onclick=load;$('logoutBtn').onclick=()=>Auth.logout();
+  Auth.requireAuth().then((u)=>{if(u)load();});
+</script>
+</body>
+</html>

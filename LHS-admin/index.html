@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LHS 统一管理中心</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;font:15px "Microsoft YaHei",sans-serif;background:radial-gradient(circle at 10% 10%,#d8efe6 0,#eef6f2 28%,#f6f1e8 64%,#eaf0f7 100%);color:#172033}
+    .shell{max-width:1180px;margin:0 auto;padding:36px 22px}
+    .hero{position:relative;overflow:hidden;border:1px solid rgba(23,32,51,.08);border-radius:30px;padding:34px;background:linear-gradient(135deg,#123c4f,#2d604f 56%,#9a671d);color:#fff;box-shadow:0 24px 70px rgba(18,60,79,.22)}
+    .hero:after{content:"";position:absolute;right:-90px;top:-110px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.16)}
+    h1{font-size:34px;letter-spacing:.04em;margin-bottom:10px}.hero p{max-width:760px;line-height:1.8;opacity:.9}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:22px}
+    .card{display:flex;flex-direction:column;gap:12px;min-height:210px;padding:22px;border-radius:24px;background:rgba(255,255,255,.78);border:1px solid rgba(23,32,51,.08);box-shadow:0 18px 44px rgba(23,32,51,.08);text-decoration:none;color:#172033;backdrop-filter:blur(10px)}
+    .card strong{font-size:21px}.card span{line-height:1.7;color:#536071}.card b{display:inline-block;width:max-content;border-radius:999px;padding:4px 10px;background:#17324d;color:#fff;font-size:12px}
+    .card:hover{transform:translateY(-3px);transition:.18s ease;box-shadow:0 22px 54px rgba(23,32,51,.14)}
+    .ops{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}.ops a{padding:10px 14px;border-radius:999px;background:#fff;border:1px solid rgba(23,32,51,.12);color:#26354a;text-decoration:none}
+    .note{margin-top:18px;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.58);border:1px dashed rgba(23,32,51,.18);color:#536071;line-height:1.7}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>LHS 统一管理中心</h1>
+      <p>已把原 `admin-users.html` 迁移到 `LHS-admin`，并在同一管理入口中接入游戏后台、代理操作后台和分销系统后台。目录代理会把不同前缀转发到不同端口。</p>
+    </section>
+    <section class="grid">
+      <a class="card" href="admin-users.html">
+        <b>/game -> 8080</b>
+        <strong>游戏用户管理</strong>
+        <span>玩家查询、编辑、任务、批量发放、手动充值、操作日志、大区管理等原 `admin-users` 能力。</span>
+      </a>
+      <a class="card" href="game-modules.html">
+        <b>独立模块</b>
+        <strong>游戏后台模块中心</strong>
+        <span>把用户数据、代理商、充值配置、操作日志和大区数据拆成可单独打开的后台模块入口。</span>
+      </a>
+      <a class="card" href="dist-admin.html">
+        <b>/dist -> 3001</b>
+        <strong>分销管理</strong>
+        <span>分销代理、佣金流水、提现审批、全局统计和后台鉴权，直接通过目录代理进入分销系统。</span>
+      </a>
+      <a class="card" href="/dist/index.html">
+        <b>代理登录</b>
+        <strong>分销代理端</strong>
+        <span>给代理商使用的登录入口、团队数据、佣金明细和提现申请页面。</span>
+      </a>
+    </section>
+  </main>
+</body>
+</html>

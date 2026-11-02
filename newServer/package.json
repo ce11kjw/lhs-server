@@ -1,0 +1,42 @@
+{
+  "name": "lhs-server",
+  "version": "1.0.0",
+  "description": "灵画师游戏服务端",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "jest --verbose",
+    "test:core-contract": "node scripts/test-core-gameplay-contract.js",
+    "test:top-combat-contract": "node scripts/test-top-combat-contract.js",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "format": "prettier --write 'src/**/*.js' 'tests/**/*.js'",
+    "contract:triggered": "node scripts/extract-triggered-tags.js",
+    "capability:sync": "node scripts/sync-tag-capability.js",
+    "gate:tag-capability": "node scripts/check-triggered-no-fallback.js",
+    "report:tag-daily": "node scripts/daily-tag-report.js"
+  },
+  "keywords": [
+    "game",
+    "server",
+    "websocket"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "ioredis": "^5.9.3",
+    "mongoose": "^9.2.1",
+    "winston": "^3.19.0",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "eslint": "^10.0.1",
+    "eslint-config-prettier": "^10.1.8",
+    "jest": "^30.2.0",
+    "prettier": "^3.8.1"
+  }
+}
