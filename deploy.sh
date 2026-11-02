@@ -144,12 +144,7 @@ if [ -n "$UPDATE_SRC" ] && [ -z "$UPDATE_PASS" ] && [[ "$UPDATE_SRC" == *@*:* ]]
   ask_val UPDATE_PASS "源机 SSH 密码（拉 update 素材用）" "--update-pass"
 fi
 
-# 取代码来源：token 或本机包，二选一
-if [ -z "$GITHUB_TOKEN" ] && [ -z "$PACK_DIR" ] && [ -z "$CODE_URL" ]; then
-  if [ -t 0 ]; then
-    printf "  ${c_in}?${c_0} GitHub 只读 Token（拉私有仓库，留空则改用 --pack-dir）: " >&2
-    IFS= read -r GITHUB_TOKEN || true
-  fi
+# 代码来源：默认匿名 clone 公开仓库（无需 token）
   [ -z "$GITHUB_TOKEN" ] && [ -z "$PACK_DIR" ] && [ -z "$CODE_URL" ] && die "必须提供 --github-token / --pack-dir / --code-url 之一"
 fi
 
